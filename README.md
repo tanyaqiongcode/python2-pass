@@ -15,7 +15,7 @@
 
 ## 在线使用
 
-开启 GitHub Pages 后直接访问：`https://tanyaqiong31029.github.io/python2-pass/`
+开启 GitHub Pages 后直接访问：[Python 二级在线练习](https://tanyaqiongcode.github.io/python2-pass/)
 
 本地使用：克隆后双击 `index.html` 即可（数据以 JS 文件加载，无跨域问题；判题引擎需联网首次加载约 10~20MB）。
 
