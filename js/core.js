@@ -82,6 +82,41 @@
     return !!(active && typeof endAt === 'number' && isFinite(endAt) && now >= endAt);
   }
 
+  /** 学习进度合并：本地与导入文件取更优记录，成绩按时间去重拼接 */
+  function mergeProgress(local, imported) {
+    var out = JSON.parse(JSON.stringify(local || {}));
+    var imp = imported || {};
+    var counts = { questions: 0, mocks: 0 };
+    var kinds = ['mcq', 'blank', 'fix', 'coding'];
+    kinds.forEach(function (k) {
+      var src = imp[k] || {};
+      out[k] = out[k] || {};
+      Object.keys(src).forEach(function (qid) {
+        var a = src[qid];
+        var b = out[k][qid];
+        var better = !b ||
+          (!!a.passed && !b.passed) ||
+          ((a.ts || 0) > (b.ts || 0) && !!a.passed >= !!b.passed);
+        if (better) { out[k][qid] = a; counts.questions++; }
+      });
+    });
+    out.lessonRead = Object.assign({}, out.lessonRead || {}, imp.lessonRead || {});
+    out.drafts = Object.assign({}, out.drafts || {}, imp.drafts || {});
+    var runs = (out.mockRuns || []).concat(imp.mockRuns || []);
+    runs.sort(function (x, y) { return (x.ts || 0) - (y.ts || 0); });
+    var seen = {}; var dedup = [];
+    runs.forEach(function (r) {
+      var key = (r.ts || 0) + ':' + (r.score || 0);
+      if (!seen[key]) { seen[key] = true; dedup.push(r); }
+    });
+    counts.mocks = dedup.length - (out.mockRuns || []).length;
+    out.mockRuns = dedup;
+    if (imp.diagnosis) out.diagnosis = imp.diagnosis;
+    if (imp.settings) out.settings = Object.assign({}, out.settings || {}, imp.settings);
+    out.version = out.version || 1;
+    return { merged: out, counts: counts };
+  }
+
   /** 单选题判分（mock 与练习共用） */
   function gradeMcq(q, choice) {
     return choice === q.ans;
@@ -109,6 +144,7 @@
     targetLabel: targetLabel,
     estimateGrade: estimateGrade,
     mockExpired: mockExpired,
+    mergeProgress: mergeProgress,
     gradeMcq: gradeMcq,
     judgeTest: judgeTest
   };

@@ -133,6 +133,29 @@ const State = {
     return total ? done / total : 0;
   },
 
+  /* ---- 数据备份（导出/导入） ---- */
+  exportData() {
+    return JSON.stringify({
+      app: 'py2pass', version: 1,
+      exportedAt: new Date().toISOString(),
+      data: this.data
+    });
+  },
+
+  /** 返回 {ok, counts|error}；合并成功后自动保存 */
+  importData(jsonStr) {
+    let parsed;
+    try { parsed = JSON.parse(jsonStr); }
+    catch (e) { return { ok: false, error: '文件不是有效的 JSON' }; }
+    if (!parsed || parsed.app !== 'py2pass' || !parsed.data) {
+      return { ok: false, error: '这不是本站的进度备份文件' };
+    }
+    const r = PY2CORE.mergeProgress(this.data, parsed.data);
+    this.data = r.merged;
+    this.save();
+    return { ok: true, counts: r.counts, exportedAt: parsed.exportedAt };
+  },
+
   /** 错题列表 */
   wrongItems() {
     const B = window.BANK;

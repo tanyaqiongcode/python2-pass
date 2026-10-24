@@ -71,3 +71,27 @@ test('gradeMcq / judgeTest', () => {
 });
 
 console.log('PY2CORE tests done');
+
+test('mergeProgress：双向合并取更优、成绩去重', () => {
+  const local = { mcq: { a: { choice: 0, correct: false, ts: 100 } }, mockRuns: [{ ts: 500, score: 90 }], lessonRead: {} };
+  const imp = {
+    mcq: { a: { choice: 1, correct: true, passed: true, ts: 200 }, b: { choice: 0, correct: true, ts: 300 } },
+    mockRuns: [{ ts: 400, score: 60 }, { ts: 500, score: 90 }],
+    lessonRead: { 1: true },
+    settings: { target: 't3e' }
+  };
+  const r = C.mergeProgress(local, imp);
+  assert.equal(r.merged.mcq.a.correct, true);   // 导入的通过记录胜出
+  assert.ok(r.merged.mcq.b);                    // 本地没有的题目被并入
+  assert.equal(r.merged.mockRuns.length, 2);    // 按 ts 去重
+  assert.equal(r.merged.lessonRead['1'], true);
+  assert.equal(r.merged.settings.target, 't3e');
+  assert.equal(r.merged.mcq.a.ts, 200);
+});
+
+test('mergeProgress：空导入不破坏本地数据', () => {
+  const local = { mcq: { a: { choice: 0, correct: true, ts: 1 } }, mockRuns: [{ ts: 9, score: 100 }] };
+  const r = C.mergeProgress(local, {});
+  assert.equal(r.merged.mcq.a.correct, true);
+  assert.equal(r.merged.mockRuns.length, 1);
+});

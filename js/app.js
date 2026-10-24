@@ -219,6 +219,40 @@ const App = {
       ' 二三级同卷同场、按分数划档：总分率 ≥60% 二级合格参考，≥75% 且三级题得分率 ≥60% 三级合格参考，≥90% 且三级题 ≥80% 三级优秀参考。目标定三级——同样的考试，分数够高自动拿三级证书。'));
   },
 
+  /* ---- 数据备份 ---- */
+  exportProgress() {
+    const blob = new Blob([State.exportData()], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const d = new Date();
+    a.download = `py2pass-backup-${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  },
+
+  importProgress(e) {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const r = State.importData(String(reader.result));
+      if (!r.ok) { alert('导入失败：' + r.error); return; }
+      alert(`导入成功：合并 ${r.counts.questions} 条答题记录、新增 ${r.counts.mocks} 场模拟考成绩。`);
+      this.render();
+    };
+    reader.readAsText(file);
+  },
+
+  clearProgress() {
+    if (!confirm('确定清空全部学习进度吗？此操作不可撤销（建议先导出备份）。')) return;
+    if (!confirm('再次确认：真的要清空吗？')) return;
+    localStorage.removeItem(Store.key);
+    localStorage.removeItem(Mock.KEY);
+    State.init();
+    this.render();
+  },
+
   /* ============================================================
    * 学习路径（难度递进 + 状态驱动）
    * ============================================================ */
@@ -869,8 +903,16 @@ const App = {
         h('h2', null, '如何使用本站'),
         h('ul', null,
           h('li', null, '按关卡顺序学习：速览 → 单选 → 填空 → 改错 → 编程，全绿即通关。'),
-          h('li', null, '进度保存在浏览器本地（localStorage），换浏览器/清缓存会丢失。'),
+          h('li', null, '进度保存在浏览器本地（localStorage），建议定期用下方按钮导出备份。'),
           h('li', null, '考前两周重点：错题本清零 + 每周一场全真模拟。')
+        ),
+        h('h2', null, '数据备份'),
+        h('p', null, '导出全部学习进度（答题记录、错题本、模拟考成绩、诊断结果）为一个 JSON 文件；导入时与当前进度智能合并（通过的记录优先，成绩按时间去重）。'),
+        h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap;align-items:center' },
+          h('button', { class: 'btn', onclick: () => App.exportProgress() }, '⬇ 导出进度备份'),
+          h('button', { class: 'btn btn-ghost', onclick: () => document.getElementById('import-file').click() }, '⬆ 导入进度备份'),
+          h('input', { type: 'file', id: 'import-file', accept: '.json,application/json', style: 'display:none', onchange: (e) => App.importProgress(e) }),
+          h('button', { class: 'btn btn-danger', onclick: () => App.clearProgress() }, '清空全部数据')
         )
       )
     );
