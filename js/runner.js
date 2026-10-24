@@ -100,7 +100,7 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
             _frames = traceback.extract_tb(sys.exc_info()[2])
             _user_frames = [f for f in _frames if f.filename == '<student>']
             if _user_frames:
-                tb = 'File "<student>", line ' + str(_user_frames[-1].lineno) + '\n' + tb
+                tb = 'File "<student>", line ' + str(_user_frames[-1].lineno) + '\\n' + tb
         except Exception:
             pass
     finally:
@@ -494,16 +494,18 @@ self.onmessage = async (e) => {
   if (msg.type === 'init') {
     // Pyodide 314 仅支持 ES Module 形式在 Worker 中运行（classic worker 会抛
     // "Classic web workers are not supported"），故本 Worker 以 type:module 创建
+    const initErrors = [];
     for (const base of CDNS) {
       try {
         const mod = await import(base + 'pyodide.mjs');
         self.pyodide = await mod.loadPyodide({ indexURL: base });
         break;
       } catch (err) {
+        initErrors.push(base + ' -> ' + String(err && err.message || err).slice(0, 160));
         self.pyodide = null;
       }
     }
-    if (!self.pyodide) { postMessage({ type: 'initFail' }); return; }
+    if (!self.pyodide) { postMessage({ type: 'initFail', errors: initErrors }); return; }
     self.pyodide.runPython(${JSON.stringify(HARNESS_PY)});
     self.pyodide.globals.set('_turtle_src', ${JSON.stringify(TURTLE_SHIM_SRC)});
     self.pyodide.runPython(\`
@@ -691,6 +693,7 @@ const Engine = {
           finish(true);
         } else if (m.type === 'initFail') {
           clearTimeout(initTimer);
+          console.warn('Worker 内 Pyodide 初始化失败：', m.errors);
           worker.terminate();
           finish(false);
         }

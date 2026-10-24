@@ -1,125 +1,191 @@
 {
-  "kind": "resources",
-  "items": [
-    {
-      "cat": "official",
-      "title": "上信考官方网站（上海市教育考试院）",
-      "url": "https://scite.shmeea.edu.cn/",
-      "desc": "报名、下载最新考试大纲与官方模拟试卷的第一渠道，考前务必把官方模拟卷做一遍"
-    },
-    {
-      "cat": "official",
-      "title": "官方考纲解读（超星平台）",
-      "url": "https://mooc1.chaoxing.com/course-ans/courseportal/portal/QYtE3phxYq1QN61Pgo_jnQ==",
-      "desc": "考试院配套的考纲解读课程，了解命题思路"
-    },
-    {
-      "cat": "official",
-      "title": "Python 程序设计基础（第3版）教材配套",
-      "url": "https://www.phei.com.cn/",
-      "desc": "大纲指定参考教材：李东方主编，电子工业出版社 2023；配合本站查漏补缺"
-    },
-    {
-      "cat": "github",
-      "title": "Python-100-Days（约 187k★）",
-      "url": "https://github.com/jackfrued/Python-100-Days",
-      "desc": "最流行的中文 Python 系统教程，语言基础与生态部分与考纲高度重合，当字典用"
-    },
-    {
-      "cat": "github",
-      "title": "Python-Core-50-Courses（约 12.6k★）",
-      "url": "https://github.com/jackfrued/Python-Core-50-Courses",
-      "desc": "50 讲语言基础课，粒度适合按考点逐章补强"
-    },
-    {
-      "cat": "github",
-      "title": "TheAlgorithms/Python（约 225k★）",
-      "url": "https://github.com/TheAlgorithms/Python",
-      "desc": "经典算法参考实现（素数/排序/查找等），编程大题常用算法都能找到范本"
-    },
-    {
-      "cat": "github",
-      "title": "Python-programming-exercises（约 29.7k★）",
-      "url": "https://github.com/zhiwehu/Python-programming-exercises",
-      "desc": "100+ 道经典编程练习含题解，难度贴合二级编程题"
-    },
-    {
-      "cat": "github",
-      "title": "NCRE-Python 二级教程笔记",
-      "url": "https://github.com/Xanxus-5/NCRE-Python",
-      "desc": "全国计算机等级考试二级 Python 全书笔记；全国卷与上海卷考点相近，可交叉练习"
-    },
-    {
-      "cat": "github",
-      "title": "NCRE2-Python 分类练习题",
-      "url": "https://github.com/sandianyiyuan/NCRE2-Python",
-      "desc": "二级 Python 分类习题集，按知识点刷"
-    },
-    {
-      "cat": "github",
-      "title": "ncre-python-guide 备考笔记",
-      "url": "https://github.com/BUZAI946/ncre-python-guide",
-      "desc": "12 章 + 318 选择 + 30 编程 + 15 套卷的备考整理，题量结构可参考"
-    },
-    {
-      "cat": "github",
-      "title": "turtle 创意绘图合集",
-      "url": "https://github.com/cmdragon/Python123",
-      "desc": "turtle 绘图实例集，对应考点\"图形绘制\""
-    },
-    {
-      "cat": "tutorial",
-      "title": "廖雪峰 Python 教程",
-      "url": "https://www.liaoxuefeng.com/wiki/1016959663602400",
-      "desc": "中文最系统的免费入门教程，适合从零到一的通读"
-    },
-    {
-      "cat": "tutorial",
-      "title": "菜鸟教程 Python3",
-      "url": "https://www.runoob.com/python3/python3-tutorial.html",
-      "desc": "查询式语法手册带在线运行，做题时快速查函数用法"
-    },
-    {
-      "cat": "tutorial",
-      "title": "Python 官方中文文档",
-      "url": "https://docs.python.org/zh-cn/3/tutorial/",
-      "desc": "权威教程与标准库参考，标准库部分对应考点 random/math/time 等"
-    },
-    {
-      "cat": "tool",
-      "title": "Python123 练习平台",
-      "url": "https://www.python123.io/",
-      "desc": "全国等级考试官方指定上机练习平台，题库与考试同源"
-    },
-    {
-      "cat": "tool",
-      "title": "拼题A（PTA）",
-      "url": "https://pintia.cn/",
-      "desc": "高校程序设计题集平台，有 Python 程序设计题库可加练"
-    },
-    {
-      "cat": "tool",
-      "title": "Pyodide（本站判题引擎）",
-      "url": "https://github.com/pyodide/pyodide",
-      "desc": "本站浏览器内 Python 判题使用的技术，也可自己在浏览器玩 Python"
-    },
-    {
-      "cat": "paper",
-      "title": "CSDN：上信考 Python 二三级模拟题与真题回忆（站内搜索）",
-      "url": "https://so.csdn.net/so/search?q=%E4%B8%8A%E6%B5%B7%E5%B8%82%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95%20python&t=all",
-      "desc": "历年考生发布的真题回忆与模拟题解析，考前浏览一遍感受真题风格"
-    },
-    {
-      "cat": "paper",
-      "title": "知乎：上信考 vs 全国计算机等级考试对比",
-      "url": "https://www.zhihu.com/search?type=content&q=%E4%B8%8A%E6%B5%B7%E9%AB%98%E6%A0%A1%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95%20Python",
-      "desc": "过来人经验：上海卷编程题比重大，重在动手写代码（本站正是按此设计）"
-    },
-    {
-      "cat": "video",
-      "title": "B站：上海高校计算机水平考试 Python 备考视频（站内搜索）",
-      "url": "https://search.bilibili.com/all?keyword=%E4%B8%8A%E6%B5%B7%E9%AB%98%E6%A0%A1%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95python",
-      "desc": "模拟卷讲解、真题回忆视频，配合本站刷题食用"
-    }
-  ]
+ "kind": "resources",
+ "items": [
+  {
+   "cat": "official",
+   "title": "上信考官方网站（上海市教育考试院）",
+   "url": "https://scite.shmeea.edu.cn/",
+   "desc": "报名、下载最新考试大纲与官方模拟试卷的第一渠道，考前务必把官方模拟卷做一遍"
+  },
+  {
+   "cat": "official",
+   "title": "官方考纲解读（超星平台）",
+   "url": "https://mooc1.chaoxing.com/course-ans/courseportal/portal/QYtE3phxYq1QN61Pgo_jnQ==",
+   "desc": "考试院配套的考纲解读课程，了解命题思路"
+  },
+  {
+   "cat": "official",
+   "title": "Python 程序设计基础（第3版）教材配套",
+   "url": "https://www.phei.com.cn/",
+   "desc": "大纲指定参考教材：李东方主编，电子工业出版社 2023；配合本站查漏补缺"
+  },
+  {
+   "cat": "github",
+   "title": "Python-100-Days（约 187k★）",
+   "url": "https://github.com/jackfrued/Python-100-Days",
+   "desc": "最流行的中文 Python 系统教程，语言基础与生态部分与考纲高度重合，当字典用"
+  },
+  {
+   "cat": "github",
+   "title": "Python-Core-50-Courses（约 12.6k★）",
+   "url": "https://github.com/jackfrued/Python-Core-50-Courses",
+   "desc": "50 讲语言基础课，粒度适合按考点逐章补强"
+  },
+  {
+   "cat": "github",
+   "title": "TheAlgorithms/Python（约 225k★）",
+   "url": "https://github.com/TheAlgorithms/Python",
+   "desc": "经典算法参考实现（素数/排序/查找等），编程大题常用算法都能找到范本"
+  },
+  {
+   "cat": "github",
+   "title": "Python-programming-exercises（约 29.7k★）",
+   "url": "https://github.com/zhiwehu/Python-programming-exercises",
+   "desc": "100+ 道经典编程练习含题解，难度贴合二级编程题"
+  },
+  {
+   "cat": "github",
+   "title": "NCRE-Python 二级教程笔记",
+   "url": "https://github.com/Xanxus-5/NCRE-Python",
+   "desc": "全国计算机等级考试二级 Python 全书笔记；全国卷与上海卷考点相近，可交叉练习"
+  },
+  {
+   "cat": "github",
+   "title": "NCRE2-Python 分类练习题",
+   "url": "https://github.com/sandianyiyuan/NCRE2-Python",
+   "desc": "二级 Python 分类习题集，按知识点刷"
+  },
+  {
+   "cat": "github",
+   "title": "ncre-python-guide 备考笔记",
+   "url": "https://github.com/BUZAI946/ncre-python-guide",
+   "desc": "12 章 + 318 选择 + 30 编程 + 15 套卷的备考整理，题量结构可参考"
+  },
+  {
+   "cat": "github",
+   "title": "turtle 创意绘图合集",
+   "url": "https://github.com/cmdragon/Python123",
+   "desc": "turtle 绘图实例集，对应考点\"图形绘制\""
+  },
+  {
+   "cat": "tutorial",
+   "title": "廖雪峰 Python 教程",
+   "url": "https://www.liaoxuefeng.com/wiki/1016959663602400",
+   "desc": "中文最系统的免费入门教程，适合从零到一的通读"
+  },
+  {
+   "cat": "tutorial",
+   "title": "菜鸟教程 Python3",
+   "url": "https://www.runoob.com/python3/python3-tutorial.html",
+   "desc": "查询式语法手册带在线运行，做题时快速查函数用法"
+  },
+  {
+   "cat": "tutorial",
+   "title": "Python 官方中文文档",
+   "url": "https://docs.python.org/zh-cn/3/tutorial/",
+   "desc": "权威教程与标准库参考，标准库部分对应考点 random/math/time 等"
+  },
+  {
+   "cat": "tool",
+   "title": "Python123 练习平台",
+   "url": "https://www.python123.io/",
+   "desc": "全国等级考试官方指定上机练习平台，题库与考试同源"
+  },
+  {
+   "cat": "tool",
+   "title": "拼题A（PTA）",
+   "url": "https://pintia.cn/",
+   "desc": "高校程序设计题集平台，有 Python 程序设计题库可加练"
+  },
+  {
+   "cat": "tool",
+   "title": "Pyodide（本站判题引擎）",
+   "url": "https://github.com/pyodide/pyodide",
+   "desc": "本站浏览器内 Python 判题使用的技术，也可自己在浏览器玩 Python"
+  },
+  {
+   "cat": "paper",
+   "title": "CSDN：上信考 Python 二三级模拟题与真题回忆（站内搜索）",
+   "url": "https://so.csdn.net/so/search?q=%E4%B8%8A%E6%B5%B7%E5%B8%82%E9%AB%98%E7%AD%89%E5%AD%A6%E6%A0%A1%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95%20python&t=all",
+   "desc": "历年考生发布的真题回忆与模拟题解析，考前浏览一遍感受真题风格"
+  },
+  {
+   "cat": "paper",
+   "title": "知乎：上信考 vs 全国计算机等级考试对比",
+   "url": "https://www.zhihu.com/search?type=content&q=%E4%B8%8A%E6%B5%B7%E9%AB%98%E6%A0%A1%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95%20Python",
+   "desc": "过来人经验：上海卷编程题比重大，重在动手写代码（本站正是按此设计）"
+  },
+  {
+   "cat": "video",
+   "title": "B站：上海高校计算机水平考试 Python 备考视频（站内搜索）",
+   "url": "https://search.bilibili.com/all?keyword=%E4%B8%8A%E6%B5%B7%E9%AB%98%E6%A0%A1%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95python",
+   "desc": "模拟卷讲解、真题回忆视频，配合本站刷题食用"
+  },
+  {
+   "cat": "official",
+   "title": "2026 年上信考报名公告（上海招考热线）",
+   "url": "https://www.shmeea.edu.cn/page/05800/20260903/20570.html",
+   "desc": "官方时间线：二三级 11 月 28 日开考、成绩 12 月底公布、2025 年起发放电子证书（随申办亮证）"
+  },
+  {
+   "cat": "official",
+   "title": "准考证快速打印入口",
+   "url": "https://scite.shmeea.edu.cn:8001/home/QuickPrintTestTicket",
+   "desc": "SCITE 报名系统内准考证打印直链，考前开放"
+  },
+  {
+   "cat": "tool",
+   "title": "Python Tutor 在线可视化执行",
+   "url": "https://pythontutor.com/",
+   "desc": "逐帧展示变量、栈帧与递归调用树——递归（L4）和循环看不见过程的问题用它一目了然"
+  },
+  {
+   "cat": "tutorial",
+   "title": "正则表达式 30 分钟入门教程",
+   "url": "https://deerchao.cn/tutorials/regex/regex.htm",
+   "desc": "中文经典正则教程：元字符/分组/贪婪与懒惰 + 速查表，对应 L7 正则考点"
+  },
+  {
+   "cat": "tool",
+   "title": "Regex101 在线正则调试器",
+   "url": "https://regex101.com/",
+   "desc": "选 Python 方言，逐步匹配解释 + 调试器，写正则提取题（官方卷第 5 题）的利器"
+  },
+  {
+   "cat": "tutorial",
+   "title": "SQLZoo 中文版交互教程",
+   "url": "https://sqlzoo.net/wiki/SQL_Tutorial/zh",
+   "desc": "浏览器内交互练 SELECT/JOIN/聚合，补齐 L7 SQLite 考点的动手环节"
+  },
+  {
+   "cat": "tutorial",
+   "title": "Matplotlib 中文文档",
+   "url": "https://www.matplotlib.org.cn/",
+   "desc": "快速入门 + pyplot API + 图库，L7 数据可视化的中文权威参考"
+  },
+  {
+   "cat": "video",
+   "title": "B站：上信考二三级 Python 备考讲解（阿福课堂）",
+   "url": "https://www.bilibili.com/video/BV1YNWMzsEQC/",
+   "desc": "官方模拟卷按题型逐题视频讲解，与站内 27A 在线判题版配套食用（注意甄别付费引流）"
+  },
+  {
+   "cat": "video",
+   "title": "B站：上信考 SCITE 备考建议（2026）",
+   "url": "https://www.bilibili.com/video/BV1McKr6LEwr/",
+   "desc": "2026-07 新发布，第二选集 23 分钟专讲二三级 Python 备考策略"
+  },
+  {
+   "cat": "tutorial",
+   "title": "知乎：上信考与全国计算机等级考试的区别",
+   "url": "https://www.zhihu.com/question/477190606/answer/3353196998",
+   "desc": "二三级亲历长文：赋分制、题型递进、自带电脑上机等实操细节"
+  },
+  {
+   "cat": "tool",
+   "title": "VisuAlgo 中文版 · 算法可视化",
+   "url": "https://visualgo.net/zh",
+   "desc": "排序、递归树、哈希等动画演示 + 测验，理解常用算法背后的机制"
+  }
+ ]
 }

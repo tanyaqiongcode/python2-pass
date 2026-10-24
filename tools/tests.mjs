@@ -1,11 +1,12 @@
 // 纯逻辑核心单测（node --test 风格，无依赖）：node tools/tests.mjs
-import { readFileSync } from 'node:fs';
+import fs from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
 // 工作区 package.json 为 "type": "module"，用 vm 沙箱加载 UMD 核心以绕开模块系统差异
-const coreSrc = readFileSync(new URL('../js/core.js', import.meta.url), 'utf8');
+const coreSrc = fs.readFileSync(new URL('../js/core.js', import.meta.url), 'utf8');
 const sandbox = {};
 vm.createContext(sandbox);
 vm.runInContext(coreSrc, sandbox);
@@ -109,4 +110,25 @@ test('errorLine：从 traceback 提取学生代码行号', () => {
   const tb = 'Traceback (most recent call last):\n  File "<student>", line 7, in <module>\nNameError: x';
   assert.equal(C.errorLine(tb), 7);
   assert.equal(C.errorLine(''), null);
+});
+
+test('runner.js 内嵌 Python 源码在真实模板字面量语义下可编译（防转义回归）', () => {
+  const runnerSrc = fs.readFileSync(new URL('../js/runner.js', import.meta.url), 'utf8');
+  for (const name of ['HARNESS_PY', 'TURTLE_SHIM_SRC']) {
+    const m = runnerSrc.match(new RegExp('const ' + name + ' = `([\\s\\S]*?)`;'));
+    assert.ok(m, name + ' 未找到');
+    // 用 vm 求值模板字面量，得到与浏览器一致的字符串语义
+    const py = vm.runInNewContext('`' + m[1] + '`', {});
+    assert.ok(py.length > 1000, name + ' 长度异常: ' + py.length);
+    // 不允许出现真实换行出现在字符串字面量内部会被 python 拒绝——交给 python 编译器裁决
+    fs.writeFileSync('/tmp/' + name + '.py', py);
+  }
+  const r = spawnSync('python3', ['-c', `
+import ast
+for name in ['HARNESS_PY', 'TURTLE_SHIM_SRC']:
+    src = open('/tmp/' + name + '.py').read()
+    ast.parse(src)
+print('embedded python OK')
+`], { encoding: 'utf8' });
+  assert.equal(r.status, 0, '内嵌 Python 编译失败: ' + r.stderr.slice(0, 300));
 });

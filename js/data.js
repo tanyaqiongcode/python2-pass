@@ -6417,6 +6417,72 @@ window.BANK = {
    "title": "B站：上海高校计算机水平考试 Python 备考视频（站内搜索）",
    "url": "https://search.bilibili.com/all?keyword=%E4%B8%8A%E6%B5%B7%E9%AB%98%E6%A0%A1%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%B0%B4%E5%B9%B3%E8%80%83%E8%AF%95python",
    "desc": "模拟卷讲解、真题回忆视频，配合本站刷题食用"
+  },
+  {
+   "cat": "official",
+   "title": "2026 年上信考报名公告（上海招考热线）",
+   "url": "https://www.shmeea.edu.cn/page/05800/20260903/20570.html",
+   "desc": "官方时间线：二三级 11 月 28 日开考、成绩 12 月底公布、2025 年起发放电子证书（随申办亮证）"
+  },
+  {
+   "cat": "official",
+   "title": "准考证快速打印入口",
+   "url": "https://scite.shmeea.edu.cn:8001/home/QuickPrintTestTicket",
+   "desc": "SCITE 报名系统内准考证打印直链，考前开放"
+  },
+  {
+   "cat": "tool",
+   "title": "Python Tutor 在线可视化执行",
+   "url": "https://pythontutor.com/",
+   "desc": "逐帧展示变量、栈帧与递归调用树——递归（L4）和循环看不见过程的问题用它一目了然"
+  },
+  {
+   "cat": "tutorial",
+   "title": "正则表达式 30 分钟入门教程",
+   "url": "https://deerchao.cn/tutorials/regex/regex.htm",
+   "desc": "中文经典正则教程：元字符/分组/贪婪与懒惰 + 速查表，对应 L7 正则考点"
+  },
+  {
+   "cat": "tool",
+   "title": "Regex101 在线正则调试器",
+   "url": "https://regex101.com/",
+   "desc": "选 Python 方言，逐步匹配解释 + 调试器，写正则提取题（官方卷第 5 题）的利器"
+  },
+  {
+   "cat": "tutorial",
+   "title": "SQLZoo 中文版交互教程",
+   "url": "https://sqlzoo.net/wiki/SQL_Tutorial/zh",
+   "desc": "浏览器内交互练 SELECT/JOIN/聚合，补齐 L7 SQLite 考点的动手环节"
+  },
+  {
+   "cat": "tutorial",
+   "title": "Matplotlib 中文文档",
+   "url": "https://www.matplotlib.org.cn/",
+   "desc": "快速入门 + pyplot API + 图库，L7 数据可视化的中文权威参考"
+  },
+  {
+   "cat": "video",
+   "title": "B站：上信考二三级 Python 备考讲解（阿福课堂）",
+   "url": "https://www.bilibili.com/video/BV1YNWMzsEQC/",
+   "desc": "官方模拟卷按题型逐题视频讲解，与站内 27A 在线判题版配套食用（注意甄别付费引流）"
+  },
+  {
+   "cat": "video",
+   "title": "B站：上信考 SCITE 备考建议（2026）",
+   "url": "https://www.bilibili.com/video/BV1McKr6LEwr/",
+   "desc": "2026-07 新发布，第二选集 23 分钟专讲二三级 Python 备考策略"
+  },
+  {
+   "cat": "tutorial",
+   "title": "知乎：上信考与全国计算机等级考试的区别",
+   "url": "https://www.zhihu.com/question/477190606/answer/3353196998",
+   "desc": "二三级亲历长文：赋分制、题型递进、自带电脑上机等实操细节"
+  },
+  {
+   "cat": "tool",
+   "title": "VisuAlgo 中文版 · 算法可视化",
+   "url": "https://visualgo.net/zh",
+   "desc": "排序、递归树、哈希等动画演示 + 测验，理解常用算法背后的机制"
   }
  ],
  "official": {

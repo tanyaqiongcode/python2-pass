@@ -992,6 +992,21 @@ function renderResult(outBox, r, expected, passed, perBlank, details) {
       ));
     });
     outBox.append(tb);
+    // 失败测试点的报错人话提示（去重，最多 2 条）
+    const seenHints = {};
+    let shown = 0;
+    details.forEach(d => {
+      if (shown >= 2 || (d.pass !== undefined ? d.pass : d.cmp.ok) || !d.r || !d.r.error) return;
+      const lineNo = PY2CORE.errorLine(d.r.tb || '');
+      const hint = PY2CORE.friendlyError(d.r.error);
+      const key = hint || d.r.error;
+      if (seenHints[key]) return;
+      seenHints[key] = true;
+      const parts = [];
+      if (lineNo) parts.push('💡 出错位置大约在第 ' + lineNo + ' 行。');
+      if (hint) parts.push('💡 ' + hint);
+      if (parts.length) { outBox.append(h('div', { class: 'tip' }, parts.join(' '))); shown++; }
+    });
   } else {
     const d = (details && details[0]) || (r ? { r, t: { stdin: '', expected } } : null);
     if (d) {
