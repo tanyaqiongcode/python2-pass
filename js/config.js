@@ -26,10 +26,12 @@ window.CONFIG = {
   /* 通关条件：每关选择题需尝试且正确率达标 */
   levelClear: { mcqMinCount: 8, mcqMinAcc: 0.8 },
 
-  /* Pyodide 判题引擎 CDN（全部锁同一版本，避免不同环境判题结果不一致） */
+  /* Pyodide 判题引擎加载源（全部锁 v314.0.7）。
+     'LOCAL' 是仓库内 vendor/pyodide/（与站点同源，站点能打开引擎就能用）；
+     jsdelivr 作为兜底（外部 CDN，matplotlib 等动态包仍走它）。 */
   pyodideCDNs: [
-    'https://cdn.jsdelivr.net/pyodide/v314.0.7/full/',
-    'https://registry.npmmirror.com/-/binary/pyodide/v314.0.7/full/'
+    'LOCAL',
+    'https://cdn.jsdelivr.net/pyodide/v314.0.7/full/'
   ],
 
   /* 动态安装的第三方包版本锁定（micropip） */

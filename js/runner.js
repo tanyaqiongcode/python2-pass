@@ -637,6 +637,11 @@ const Engine = {
     return this._loadingPromise;
   },
 
+  _resolveCDNs() {
+    return window.CONFIG.pyodideCDNs.map(c =>
+      c === 'LOCAL' ? new URL('vendor/pyodide/', document.baseURI).href : c);
+  },
+
   async _load() {
     this.status = 'loading';
     this.chip('判题引擎：加载中…');
@@ -723,9 +728,10 @@ const Engine = {
     return new Promise((resolve) => {
       let settled = false;
       const finish = (ok) => { if (!settled) { settled = true; resolve(ok); } };
+      const cdns = this._resolveCDNs();
       const tryNext = async (idx) => {
-        if (idx >= window.CONFIG.pyodideCDNs.length) { finish(false); return; }
-        const base = window.CONFIG.pyodideCDNs[idx];
+        if (idx >= cdns.length) { finish(false); return; }
+        const base = cdns[idx];
         try {
           await this._loadScript(base + 'pyodide.js');
           const py = await window.loadPyodide({ indexURL: base });
