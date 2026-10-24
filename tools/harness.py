@@ -107,6 +107,13 @@ def run_user(
     except BaseException as e:
         err = e.__class__.__name__ + ": " + str(e)
         tb = "".join(traceback.format_exception_only(type(e), e)).strip()
+        try:
+            _frames = traceback.extract_tb(sys.exc_info()[2])
+            _user_frames = [f for f in _frames if f.filename == "<student>"]
+            if _user_frames:
+                tb = 'File "<student>", line ' + str(_user_frames[-1].lineno) + "\n" + tb
+        except Exception:
+            pass
     finally:
         builtins.input = old_input
         sys.stdin, sys.stdout = saved_stdin, saved_stdout

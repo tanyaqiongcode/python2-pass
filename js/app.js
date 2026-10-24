@@ -508,7 +508,11 @@ const App = {
         const out = h('pre', { class: 'output' });
         out.textContent = r.stdout || '（无输出）';
         runArea.append(out);
-        if (!r.ok) runArea.append(h('pre', { class: 'output' }, h('span', { class: 'out-err' }, '⚠ ' + r.error)));
+        if (!r.ok) {
+          runArea.append(h('pre', { class: 'output' }, h('span', { class: 'out-err' }, '⚠ ' + r.error)));
+          const hint = PY2CORE.friendlyError(r.error);
+          if (hint) runArea.append(h('div', { class: 'tip' }, '💡 ' + hint));
+        }
         btn.disabled = false; btn.textContent = '▶ 再运行一次';
       });
       pre.after(btn, runArea);
@@ -997,6 +1001,12 @@ function renderResult(outBox, r, expected, passed, perBlank, details) {
       outBox.append(pre);
       if (d.r.error) {
         outBox.append(h('pre', { class: 'output' }, h('span', { class: 'out-err' }, '⚠ ' + d.r.error)));
+        const lineNo = PY2CORE.errorLine(d.r.tb || '');
+        const hint = PY2CORE.friendlyError(d.r.error);
+        const parts = [];
+        if (lineNo) parts.push('💡 出错位置大约在第 ' + lineNo + ' 行（从 1 数起）。');
+        if (hint) parts.push('💡 ' + hint);
+        if (parts.length) outBox.append(h('div', { class: 'tip' }, parts.join(' ')));
       }
       if (d.t.expected) {
         outBox.append(h('div', { class: 'io-label' }, '期望输出：'));

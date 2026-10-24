@@ -82,6 +82,60 @@
     return !!(active && typeof endAt === 'number' && isFinite(endAt) && now >= endAt);
   }
 
+  /* ---------- 错误信息人话化（借鉴 futurecoder 的 friendly traceback 思路） ---------- */
+  var FRIENDLY_ERRORS = [
+    { re: /NameError: name ['"]?(.+?)['"]? is not defined/,
+      cn: function (m) { return '变量或函数「' + m[1] + '」没有定义——检查拼写、是否忘记先定义，或字符串忘了加引号'; } },
+    { re: /IndentationError|expected an indented block|unindent does not match|unexpected indent/,
+      cn: function () { return '缩进错误——Python 用缩进表示代码块，同一块内缩进必须一致（建议一律 4 个空格）'; } },
+    { re: /SyntaxError: invalid syntax/,
+      cn: function () { return '语法错误——最常见原因：if/for/while/def 行末少了冒号、括号没配对、用了中文标点（：（）"")'; } },
+    { re: /SyntaxError: '(.+?)' is an invalid syntax|cannot assign to/,
+      cn: function (m) { return '「' + (m[1] || '表达式') + '」写法不合法——检查运算符、关键字拼写或赋值目标'; } },
+    { re: /TypeError: '(.+?)' object is not subscriptable/,
+      cn: function (m) { return m[1] + ' 类型不能用下标访问（比如 int/float 没有 s[0] 这种用法），先转成 str/list'; } },
+    { re: /TypeError: '(.+?)' object is not callable/,
+      cn: function (m) { return m[1] + ' 类型不能当函数调用——常见于把变量名和函数名写重，或对 sort() 这类返回 None 的结果继续调用'; } },
+    { re: /TypeError: '(.+?)' object is not iterable/,
+      cn: function (m) { return m[1] + ' 类型不能被 for 遍历——数字要先转 range(n) 或放进列表'; } },
+    { re: /IndexError: (.*)index out of range/,
+      cn: function () { return '下标越界——先 len() 看长度，最大合法下标是 长度-1；切片越界不报错但会截短'; } },
+    { re: /KeyError: (.+)/,
+      cn: function (m) { return '字典里没有键 ' + m[1] + '——用 d.get(k, 默认值) 或先 k in d 判断'; } },
+    { re: /ValueError: invalid literal for int\(\) with base 10: ['"]?([\s\S]*?)['"]?\s*$/m,
+      cn: function (m) { return 'int() 无法把 ' + (m[1] ? '"' + m[1] + '"' : '该字符串') + ' 转成整数——多半是输入带了换行/空格（先 strip()），或这行不是纯数字'; } },
+    { re: /ValueError: (?:too many values to unpack|not enough values to unpack)/,
+      cn: function () { return '解包个数不匹配——左边变量个数要和右边元素个数一致'; } },
+    { re: /ZeroDivisionError/,
+      cn: function () { return '除数为 0——分母可能来自输入或空列表的平均值，先判断再除'; } },
+    { re: /EOFError/,
+      cn: function () { return '程序请求输入，但测试输入已经用完——检查 input() 调用次数是否与题目输入一致'; } },
+    { re: /ModuleNotFoundError: No module named ['"]?(.+?)['"]?/,
+      cn: function (m) { return '模块 ' + m[1] + ' 在当前环境不可用——标准库检查拼写，第三方库需要先安装'; } },
+    { re: /AttributeError: '(.+?)' object has no attribute '(.+?)'/,
+      cn: function (m) { return m[1] + ' 类型没有 ' + m[2] + ' 方法/属性——比如元组没有 append，字符串排序要用 sorted()'; } },
+    { re: /RecursionError/,
+      cn: function () { return '递归深度超限——检查是否漏了终止条件（基例），或递归参数没有向基例收敛'; } },
+    { re: /unsupported operand type\(s\) for \+: 'int' and 'str'/,
+      cn: function () { return '数字和字符串不能直接相加——用 str() 或 int()/float() 统一类型'; } }
+  ];
+
+  /** 把 Python 报错翻译成中文提示；无匹配返回 null */
+  function friendlyError(err) {
+    var text = String(err || '');
+    for (var i = 0; i < FRIENDLY_ERRORS.length; i++) {
+      var m = text.match(FRIENDLY_ERRORS[i].re);
+      if (m) return FRIENDLY_ERRORS[i].cn(m);
+    }
+    return null;
+  }
+
+  /** 从 traceback 文本提取出错行号（harness 会给 <student> 文件名） */
+  function errorLine(tb) {
+    var m = String(tb || '').match(/File "<student>", line (\d+)/);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
   /** 学习进度合并：本地与导入文件取更优记录，成绩按时间去重拼接 */
   function mergeProgress(local, imported) {
     var out = JSON.parse(JSON.stringify(local || {}));
@@ -145,6 +199,8 @@
     estimateGrade: estimateGrade,
     mockExpired: mockExpired,
     mergeProgress: mergeProgress,
+    friendlyError: friendlyError,
+    errorLine: errorLine,
     gradeMcq: gradeMcq,
     judgeTest: judgeTest
   };

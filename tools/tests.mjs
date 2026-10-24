@@ -95,3 +95,18 @@ test('mergeProgress：空导入不破坏本地数据', () => {
   assert.equal(r.merged.mcq.a.correct, true);
   assert.equal(r.merged.mockRuns.length, 1);
 });
+
+test('friendlyError：高频报错翻译成人话', () => {
+  assert.ok(C.friendlyError("NameError: name 'nmae' is not defined").includes('没有定义'));
+  assert.ok(C.friendlyError('SyntaxError: invalid syntax').includes('冒号'));
+  assert.ok(C.friendlyError("ValueError: invalid literal for int() with base 10: '12\n'").includes('strip'));
+  assert.ok(C.friendlyError('IndexError: list index out of range').includes('越界'));
+  assert.ok(C.friendlyError('RecursionError: maximum recursion depth exceeded').includes('终止条件'));
+  assert.equal(C.friendlyError('SomeWeirdError: blah'), null);
+});
+
+test('errorLine：从 traceback 提取学生代码行号', () => {
+  const tb = 'Traceback (most recent call last):\n  File "<student>", line 7, in <module>\nNameError: x';
+  assert.equal(C.errorLine(tb), 7);
+  assert.equal(C.errorLine(''), null);
+});
