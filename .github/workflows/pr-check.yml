@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
       - name: Install validation deps
-        run: pip install "matplotlib>=3.8,<4"
+        run: pip install "matplotlib>=3.8,<4" "openpyxl>=3.1,<4"
       - name: Core logic unit tests
         run: node tools/tests.mjs
       - name: Validate & rebuild question bank
