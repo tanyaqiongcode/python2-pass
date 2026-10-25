@@ -1,0 +1,39 @@
+{
+  "kind": "coding",
+  "items": [
+    {
+      "id": "code-l5-010",
+      "level": 5,
+      "title": "学生成绩平均分统计",
+      "desc": "站内已提供文件 students.csv（UTF-8 编码），首行为表头：姓名,语文,数学,英语，其后 8 行是学生数据（成绩均为整数）。要求：①定义函数 average(scores)，参数为成绩列表，返回平均分（浮点数）；②读入文件，按行输出每个学生的姓名和三科平均分（保留 2 位小数，姓名与平均分之间用一个空格分隔，如：王芳 88.33）；③最后输出一行全班三科总平均分（所有同学所有科目成绩的平均分，保留 2 位小数），格式如：全班三科总平均:81.58。",
+      "files": [
+        {"name": "students.csv", "content": "姓名,语文,数学,英语\n王芳,85,92,88\n李伟,78,88,90\n张敏,95,90,93\n刘洋,66,75,70\n陈静,88,79,84\n赵磊,73,81,77\n孙丽,92,85,89\n周涛,60,72,68\n"}
+      ],
+      "starter": "def average(scores):\n    # 返回成绩列表 scores 的平均分\n    pass\n",
+      "tests": [
+        {"stdin": "", "expected": "王芳 88.33\n李伟 85.33\n张敏 92.67\n刘洋 70.33\n陈静 83.67\n赵磊 77.00\n孙丽 88.67\n周涛 66.67\n全班三科总平均:81.58"},
+        {"stdin": "", "expected": "王芳 88.33\n李伟 85.33\n张敏 92.67\n刘洋 70.33\n陈静 83.67\n赵磊 77.00\n孙丽 88.67\n周涛 66.67\n全班三科总平均:81.58"}
+      ],
+      "ref": "def average(scores):\n    return sum(scores) / len(scores)\n\nf = open('students.csv', 'r', encoding='utf-8')\nnext(f)\nall_scores = []\nfor line in f:\n    parts = line.strip().split(',')\n    scores = [int(x) for x in parts[1:]]\n    all_scores += scores\n    print(parts[0], '{:.2f}'.format(average(scores)))\nf.close()\nprint('全班三科总平均:{:.2f}'.format(average(all_scores)))",
+      "hint": "用 next(f) 跳过表头行；每行先 strip() 去掉换行再 split(',')；第 1 列是姓名，后面 3 列转 int 后组成成绩列表；总平均就是把所有人的成绩放进一个列表再求 average。",
+      "exp": "综合考查：文件读取（open + next 跳表头 + strip/split）、CSV 数据解析与类型转换、自定义函数 average 复用、'{:.2f}' 格式化。是“文件 + 函数 + 统计”的典型综合题。",
+      "tags": ["文件", "函数", "CSV", "统计"]
+    },
+    {
+      "id": "code-l2-009",
+      "level": 2,
+      "title": "BMI 计算器",
+      "desc": "输入体重（千克）与身高（米），各占一行。先输出 BMI 值（保留 1 位小数），格式如：BMI:22.9；再输出分级结果：BMI < 18.5 为偏瘦，18.5 ≤ BMI < 24 为正常，24 ≤ BMI < 28 为偏胖，28 及以上为肥胖。BMI = 体重 ÷ 身高 ÷ 身高。注意边界：恰好等于 18.5 属正常，恰好等于 24 属偏胖，恰好等于 28 属肥胖。",
+      "starter": "",
+      "tests": [
+        {"stdin": "70\n1.75\n", "expected": "BMI:22.9\n正常"},
+        {"stdin": "54\n1.5\n", "expected": "BMI:24.0\n偏胖"},
+        {"stdin": "28\n1.0\n", "expected": "BMI:28.0\n肥胖"}
+      ],
+      "ref": "w = float(input())\nh = float(input())\nbmi = w / (h * h)\nprint('BMI:{:.1f}'.format(bmi))\nif bmi < 18.5:\n    print('偏瘦')\nelif bmi < 24:\n    print('正常')\nelif bmi < 28:\n    print('偏胖')\nelse:\n    print('肥胖')",
+      "hint": "体重、身高都要 float() 转换；BMI 用 bmi = w / (h * h)；分级用 if-elif-else 从小到大依次判断，注意边界值归入右侧一档。",
+      "exp": "综合考查：输入与 float 转换、算术表达式、'{:.1f}' 格式化、if-elif-else 多分支判断（含边界条件的开闭区间）。",
+      "tags": ["分支", "浮点数", "格式化"]
+    }
+  ]
+}

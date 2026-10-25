@@ -1,0 +1,127 @@
+{
+  "kind": "blank",
+  "items": [
+    {
+      "id": "blk-l3-008",
+      "level": 3,
+      "title": "冒泡排序填空",
+      "desc": "输入一行若干个整数（用空格分隔），程序使用冒泡排序将其升序排列后输出（同一行，空格分隔）。请补全程序中的 3 处空白。",
+      "code": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in ___(1)___:\n    for j in ___(2)___:\n        if nums[j] > nums[j + 1]:\n            ___(3)___\nprint(' '.join(str(v) for v in nums))",
+      "blanks": [
+        {
+          "n": 1,
+          "answers": [
+            "range(n - 1)",
+            "range(n-1)"
+          ],
+          "hint": "n 个数最多需要 n-1 趟"
+        },
+        {
+          "n": 2,
+          "answers": [
+            "range(n - 1 - i)",
+            "range(n-1-i)",
+            "range(n - i - 1)",
+            "range(n-i-1)"
+          ],
+          "hint": "第 i 趟时后面已有 i 个元素排好，内层只需比较到 n-1-i"
+        },
+        {
+          "n": 3,
+          "answers": [
+            "nums[j], nums[j + 1] = nums[j + 1], nums[j]",
+            "nums[j], nums[j+1] = nums[j+1], nums[j]",
+            "nums[j + 1], nums[j] = nums[j], nums[j + 1]",
+            "nums[j+1], nums[j] = nums[j], nums[j+1]"
+          ],
+          "hint": "相邻两个元素逆序时交换：把 nums[j] 与 nums[j+1] 互换"
+        }
+      ],
+      "stdin": "5 2 8 1 9\n",
+      "expected": "1 2 5 8 9",
+      "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    for j in range(n - 1 - i):\n        if nums[j] > nums[j + 1]:\n            nums[j], nums[j + 1] = nums[j + 1], nums[j]\nprint(' '.join(str(v) for v in nums))",
+      "hint": "外层控制趟数，内层比较范围随 i 递减；交换可用多重赋值 a, b = b, a。",
+      "exp": "考查冒泡排序的双重循环边界（外层趟数、内层随 i 收缩）与相邻元素交换语句。"
+    },
+    {
+      "id": "blk-l2-008",
+      "level": 2,
+      "title": "除法除零防护填空",
+      "desc": "输入两个整数 a、b（每行一个），程序计算并输出 a÷b 的商。为防止程序崩溃，用 try-except 做防护：若 b 为 0，捕获 ZeroDivisionError，输出 除数不能为零！；若输入的内容不能转换成整数，捕获 ValueError，输出 请输入整数！。请补全程序中的 3 处空白。",
+      "code": "try:\n    a = int(input())\n    b = int(input())\n    ___(1)___\n___(2)___\n    print('除数不能为零！')\n___(3)___\n    print('请输入整数！')",
+      "blanks": [
+        {
+          "n": 1,
+          "answers": [
+            "print(a / b)",
+            "print(a/b)"
+          ],
+          "hint": "在 try 子句中输出 a 除以 b 的商"
+        },
+        {
+          "n": 2,
+          "answers": [
+            "except ZeroDivisionError:"
+          ],
+          "hint": "捕获除零异常，注意结尾的冒号"
+        },
+        {
+          "n": 3,
+          "answers": [
+            "except ValueError:"
+          ],
+          "hint": "捕获类型转换失败异常，注意结尾的冒号"
+        }
+      ],
+      "stdin": "8\n0\n",
+      "expected": "除数不能为零！",
+      "ref": "try:\n    a = int(input())\n    b = int(input())\n    print(a / b)\nexcept ZeroDivisionError:\n    print('除数不能为零！')\nexcept ValueError:\n    print('请输入整数！')",
+      "hint": "可能出错的除法语句放在 try 中；每个 except 子句写成 except 异常类型: 的形式。",
+      "exp": "考查 try-except 异常处理结构：int() 转换失败触发 ValueError，除数为 0 触发 ZeroDivisionError，分别在不同 except 分支中给出提示。"
+    },
+    {
+      "id": "blk-l4-008",
+      "level": 4,
+      "title": "二分查找填空",
+      "desc": "输入两行：第一行为一组按升序排列的整数（用空格分隔），第二行为要查找的目标值。程序用 while 循环实现二分查找：找到则输出其下标（从 0 开始），找不到输出 -1。请补全程序中的 4 处空白。",
+      "code": "nums = [int(v) for v in input().split()]\nx = int(input())\nlow, high = 0, ___(1)___\nidx = -1\nwhile ___(2)___:\n    mid = (low + high) // 2\n    if nums[mid] == x:\n        idx = mid\n        ___(3)___\n    elif nums[mid] < x:\n        low = ___(4)___\n    else:\n        high = mid - 1\nprint(idx)",
+      "blanks": [
+        {
+          "n": 1,
+          "answers": [
+            "len(nums) - 1",
+            "len(nums)-1"
+          ],
+          "hint": "high 初始为最后一个元素的下标"
+        },
+        {
+          "n": 2,
+          "answers": [
+            "low <= high"
+          ],
+          "hint": "查找区间还存在时继续（注意是 <=）"
+        },
+        {
+          "n": 3,
+          "answers": [
+            "break"
+          ],
+          "hint": "找到目标后立即退出循环"
+        },
+        {
+          "n": 4,
+          "answers": [
+            "mid + 1",
+            "mid+1"
+          ],
+          "hint": "中间值比目标小，目标只可能在右半区间"
+        }
+      ],
+      "stdin": "2 5 8 12 16 23 38 56 72 91\n23\n",
+      "expected": "5",
+      "ref": "nums = [int(v) for v in input().split()]\nx = int(input())\nlow, high = 0, len(nums) - 1\nidx = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if nums[mid] == x:\n        idx = mid\n        break\n    elif nums[mid] < x:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(idx)",
+      "hint": "二分查找四要素：high 初值、low <= high、找到后 break、区间收缩方向。",
+      "exp": "考查迭代二分查找的关键边界：循环条件 low <= high 与 low = mid + 1、high = mid - 1 的配合，漏写 +1/-1 会造成死循环。"
+    }
+  ]
+}

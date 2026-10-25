@@ -1,0 +1,179 @@
+{
+  "kind": "coding",
+  "items": [
+    {
+      "id": "code-l2-006",
+      "level": 2,
+      "title": "顺序查找",
+      "desc": "输入两行：第一行为若干个整数（用空格分隔），第二行为要查找的目标值 x。程序用顺序查找在列表中查找 x：若找到，输出 x 第一次出现处的下标（从 0 开始）；若找不到，输出 -1。要求用循环逐个比较实现，不得使用 `index()` 方法。",
+      "starter": "# 读入一行整数与目标值，顺序查找输出下标或 -1\n",
+      "tests": [
+        {
+          "stdin": "10 20 30 40 50\n30\n",
+          "expected": "2"
+        },
+        {
+          "stdin": "10 20 30 40 50\n35\n",
+          "expected": "-1"
+        },
+        {
+          "stdin": "5 3 8 3 9\n3\n",
+          "expected": "1"
+        }
+      ],
+      "ref": "s = input().split()\nnums = []\nfor v in s:\n    nums.append(int(v))\nx = int(input())\nidx = -1\nfor i in range(len(nums)):\n    if nums[i] == x:\n        idx = i\n        break\nprint(idx)",
+      "hint": "先把 idx 设为 -1 作为“未找到”的标记；用 for i in range(len(nums)) 逐个比较，相等时记下 i 并 break，保证输出的是第一次出现的下标。",
+      "exp": "考查列表遍历、条件判断、break 的使用与哨兵变量设计——顺序查找是最基础的查找算法，真题常考“找到输出下标、找不到输出-1”。",
+      "tags": [
+        "列表",
+        "循环",
+        "查找"
+      ]
+    },
+    {
+      "id": "code-l2-007",
+      "level": 2,
+      "title": "角谷猜想",
+      "desc": "角谷猜想：对任一正整数，若是偶数就把它减半（`n//2`），若是奇数就把它变成 `3n+1`，如此反复最终会变成 1。输入一个正整数 n，输出每一次变换，每行格式为 当前值->变换后的值（如 6->3），全部变换完后最后一行输出 共N步（N 为变换总次数）。若输入的 n 本身就是 1，则直接输出 共0步。",
+      "starter": "# 按角谷猜想规则变换，输出每次变化与总步数\n",
+      "tests": [
+        {
+          "stdin": "6\n",
+          "expected": "6->3\n3->10\n10->5\n5->16\n16->8\n8->4\n4->2\n2->1\n共8步"
+        },
+        {
+          "stdin": "1\n",
+          "expected": "共0步"
+        },
+        {
+          "stdin": "7\n",
+          "expected": "7->22\n22->11\n11->34\n34->17\n17->52\n52->26\n26->13\n13->40\n40->20\n20->10\n10->5\n5->16\n16->8\n8->4\n4->2\n2->1\n共16步"
+        }
+      ],
+      "ref": "n = int(input())\ncount = 0\nwhile n != 1:\n    if n % 2 == 0:\n        m = n // 2\n    else:\n        m = n * 3 + 1\n    print('{}->{}'.format(n, m))\n    n = m\n    count += 1\nprint('共{}步'.format(count))",
+      "hint": "用 while n != 1 控制变换；偶数用 // 整除 2，奇数乘 3 加 1；每变换一次计数器加 1。",
+      "exp": "考查 while 循环、奇偶判断（%）、变量迭代与 format 格式化输出——角谷猜想是循环类真题的经典题型。",
+      "tags": [
+        "循环",
+        "while",
+        "经典算法"
+      ]
+    },
+    {
+      "id": "code-l2-008",
+      "level": 2,
+      "title": "完全数判断",
+      "desc": "完全数指它所有真因子（除自身以外的全部正约数）之和恰好等于它本身。例如 6 的真因子是 1、2、3，且 1+2+3=6，所以 6 是完全数。输入一个正整数 n，按从小到大的顺序输出 2~n（含 n）之间的所有完全数，每个数占一行；若该范围内没有完全数，则不输出任何内容。",
+      "starter": "# 枚举 2~n，求每个数的真因子之和，判断是否为完全数\n",
+      "tests": [
+        {
+          "stdin": "1000\n",
+          "expected": "6\n28\n496"
+        },
+        {
+          "stdin": "30\n",
+          "expected": "6\n28"
+        },
+        {
+          "stdin": "496\n",
+          "expected": "6\n28\n496"
+        }
+      ],
+      "ref": "n = int(input())\nfor num in range(2, n + 1):\n    s = 0\n    for i in range(1, num):\n        if num % i == 0:\n            s += i\n    if s == num:\n        print(num)",
+      "hint": "对每个 num 用内层循环 i 从 1 到 num-1 试除，能整除就累加到 s；内层结束后判断 s 是否等于 num。",
+      "exp": "考查双重循环、整除运算符 % 与累加求和——“枚举 + 因子求和”与素数、水仙花数是同一套路子。",
+      "tags": [
+        "循环",
+        "经典算法",
+        "累加"
+      ]
+    },
+    {
+      "id": "code-l3-006",
+      "level": 3,
+      "title": "冒泡排序（升序）",
+      "desc": "输入一行若干个整数（用空格分隔），使用冒泡排序把它们从小到大排序后输出，同一行内用空格分隔。要求手动实现冒泡排序（相邻元素两两比较、逆序交换），不得调用 `sort()` 或 `sorted()`。",
+      "starter": "nums = [int(v) for v in input().split()]\nn = len(nums)\n# 请用冒泡排序把 nums 升序排列（不得使用 sort() 或 sorted()）\n",
+      "tests": [
+        {
+          "stdin": "5 2 8 1 9\n",
+          "expected": "1 2 5 8 9"
+        },
+        {
+          "stdin": "3 -1 4 -5 2 0\n",
+          "expected": "-5 -1 0 2 3 4"
+        },
+        {
+          "stdin": "42\n",
+          "expected": "42"
+        }
+      ],
+      "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    for j in range(n - 1 - i):\n        if nums[j] > nums[j + 1]:\n            nums[j], nums[j + 1] = nums[j + 1], nums[j]\nprint(' '.join(str(v) for v in nums))",
+      "hint": "外层共 n-1 趟；第 i 趟内层用 range(n-1-i) 比较相邻元素，把大的换到后面；输出用 ' '.join(str(v) for v in nums)。",
+      "exp": "考查冒泡排序双重循环的边界控制、相邻元素交换与列表输出——排序是三级考试最常考的算法大题。",
+      "tags": [
+        "排序",
+        "列表",
+        "双重循环"
+      ]
+    },
+    {
+      "id": "code-l3-007",
+      "level": 3,
+      "title": "选择排序（降序）",
+      "desc": "输入一行若干个整数成绩（用空格分隔），使用选择排序把它们从高到低排序后输出，同一行内用空格分隔。要求手动实现选择排序（每趟从未排序部分选出最大值，与该部分第一个元素交换），不得调用 `sort()` 或 `sorted()`。",
+      "starter": "scores = [int(v) for v in input().split()]\nn = len(scores)\n# 请用选择排序把 scores 降序排列（不得使用 sort() 或 sorted()）\n",
+      "tests": [
+        {
+          "stdin": "88 75 92 60 88\n",
+          "expected": "92 88 88 75 60"
+        },
+        {
+          "stdin": "100\n",
+          "expected": "100"
+        },
+        {
+          "stdin": "59 60 61 47\n",
+          "expected": "61 60 59 47"
+        }
+      ],
+      "ref": "scores = [int(v) for v in input().split()]\nn = len(scores)\nfor i in range(n - 1):\n    k = i\n    for j in range(i + 1, n):\n        if scores[j] > scores[k]:\n            k = j\n    scores[i], scores[k] = scores[k], scores[i]\nprint(' '.join(str(v) for v in scores))",
+      "hint": "每趟先记 k = i，内层 j 从 i+1 扫描到 n-1，若 scores[j] > scores[k] 就更新 k；一趟结束后交换 scores[i] 与 scores[k]。降序即每趟选最大。",
+      "exp": "考查选择排序的双重循环、极值下标 k 的记录与一趟只交换一次的特点——降序只需把找最小改成找最大。",
+      "tags": [
+        "排序",
+        "列表",
+        "双重循环"
+      ]
+    },
+    {
+      "id": "code-l4-007",
+      "level": 4,
+      "title": "二分查找（迭代）",
+      "desc": "输入两行：第一行为一组按升序排列的整数（用空格分隔），第二行为要查找的目标值 x。程序用 while 循环实现二分查找，输出 x 在列表中的下标（从 0 开始）；若不存在，输出 -1。要求迭代实现（不得使用递归），不得使用 `index()` 方法。",
+      "starter": "nums = [int(v) for v in input().split()]\nx = int(input())\n# 请用 while 循环实现二分查找，输出下标或 -1\n",
+      "tests": [
+        {
+          "stdin": "2 5 8 12 16 23 38 56 72 91\n23\n",
+          "expected": "5"
+        },
+        {
+          "stdin": "2 5 8 12 16 23 38 56 72 91\n91\n",
+          "expected": "9"
+        },
+        {
+          "stdin": "2 5 8 12 16\n10\n",
+          "expected": "-1"
+        }
+      ],
+      "ref": "nums = [int(v) for v in input().split()]\nx = int(input())\nlow, high = 0, len(nums) - 1\nidx = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if nums[mid] == x:\n        idx = mid\n        break\n    elif nums[mid] < x:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(idx)",
+      "hint": "low, high = 0, len(nums) - 1；循环条件 low <= high；mid = (low + high) // 2；中间值比 x 小则 low = mid + 1，比 x 大则 high = mid - 1。",
+      "exp": "考查二分查找的循环实现：区间初值、循环条件与 low/high 的收缩方向是三大易错点，比顺序查找高效。",
+      "tags": [
+        "查找",
+        "循环",
+        "算法"
+      ]
+    }
+  ]
+}

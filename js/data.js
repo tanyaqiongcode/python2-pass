@@ -2,6 +2,126 @@
 window.BANK = {
  "mcq": [
   {
+   "id": "mcq-l6-021",
+   "level": 6,
+   "topic": "tkinter 控件布局",
+   "q": "有如下程序：\nimport tkinter as tk\n\nroot = tk.Tk()\nroot.title('登录')\ntk.Label(root, text='用户名').pack()\ntk.Entry(root).pack()\ntk.Button(root, text='确定').pack()\nroot.mainloop()\n运行后，窗口中控件从上到下的排列顺序是____。",
+   "opts": [
+    "Button 在最上面，Label 在最下面",
+    "Label 与 Entry 左右并排在一行",
+    "Label“用户名”、Entry 输入框、Button“确定”自上而下依次排列",
+    "三个控件重叠挤在窗口中心"
+   ],
+   "ans": 2,
+   "exp": "pack() 不带参数时默认从窗口顶部开始自上而下依次堆放控件，所以顺序就是创建顺序：标签、输入框、按钮；要左右并排须用 pack(side=...) 设置，本题未设置；控件也不会重叠或颠倒。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l6-022",
+   "level": 6,
+   "topic": "Button 的 command 回调",
+   "q": "有如下程序：\nimport tkinter as tk\n\ndef hello():\n    print('欢迎')\n\nroot = tk.Tk()\ntk.Button(root, text='点我', command=hello).pack()\nroot.mainloop()\n程序运行后，下列说法正确的是____。",
+   "opts": [
+    "创建按钮的那一行执行时立即调用 hello 并打印“欢迎”",
+    "command=hello 不加括号，是把函数交给按钮保存，点击按钮时才执行并打印“欢迎”",
+    "必须写成 command=hello()，否则点击按钮没有任何反应",
+    "点击按钮会打印函数对象本身，如 <function hello>"
+   ],
+   "ans": 1,
+   "exp": "command 绑定的是“函数名”（函数对象），不加括号表示“点击时再调用”；写成 command=hello() 会在创建按钮时立即执行一次，点击后反而不响应。点击按钮时才调用 hello，打印“欢迎”。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l6-023",
+   "level": 6,
+   "topic": "Entry 取值 get()",
+   "q": "有如下程序：\nimport tkinter as tk\n\ndef show():\n    print(e.get())\n\nroot = tk.Tk()\ne = tk.Entry(root)\ne.pack()\ntk.Button(root, text='显示', command=show).pack()\nroot.mainloop()\n运行后在输入框中输入 Python，再点击“显示”按钮，结果是____。",
+   "opts": [
+    "在控制台打印 Python",
+    "在控制台打印空字符串",
+    "打印 Entry 控件对象的信息",
+    "程序报错，因为定义 show 时变量 e 还不存在"
+   ],
+   "ans": 0,
+   "exp": "Entry 的 get() 方法返回输入框当前的内容。函数定义时函数体不执行，点击按钮调用 show 时全局变量 e 已创建，get() 返回 Python 并打印；定义顺序在前并不影响调用时取值。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l6-024",
+   "level": 6,
+   "topic": "mainloop 的作用",
+   "q": "关于 tkinter 程序最后的 root.mainloop()，下列说法正确的是____。",
+   "opts": [
+    "它销毁所有控件并立即结束程序",
+    "它只负责把窗口画出来，画完就接着执行下一行代码",
+    "它必须在创建任何控件之前调用，否则窗口无法显示",
+    "它进入事件监听循环，等待并处理按钮点击、键盘输入等事件；没有它窗口无法持续显示和响应用户操作"
+   ],
+   "ans": 3,
+   "exp": "mainloop() 启动消息循环，程序停在这里不断接收用户事件并触发对应回调；它应放在窗口和控件都创建完成之后调用，一般写在程序最后一行，其后代码通常不会再执行。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l6-025",
+   "level": 6,
+   "topic": "openpyxl 修改与保存",
+   "q": "有如下程序（score.xlsx 是已存在的工作簿）：\nfrom openpyxl import load_workbook\n\nwb = load_workbook('score.xlsx')\nws = wb.active\nws['B1'] = '总分'\nwb.save('score.xlsx')\n程序执行后，下列说法正确的是____。",
+   "opts": [
+    "程序报错，load_workbook 不能打开已存在的文件",
+    "B1 单元格被写入“总分”，调用 save 后修改被写回 score.xlsx 文件",
+    "ws['B1'] = '总分' 只改了内存中的数据，score.xlsx 的文件内容不变",
+    "save 会另存为一个新文件，原文件保持不变"
+   ],
+   "ans": 1,
+   "exp": "load_workbook 用于打开已有工作簿；对单元格赋值先修改内存中的工作簿对象，wb.save('score.xlsx') 再把修改写回文件（保存到同名文件即覆盖更新）。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l6-026",
+   "level": 6,
+   "topic": "openpyxl cell(row, column)",
+   "q": "有如下程序（data.xlsx 中已有数据）：\nfrom openpyxl import load_workbook\n\nwb = load_workbook('data.xlsx')\nws = wb.active\nprint(ws.cell(row=3, column=2).value)\n这条 print 输出的是____。",
+   "opts": [
+    "工作表的名称（如 Sheet）",
+    "第 2 行第 3 列（C2）单元格的值",
+    "第 3 行第 2 列（B3）单元格的值",
+    "第 3 行第 3 列（C3）单元格的值"
+   ],
+   "ans": 2,
+   "exp": "cell(row=行号, column=列号) 中 row 在前、column 在后，row=3、column=2 即第 3 行第 2 列，也就是 B3 单元格，加 .value 取其值；C2 是第 2 行第 3 列，C3 是第 3 行第 3 列。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l7-037",
+   "level": 7,
+   "topic": "matplotlib bar 柱状图",
+   "q": "有如下程序：\nimport matplotlib.pyplot as plt\n\nplt.bar(['苹果', '香蕉', '橘子'], [30, 45, 25])\nplt.show()\n运行后显示的图形是____。",
+   "opts": [
+    "柱状图：横轴是三种水果名称，柱子高度分别对应 30、45、25",
+    "折线图：把三个数据点用折线依次连接",
+    "饼图：三块扇形分别表示三种水果的占比",
+    "散点图：在坐标系中画出三个孤立的点"
+   ],
+   "ans": 0,
+   "exp": "plt.bar() 绘制柱状图，第一个参数是横轴上的类目，第二个参数是对应柱子的高度；plot 画折线图、pie 画饼图、scatter 画散点图。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-l7-038",
+   "level": 7,
+   "topic": "matplotlib 图例 legend",
+   "q": "有如下程序：\nimport matplotlib.pyplot as plt\n\nplt.plot([1, 2, 3], [5, 7, 6], label='北京')\nplt.plot([1, 2, 3], [9, 4, 8], label='上海')\nplt.legend()\nplt.show()\n下列说法正确的是____。",
+   "opts": [
+    "第二条 plot 会覆盖第一条，图中最终只有一条折线",
+    "图例中只显示“北京”，因为 legend() 默认只取第一个 label",
+    "legend() 必须传入图例文字参数，否则无法显示图例",
+    "图中同时画出两条折线，图例中同时出现“北京”和“上海”两项"
+   ],
+   "ans": 3,
+   "exp": "连续调用 plot 会在同一坐标系中叠加多条线而不是覆盖；每条线的 label 都会被 legend() 自动收集，因此图例同时显示“北京”和“上海”两项；legend() 不带参数即可使用此前设置的 label。",
+   "difficulty": 2
+  },
+  {
    "id": "mcq-l1-001",
    "level": 1,
    "topic": "标识符规则",
@@ -2884,6 +3004,128 @@ window.BANK = {
  ],
  "blanks": [
   {
+   "id": "blk-l3-008",
+   "level": 3,
+   "title": "冒泡排序填空",
+   "desc": "输入一行若干个整数（用空格分隔），程序使用冒泡排序将其升序排列后输出（同一行，空格分隔）。请补全程序中的 3 处空白。",
+   "code": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in ___(1)___:\n    for j in ___(2)___:\n        if nums[j] > nums[j + 1]:\n            ___(3)___\nprint(' '.join(str(v) for v in nums))",
+   "blanks": [
+    {
+     "n": 1,
+     "answers": [
+      "range(n - 1)",
+      "range(n-1)"
+     ],
+     "hint": "n 个数最多需要 n-1 趟"
+    },
+    {
+     "n": 2,
+     "answers": [
+      "range(n - 1 - i)",
+      "range(n-1-i)",
+      "range(n - i - 1)",
+      "range(n-i-1)"
+     ],
+     "hint": "第 i 趟时后面已有 i 个元素排好，内层只需比较到 n-1-i"
+    },
+    {
+     "n": 3,
+     "answers": [
+      "nums[j], nums[j + 1] = nums[j + 1], nums[j]",
+      "nums[j], nums[j+1] = nums[j+1], nums[j]",
+      "nums[j + 1], nums[j] = nums[j], nums[j + 1]",
+      "nums[j+1], nums[j] = nums[j], nums[j+1]"
+     ],
+     "hint": "相邻两个元素逆序时交换：把 nums[j] 与 nums[j+1] 互换"
+    }
+   ],
+   "stdin": "5 2 8 1 9\n",
+   "expected": "1 2 5 8 9",
+   "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    for j in range(n - 1 - i):\n        if nums[j] > nums[j + 1]:\n            nums[j], nums[j + 1] = nums[j + 1], nums[j]\nprint(' '.join(str(v) for v in nums))",
+   "hint": "外层控制趟数，内层比较范围随 i 递减；交换可用多重赋值 a, b = b, a。",
+   "exp": "考查冒泡排序的双重循环边界（外层趟数、内层随 i 收缩）与相邻元素交换语句。"
+  },
+  {
+   "id": "blk-l2-008",
+   "level": 2,
+   "title": "除法除零防护填空",
+   "desc": "输入两个整数 a、b（每行一个），程序计算并输出 a÷b 的商。为防止程序崩溃，用 try-except 做防护：若 b 为 0，捕获 ZeroDivisionError，输出 除数不能为零！；若输入的内容不能转换成整数，捕获 ValueError，输出 请输入整数！。请补全程序中的 3 处空白。",
+   "code": "try:\n    a = int(input())\n    b = int(input())\n    ___(1)___\n___(2)___\n    print('除数不能为零！')\n___(3)___\n    print('请输入整数！')",
+   "blanks": [
+    {
+     "n": 1,
+     "answers": [
+      "print(a / b)",
+      "print(a/b)"
+     ],
+     "hint": "在 try 子句中输出 a 除以 b 的商"
+    },
+    {
+     "n": 2,
+     "answers": [
+      "except ZeroDivisionError:"
+     ],
+     "hint": "捕获除零异常，注意结尾的冒号"
+    },
+    {
+     "n": 3,
+     "answers": [
+      "except ValueError:"
+     ],
+     "hint": "捕获类型转换失败异常，注意结尾的冒号"
+    }
+   ],
+   "stdin": "8\n0\n",
+   "expected": "除数不能为零！",
+   "ref": "try:\n    a = int(input())\n    b = int(input())\n    print(a / b)\nexcept ZeroDivisionError:\n    print('除数不能为零！')\nexcept ValueError:\n    print('请输入整数！')",
+   "hint": "可能出错的除法语句放在 try 中；每个 except 子句写成 except 异常类型: 的形式。",
+   "exp": "考查 try-except 异常处理结构：int() 转换失败触发 ValueError，除数为 0 触发 ZeroDivisionError，分别在不同 except 分支中给出提示。"
+  },
+  {
+   "id": "blk-l4-008",
+   "level": 4,
+   "title": "二分查找填空",
+   "desc": "输入两行：第一行为一组按升序排列的整数（用空格分隔），第二行为要查找的目标值。程序用 while 循环实现二分查找：找到则输出其下标（从 0 开始），找不到输出 -1。请补全程序中的 4 处空白。",
+   "code": "nums = [int(v) for v in input().split()]\nx = int(input())\nlow, high = 0, ___(1)___\nidx = -1\nwhile ___(2)___:\n    mid = (low + high) // 2\n    if nums[mid] == x:\n        idx = mid\n        ___(3)___\n    elif nums[mid] < x:\n        low = ___(4)___\n    else:\n        high = mid - 1\nprint(idx)",
+   "blanks": [
+    {
+     "n": 1,
+     "answers": [
+      "len(nums) - 1",
+      "len(nums)-1"
+     ],
+     "hint": "high 初始为最后一个元素的下标"
+    },
+    {
+     "n": 2,
+     "answers": [
+      "low <= high"
+     ],
+     "hint": "查找区间还存在时继续（注意是 <=）"
+    },
+    {
+     "n": 3,
+     "answers": [
+      "break"
+     ],
+     "hint": "找到目标后立即退出循环"
+    },
+    {
+     "n": 4,
+     "answers": [
+      "mid + 1",
+      "mid+1"
+     ],
+     "hint": "中间值比目标小，目标只可能在右半区间"
+    }
+   ],
+   "stdin": "2 5 8 12 16 23 38 56 72 91\n23\n",
+   "expected": "5",
+   "ref": "nums = [int(v) for v in input().split()]\nx = int(input())\nlow, high = 0, len(nums) - 1\nidx = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if nums[mid] == x:\n        idx = mid\n        break\n    elif nums[mid] < x:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(idx)",
+   "hint": "二分查找四要素：high 初值、low <= high、找到后 break、区间收缩方向。",
+   "exp": "考查迭代二分查找的关键边界：循环条件 low <= high 与 low = mid + 1、high = mid - 1 的配合，漏写 +1/-1 会造成死循环。"
+  },
+  {
    "id": "blk-l1-001",
    "level": 1,
    "title": "三数求和与平均值",
@@ -4162,6 +4404,137 @@ window.BANK = {
  ],
  "fixes": [
   {
+   "id": "fix-l1-001",
+   "level": 1,
+   "title": "华氏温度转摄氏温度",
+   "desc": "输入一个华氏温度（可能带小数），输出对应的摄氏温度，保留 1 位小数，输出格式如：摄氏温度为36.7度。换算公式：摄氏温度 = (华氏温度 - 32) × 5 / 9。程序有 3 处错误，请修改（不增删语句）。",
+   "buggy": "f = input()\nc = (f - 32) * 5 // 9\nprint('摄氏温度为{:.2f}度'.format(c))",
+   "stdin": "98\n",
+   "expected": "摄氏温度为36.7度",
+   "errors": [
+    {
+     "line": 1,
+     "hint": "input() 得到的是字符串，参与算术运算前要用 float() 转换成数"
+    },
+    {
+     "line": 2,
+     "hint": "// 是整除（截断小数），温度换算要用普通除法 /"
+    },
+    {
+     "line": 3,
+     "hint": "题目要求保留 1 位小数，格式占位符应为 {:.1f}"
+    }
+   ],
+   "ref": "f = float(input())\nc = (f - 32) * 5 / 9\nprint('摄氏温度为{:.1f}度'.format(c))",
+   "exp": "考查 input 的类型转换、整除 // 与除法 / 的区别、格式化占位符 {:.1f}。三处都是一级考试高频错误点。"
+  },
+  {
+   "id": "fix-l5-003",
+   "level": 5,
+   "title": "统计文件行数与最长单词",
+   "desc": "站内已提供文件 words.txt（UTF-8 编码），每行存放一个英文单词。程序要输出：第一行为单词行数，如“共 5 行”；第二行为最长的单词。程序有 3 处错误，请修改（不增删语句）。",
+   "buggy": "f = open('words.txt', 'w', encoding='utf-8')\nlines = f.readlines()\nf.close()\nprint('共', len(lines), '行')\nmx = lines[len(lines)]\nfor line in lines:\n    if len(line) > len(mx):\n        mx = line\nprint(mx, end='')",
+   "stdin": "",
+   "expected": "共 5 行\nwonderful",
+   "files": [
+    {
+     "name": "words.txt",
+     "content": "hi\nhello\nwonderful\nok\npython\n"
+    }
+   ],
+   "errors": [
+    {
+     "line": 1,
+     "hint": "读取文件要用 'r' 模式，'w' 模式会清空文件且不能读"
+    },
+    {
+     "line": 5,
+     "hint": "lines[len(lines)] 下标越界：最大合法下标是 len(lines)-1，应取第 1 行 lines[0] 作初始值"
+    },
+    {
+     "line": 7,
+     "hint": "readlines 读到的每行末尾带换行符 \\n，比较长度前要用 strip() 去掉（mx 同样要用去掉换行的内容）"
+    }
+   ],
+   "ref": "f = open('words.txt', 'r', encoding='utf-8')\nlines = f.readlines()\nf.close()\nprint('共', len(lines), '行')\nmx = lines[0].strip()\nfor line in lines:\n    if len(line.strip()) > len(mx):\n        mx = line.strip()\nprint(mx, end='')",
+   "exp": "考查文件打开模式（w 清空且不可读）、readlines 的下标范围（len(lines) 越界）、逐行读取后 strip() 去换行再比较。三处错误层层递进，是 L5 文件题的典型组合。"
+  },
+  {
+   "id": "fix-l3-007",
+   "level": 3,
+   "title": "冒泡排序改错",
+   "desc": "输入一行若干个整数（用空格分隔），程序使用冒泡排序将其升序排列后输出（同一行，空格分隔）。程序中有 3 处错误，请修改（不增删语句），不得使用 `sort()` 或 `sorted()`。",
+   "buggy": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 2):\n    for j in range(n - 1 - i):\n        if nums[j] < nums[j + 1]:\n            t = nums[j]\n            nums[j + 1] = t\n            nums[j] = nums[j + 1]\nprint(' '.join(str(v) for v in nums))",
+   "stdin": "9 5 8 1 3\n",
+   "expected": "1 3 5 8 9",
+   "errors": [
+    {
+     "line": 3,
+     "hint": "冒泡排序 n 个数最多需要 n-1 趟，外层循环次数少了一趟（写成了 range(n-2)）"
+    },
+    {
+     "line": 5,
+     "hint": "升序排序应把大的元素往后换，比较条件方向写反了（应为 nums[j] > nums[j + 1]）"
+    },
+    {
+     "line": 8,
+     "hint": "交换的两条赋值语句写反了：应先 nums[j] = nums[j + 1]，再 nums[j + 1] = t（t 中保存的是 nums[j] 的旧值）"
+    }
+   ],
+   "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    for j in range(n - 1 - i):\n        if nums[j] > nums[j + 1]:\n            t = nums[j]\n            nums[j] = nums[j + 1]\n            nums[j + 1] = t\nprint(' '.join(str(v) for v in nums))",
+   "exp": "考查冒泡排序三要素：趟数（range(n-1)）、比较方向（升序用 >）与借助临时变量交换时的赋值顺序。"
+  },
+  {
+   "id": "fix-l2-009",
+   "level": 2,
+   "title": "异常处理改错",
+   "desc": "程序连续处理 3 组数据（共 6 行输入，每两行为一组：第一行为 a，第二行为 b），每组输出一行结果：正常时输出 a÷b 的商；若 b 为 0，输出 错误: division by zero（利用异常对象 e）；若输入不能转换成整数，输出 请输入整数！。程序中有 3 处错误，请修改（不增删语句）。",
+   "buggy": "for k in range(3):\n    try:\n        a = int(input())\n        b = int(input())\n        print(a // b)\n    except ZeroDivisionError:\n        print('错误:', e)\n    except ValueError:\n        print('除数不能为零！')",
+   "stdin": "7\n2\n8\n0\n3\nx\n",
+   "expected": "3.5\n错误: division by zero\n请输入整数！",
+   "errors": [
+    {
+     "line": 5,
+     "hint": "题目要求输出 a÷b 的商，// 是整除（会丢掉小数部分），应使用 /"
+    },
+    {
+     "line": 6,
+     "hint": "下一行要用异常对象 e 输出错误信息，但该 except 子句漏写了 as e"
+    },
+    {
+     "line": 9,
+     "hint": "这是捕获 ValueError（输入不是整数）的分支，提示语与除零分支写混了，应输出 请输入整数！"
+    }
+   ],
+   "ref": "for k in range(3):\n    try:\n        a = int(input())\n        b = int(input())\n        print(a / b)\n    except ZeroDivisionError as e:\n        print('错误:', e)\n    except ValueError:\n        print('请输入整数！')",
+   "exp": "考查 try-except 多分支：/ 与 // 的区别、as e 接收异常对象并在分支中输出、异常类型与提示语的对应关系。"
+  },
+  {
+   "id": "fix-l3-008",
+   "level": 3,
+   "title": "选择排序改错",
+   "desc": "输入一行若干个整数（用空格分隔），程序使用选择排序将其升序排列后输出（同一行，空格分隔）。程序中有 3 处错误，请修改（不增删语句）。",
+   "buggy": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    k = i\n    for j in range(i + 2, n):\n        if nums[j] > nums[k]:\n            k = j\n    t = nums[i]\n    nums[i] = nums[k]\n    nums[k] = nums[i]\nprint(' '.join(str(v) for v in nums))",
+   "stdin": "9 5 8 1 3\n",
+   "expected": "1 3 5 8 9",
+   "errors": [
+    {
+     "line": 5,
+     "hint": "内层循环应从 i+1 开始逐个检查未排序部分，起点写成 i+2 会漏看紧邻的 nums[i+1]"
+    },
+    {
+     "line": 6,
+     "hint": "升序选择排序每趟要在未排序部分找最小值，比较条件方向写反了（应为 nums[j] < nums[k]）"
+    },
+    {
+     "line": 10,
+     "hint": "交换的最后一步应把临时变量 t 赋给 nums[k]，写成 nums[i] 会让交换失效"
+    }
+   ],
+   "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    k = i\n    for j in range(i + 1, n):\n        if nums[j] < nums[k]:\n            k = j\n    t = nums[i]\n    nums[i] = nums[k]\n    nums[k] = t\nprint(' '.join(str(v) for v in nums))",
+   "exp": "考查选择排序三要素：内层起点（i+1）、找最小值的比较方向（<）与借助临时变量的交换。"
+  },
+  {
    "id": "fix-l2-002",
    "level": 2,
    "title": "成绩等级判断",
@@ -4786,6 +5159,269 @@ window.BANK = {
   }
  ],
  "coding": [
+  {
+   "id": "code-l2-006",
+   "level": 2,
+   "title": "顺序查找",
+   "desc": "输入两行：第一行为若干个整数（用空格分隔），第二行为要查找的目标值 x。程序用顺序查找在列表中查找 x：若找到，输出 x 第一次出现处的下标（从 0 开始）；若找不到，输出 -1。要求用循环逐个比较实现，不得使用 `index()` 方法。",
+   "starter": "# 读入一行整数与目标值，顺序查找输出下标或 -1\n",
+   "tests": [
+    {
+     "stdin": "10 20 30 40 50\n30\n",
+     "expected": "2"
+    },
+    {
+     "stdin": "10 20 30 40 50\n35\n",
+     "expected": "-1"
+    },
+    {
+     "stdin": "5 3 8 3 9\n3\n",
+     "expected": "1"
+    }
+   ],
+   "ref": "s = input().split()\nnums = []\nfor v in s:\n    nums.append(int(v))\nx = int(input())\nidx = -1\nfor i in range(len(nums)):\n    if nums[i] == x:\n        idx = i\n        break\nprint(idx)",
+   "hint": "先把 idx 设为 -1 作为“未找到”的标记；用 for i in range(len(nums)) 逐个比较，相等时记下 i 并 break，保证输出的是第一次出现的下标。",
+   "exp": "考查列表遍历、条件判断、break 的使用与哨兵变量设计——顺序查找是最基础的查找算法，真题常考“找到输出下标、找不到输出-1”。",
+   "tags": [
+    "列表",
+    "循环",
+    "查找"
+   ]
+  },
+  {
+   "id": "code-l2-007",
+   "level": 2,
+   "title": "角谷猜想",
+   "desc": "角谷猜想：对任一正整数，若是偶数就把它减半（`n//2`），若是奇数就把它变成 `3n+1`，如此反复最终会变成 1。输入一个正整数 n，输出每一次变换，每行格式为 当前值->变换后的值（如 6->3），全部变换完后最后一行输出 共N步（N 为变换总次数）。若输入的 n 本身就是 1，则直接输出 共0步。",
+   "starter": "# 按角谷猜想规则变换，输出每次变化与总步数\n",
+   "tests": [
+    {
+     "stdin": "6\n",
+     "expected": "6->3\n3->10\n10->5\n5->16\n16->8\n8->4\n4->2\n2->1\n共8步"
+    },
+    {
+     "stdin": "1\n",
+     "expected": "共0步"
+    },
+    {
+     "stdin": "7\n",
+     "expected": "7->22\n22->11\n11->34\n34->17\n17->52\n52->26\n26->13\n13->40\n40->20\n20->10\n10->5\n5->16\n16->8\n8->4\n4->2\n2->1\n共16步"
+    }
+   ],
+   "ref": "n = int(input())\ncount = 0\nwhile n != 1:\n    if n % 2 == 0:\n        m = n // 2\n    else:\n        m = n * 3 + 1\n    print('{}->{}'.format(n, m))\n    n = m\n    count += 1\nprint('共{}步'.format(count))",
+   "hint": "用 while n != 1 控制变换；偶数用 // 整除 2，奇数乘 3 加 1；每变换一次计数器加 1。",
+   "exp": "考查 while 循环、奇偶判断（%）、变量迭代与 format 格式化输出——角谷猜想是循环类真题的经典题型。",
+   "tags": [
+    "循环",
+    "while",
+    "经典算法"
+   ]
+  },
+  {
+   "id": "code-l2-008",
+   "level": 2,
+   "title": "完全数判断",
+   "desc": "完全数指它所有真因子（除自身以外的全部正约数）之和恰好等于它本身。例如 6 的真因子是 1、2、3，且 1+2+3=6，所以 6 是完全数。输入一个正整数 n，按从小到大的顺序输出 2~n（含 n）之间的所有完全数，每个数占一行；若该范围内没有完全数，则不输出任何内容。",
+   "starter": "# 枚举 2~n，求每个数的真因子之和，判断是否为完全数\n",
+   "tests": [
+    {
+     "stdin": "1000\n",
+     "expected": "6\n28\n496"
+    },
+    {
+     "stdin": "30\n",
+     "expected": "6\n28"
+    },
+    {
+     "stdin": "496\n",
+     "expected": "6\n28\n496"
+    }
+   ],
+   "ref": "n = int(input())\nfor num in range(2, n + 1):\n    s = 0\n    for i in range(1, num):\n        if num % i == 0:\n            s += i\n    if s == num:\n        print(num)",
+   "hint": "对每个 num 用内层循环 i 从 1 到 num-1 试除，能整除就累加到 s；内层结束后判断 s 是否等于 num。",
+   "exp": "考查双重循环、整除运算符 % 与累加求和——“枚举 + 因子求和”与素数、水仙花数是同一套路子。",
+   "tags": [
+    "循环",
+    "经典算法",
+    "累加"
+   ]
+  },
+  {
+   "id": "code-l3-006",
+   "level": 3,
+   "title": "冒泡排序（升序）",
+   "desc": "输入一行若干个整数（用空格分隔），使用冒泡排序把它们从小到大排序后输出，同一行内用空格分隔。要求手动实现冒泡排序（相邻元素两两比较、逆序交换），不得调用 `sort()` 或 `sorted()`。",
+   "starter": "nums = [int(v) for v in input().split()]\nn = len(nums)\n# 请用冒泡排序把 nums 升序排列（不得使用 sort() 或 sorted()）\n",
+   "tests": [
+    {
+     "stdin": "5 2 8 1 9\n",
+     "expected": "1 2 5 8 9"
+    },
+    {
+     "stdin": "3 -1 4 -5 2 0\n",
+     "expected": "-5 -1 0 2 3 4"
+    },
+    {
+     "stdin": "42\n",
+     "expected": "42"
+    }
+   ],
+   "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    for j in range(n - 1 - i):\n        if nums[j] > nums[j + 1]:\n            nums[j], nums[j + 1] = nums[j + 1], nums[j]\nprint(' '.join(str(v) for v in nums))",
+   "hint": "外层共 n-1 趟；第 i 趟内层用 range(n-1-i) 比较相邻元素，把大的换到后面；输出用 ' '.join(str(v) for v in nums)。",
+   "exp": "考查冒泡排序双重循环的边界控制、相邻元素交换与列表输出——排序是三级考试最常考的算法大题。",
+   "tags": [
+    "排序",
+    "列表",
+    "双重循环"
+   ]
+  },
+  {
+   "id": "code-l3-007",
+   "level": 3,
+   "title": "选择排序（降序）",
+   "desc": "输入一行若干个整数成绩（用空格分隔），使用选择排序把它们从高到低排序后输出，同一行内用空格分隔。要求手动实现选择排序（每趟从未排序部分选出最大值，与该部分第一个元素交换），不得调用 `sort()` 或 `sorted()`。",
+   "starter": "scores = [int(v) for v in input().split()]\nn = len(scores)\n# 请用选择排序把 scores 降序排列（不得使用 sort() 或 sorted()）\n",
+   "tests": [
+    {
+     "stdin": "88 75 92 60 88\n",
+     "expected": "92 88 88 75 60"
+    },
+    {
+     "stdin": "100\n",
+     "expected": "100"
+    },
+    {
+     "stdin": "59 60 61 47\n",
+     "expected": "61 60 59 47"
+    }
+   ],
+   "ref": "scores = [int(v) for v in input().split()]\nn = len(scores)\nfor i in range(n - 1):\n    k = i\n    for j in range(i + 1, n):\n        if scores[j] > scores[k]:\n            k = j\n    scores[i], scores[k] = scores[k], scores[i]\nprint(' '.join(str(v) for v in scores))",
+   "hint": "每趟先记 k = i，内层 j 从 i+1 扫描到 n-1，若 scores[j] > scores[k] 就更新 k；一趟结束后交换 scores[i] 与 scores[k]。降序即每趟选最大。",
+   "exp": "考查选择排序的双重循环、极值下标 k 的记录与一趟只交换一次的特点——降序只需把找最小改成找最大。",
+   "tags": [
+    "排序",
+    "列表",
+    "双重循环"
+   ]
+  },
+  {
+   "id": "code-l4-007",
+   "level": 4,
+   "title": "二分查找（迭代）",
+   "desc": "输入两行：第一行为一组按升序排列的整数（用空格分隔），第二行为要查找的目标值 x。程序用 while 循环实现二分查找，输出 x 在列表中的下标（从 0 开始）；若不存在，输出 -1。要求迭代实现（不得使用递归），不得使用 `index()` 方法。",
+   "starter": "nums = [int(v) for v in input().split()]\nx = int(input())\n# 请用 while 循环实现二分查找，输出下标或 -1\n",
+   "tests": [
+    {
+     "stdin": "2 5 8 12 16 23 38 56 72 91\n23\n",
+     "expected": "5"
+    },
+    {
+     "stdin": "2 5 8 12 16 23 38 56 72 91\n91\n",
+     "expected": "9"
+    },
+    {
+     "stdin": "2 5 8 12 16\n10\n",
+     "expected": "-1"
+    }
+   ],
+   "ref": "nums = [int(v) for v in input().split()]\nx = int(input())\nlow, high = 0, len(nums) - 1\nidx = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if nums[mid] == x:\n        idx = mid\n        break\n    elif nums[mid] < x:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(idx)",
+   "hint": "low, high = 0, len(nums) - 1；循环条件 low <= high；mid = (low + high) // 2；中间值比 x 小则 low = mid + 1，比 x 大则 high = mid - 1。",
+   "exp": "考查二分查找的循环实现：区间初值、循环条件与 low/high 的收缩方向是三大易错点，比顺序查找高效。",
+   "tags": [
+    "查找",
+    "循环",
+    "算法"
+   ]
+  },
+  {
+   "id": "code-l6-005",
+   "level": 6,
+   "title": "openpyxl 读取成绩表求总分",
+   "desc": "站内已提供 Excel 文件 scores.xlsx（Sheet 名为 stu，UTF-8），第一行是表头：姓名、语文、数学，其后 6 行是学生数据（成绩均为整数）。编写程序读取该表，按行输出每个学生的姓名和总分（姓名与总分之间用一个空格分隔），例如：王芳 177。每人一行，共 6 行。",
+   "files": [
+    {
+     "name": "scores.xlsx",
+     "content": "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",
+     "b64": true
+    }
+   ],
+   "starter": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "王芳 177\n李伟 166\n张敏 185\n刘洋 141\n陈静 167\n赵磊 154"
+    },
+    {
+     "stdin": "",
+     "expected": "王芳 177\n李伟 166\n张敏 185\n刘洋 141\n陈静 167\n赵磊 154"
+    }
+   ],
+   "ref": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\nfor i in range(2, ws.max_row + 1):\n    name = ws.cell(row=i, column=1).value\n    chinese = ws.cell(row=i, column=2).value\n    math = ws.cell(row=i, column=3).value\n    print(name, chinese + math)",
+   "hint": "第 1 行是表头，从第 2 行遍历到 ws.max_row；用 cell(row=i, column=n).value 逐格取值，姓名在第 1 列。",
+   "exp": "考查 openpyxl 完整读流程：load_workbook 打开工作簿 → 按名取工作表 → cell(row, column).value 逐格读取 → 计算并格式化输出。",
+   "tags": [
+    "openpyxl",
+    "Excel",
+    "循环"
+   ]
+  },
+  {
+   "id": "code-l6-006",
+   "level": 6,
+   "title": "openpyxl 写入总分列并找最高分",
+   "desc": "站内已提供 Excel 文件 scores.xlsx（Sheet 名为 stu，UTF-8），第一行是表头：姓名、语文、数学，其后 6 行是学生数据（成绩均为整数）。编写程序：①为每个学生计算语文与数学的总分，写入新的一列——E1 单元格写入表头“总分”，E2 起依次写入各人的总分；②输出总分最高的学生姓名（每人总分互不相同，只输出一行姓名）。保存工作簿与否不影响判题，判题只看 print 输出。",
+   "files": [
+    {
+     "name": "scores.xlsx",
+     "content": "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",
+     "b64": true
+    }
+   ],
+   "starter": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "张敏"
+    },
+    {
+     "stdin": "",
+     "expected": "张敏"
+    }
+   ],
+   "ref": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\nws['E1'] = '总分'\nbest_name = ''\nbest = 0\nfor i in range(2, ws.max_row + 1):\n    name = ws.cell(row=i, column=1).value\n    total = ws.cell(row=i, column=2).value + ws.cell(row=i, column=3).value\n    ws.cell(row=i, column=5).value = total\n    if total > best:\n        best_name = name\n        best = total\nwb.save('scores.xlsx')\nprint(best_name)",
+   "hint": "单元格赋值用 ws['E1'] = '总分' 或 ws.cell(row=i, column=5).value = total；求最高分用“打擂台”：总分更大时更新记录者；最后 wb.save('scores.xlsx') 保存。",
+   "exp": "考查 openpyxl 读写完整闭环：读单元格计算 → 写入新列 → save 写回文件 → 打擂台法求最值。判题依据为输出的最高分学生姓名。",
+   "tags": [
+    "openpyxl",
+    "Excel",
+    "最值"
+   ]
+  },
+  {
+   "id": "code-l7-013",
+   "level": 7,
+   "title": "matplotlib 绘制气温折线图",
+   "desc": "起始代码已给出 12 个月的月份列表 months 和月平均气温列表 temps。要求：①用 plt.plot 绘制气温随月份变化的折线图，并用 plt.savefig('t.png') 把图形保存为图片 t.png；②按月份顺序逐行输出“月:气温”，例如 1:5；③最后输出一行平均气温，格式如：平均气温:19.5（保留 1 位小数）。判题只看 print 输出，不看图片。",
+   "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+    },
+    {
+     "stdin": "",
+     "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+    }
+   ],
+   "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\nplt.plot(months, temps)\nplt.savefig('t.png')\nfor i in range(12):\n    print('{}:{}'.format(months[i], temps[i]))\nprint('平均气温:{:.1f}'.format(sum(temps) / len(temps)))",
+   "hint": "plt.plot( months, temps ) 画折线，plt.savefig('t.png') 存图；平均气温 = sum(temps) / len(temps)，用 '{:.1f}'.format() 保留 1 位小数。",
+   "exp": "考查 matplotlib 折线图绘制与保存（plot + savefig），以及列表遍历输出与平均值统计；判题通过打印数据验证，绘图仅要求代码正确执行。",
+   "tags": [
+    "matplotlib",
+    "可视化",
+    "统计"
+   ]
+  },
   {
    "id": "code-l1-001",
    "level": 1,
@@ -6112,6 +6748,67 @@ window.BANK = {
     "递归",
     "整数分解",
     "默认参数"
+   ]
+  },
+  {
+   "id": "code-l5-010",
+   "level": 5,
+   "title": "学生成绩平均分统计",
+   "desc": "站内已提供文件 students.csv（UTF-8 编码），首行为表头：姓名,语文,数学,英语，其后 8 行是学生数据（成绩均为整数）。要求：①定义函数 average(scores)，参数为成绩列表，返回平均分（浮点数）；②读入文件，按行输出每个学生的姓名和三科平均分（保留 2 位小数，姓名与平均分之间用一个空格分隔，如：王芳 88.33）；③最后输出一行全班三科总平均分（所有同学所有科目成绩的平均分，保留 2 位小数），格式如：全班三科总平均:81.58。",
+   "files": [
+    {
+     "name": "students.csv",
+     "content": "姓名,语文,数学,英语\n王芳,85,92,88\n李伟,78,88,90\n张敏,95,90,93\n刘洋,66,75,70\n陈静,88,79,84\n赵磊,73,81,77\n孙丽,92,85,89\n周涛,60,72,68\n"
+    }
+   ],
+   "starter": "def average(scores):\n    # 返回成绩列表 scores 的平均分\n    pass\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "王芳 88.33\n李伟 85.33\n张敏 92.67\n刘洋 70.33\n陈静 83.67\n赵磊 77.00\n孙丽 88.67\n周涛 66.67\n全班三科总平均:81.58"
+    },
+    {
+     "stdin": "",
+     "expected": "王芳 88.33\n李伟 85.33\n张敏 92.67\n刘洋 70.33\n陈静 83.67\n赵磊 77.00\n孙丽 88.67\n周涛 66.67\n全班三科总平均:81.58"
+    }
+   ],
+   "ref": "def average(scores):\n    return sum(scores) / len(scores)\n\nf = open('students.csv', 'r', encoding='utf-8')\nnext(f)\nall_scores = []\nfor line in f:\n    parts = line.strip().split(',')\n    scores = [int(x) for x in parts[1:]]\n    all_scores += scores\n    print(parts[0], '{:.2f}'.format(average(scores)))\nf.close()\nprint('全班三科总平均:{:.2f}'.format(average(all_scores)))",
+   "hint": "用 next(f) 跳过表头行；每行先 strip() 去掉换行再 split(',')；第 1 列是姓名，后面 3 列转 int 后组成成绩列表；总平均就是把所有人的成绩放进一个列表再求 average。",
+   "exp": "综合考查：文件读取（open + next 跳表头 + strip/split）、CSV 数据解析与类型转换、自定义函数 average 复用、'{:.2f}' 格式化。是“文件 + 函数 + 统计”的典型综合题。",
+   "tags": [
+    "文件",
+    "函数",
+    "CSV",
+    "统计"
+   ]
+  },
+  {
+   "id": "code-l2-009",
+   "level": 2,
+   "title": "BMI 计算器",
+   "desc": "输入体重（千克）与身高（米），各占一行。先输出 BMI 值（保留 1 位小数），格式如：BMI:22.9；再输出分级结果：BMI < 18.5 为偏瘦，18.5 ≤ BMI < 24 为正常，24 ≤ BMI < 28 为偏胖，28 及以上为肥胖。BMI = 体重 ÷ 身高 ÷ 身高。注意边界：恰好等于 18.5 属正常，恰好等于 24 属偏胖，恰好等于 28 属肥胖。",
+   "starter": "",
+   "tests": [
+    {
+     "stdin": "70\n1.75\n",
+     "expected": "BMI:22.9\n正常"
+    },
+    {
+     "stdin": "54\n1.5\n",
+     "expected": "BMI:24.0\n偏胖"
+    },
+    {
+     "stdin": "28\n1.0\n",
+     "expected": "BMI:28.0\n肥胖"
+    }
+   ],
+   "ref": "w = float(input())\nh = float(input())\nbmi = w / (h * h)\nprint('BMI:{:.1f}'.format(bmi))\nif bmi < 18.5:\n    print('偏瘦')\nelif bmi < 24:\n    print('正常')\nelif bmi < 28:\n    print('偏胖')\nelse:\n    print('肥胖')",
+   "hint": "体重、身高都要 float() 转换；BMI 用 bmi = w / (h * h)；分级用 if-elif-else 从小到大依次判断，注意边界值归入右侧一档。",
+   "exp": "综合考查：输入与 float 转换、算术表达式、'{:.1f}' 格式化、if-elif-else 多分支判断（含边界条件的开闭区间）。",
+   "tags": [
+    "分支",
+    "浮点数",
+    "格式化"
    ]
   },
   {

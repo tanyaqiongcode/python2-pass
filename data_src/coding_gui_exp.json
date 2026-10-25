@@ -1,0 +1,94 @@
+{
+  "kind": "coding",
+  "items": [
+    {
+      "id": "code-l6-005",
+      "level": 6,
+      "title": "openpyxl 读取成绩表求总分",
+      "desc": "站内已提供 Excel 文件 scores.xlsx（Sheet 名为 stu，UTF-8），第一行是表头：姓名、语文、数学，其后 6 行是学生数据（成绩均为整数）。编写程序读取该表，按行输出每个学生的姓名和总分（姓名与总分之间用一个空格分隔），例如：王芳 177。每人一行，共 6 行。",
+      "files": [
+        {
+          "name": "scores.xlsx",
+          "content": "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",
+          "b64": true
+        }
+      ],
+      "starter": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\n",
+      "tests": [
+        {
+          "stdin": "",
+          "expected": "王芳 177\n李伟 166\n张敏 185\n刘洋 141\n陈静 167\n赵磊 154"
+        },
+        {
+          "stdin": "",
+          "expected": "王芳 177\n李伟 166\n张敏 185\n刘洋 141\n陈静 167\n赵磊 154"
+        }
+      ],
+      "ref": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\nfor i in range(2, ws.max_row + 1):\n    name = ws.cell(row=i, column=1).value\n    chinese = ws.cell(row=i, column=2).value\n    math = ws.cell(row=i, column=3).value\n    print(name, chinese + math)",
+      "hint": "第 1 行是表头，从第 2 行遍历到 ws.max_row；用 cell(row=i, column=n).value 逐格取值，姓名在第 1 列。",
+      "exp": "考查 openpyxl 完整读流程：load_workbook 打开工作簿 → 按名取工作表 → cell(row, column).value 逐格读取 → 计算并格式化输出。",
+      "tags": [
+        "openpyxl",
+        "Excel",
+        "循环"
+      ]
+    },
+    {
+      "id": "code-l6-006",
+      "level": 6,
+      "title": "openpyxl 写入总分列并找最高分",
+      "desc": "站内已提供 Excel 文件 scores.xlsx（Sheet 名为 stu，UTF-8），第一行是表头：姓名、语文、数学，其后 6 行是学生数据（成绩均为整数）。编写程序：①为每个学生计算语文与数学的总分，写入新的一列——E1 单元格写入表头“总分”，E2 起依次写入各人的总分；②输出总分最高的学生姓名（每人总分互不相同，只输出一行姓名）。保存工作簿与否不影响判题，判题只看 print 输出。",
+      "files": [
+        {
+          "name": "scores.xlsx",
+          "content": "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",
+          "b64": true
+        }
+      ],
+      "starter": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\n",
+      "tests": [
+        {
+          "stdin": "",
+          "expected": "张敏"
+        },
+        {
+          "stdin": "",
+          "expected": "张敏"
+        }
+      ],
+      "ref": "from openpyxl import load_workbook\n\nwb = load_workbook('scores.xlsx')\nws = wb['stu']\nws['E1'] = '总分'\nbest_name = ''\nbest = 0\nfor i in range(2, ws.max_row + 1):\n    name = ws.cell(row=i, column=1).value\n    total = ws.cell(row=i, column=2).value + ws.cell(row=i, column=3).value\n    ws.cell(row=i, column=5).value = total\n    if total > best:\n        best_name = name\n        best = total\nwb.save('scores.xlsx')\nprint(best_name)",
+      "hint": "单元格赋值用 ws['E1'] = '总分' 或 ws.cell(row=i, column=5).value = total；求最高分用“打擂台”：总分更大时更新记录者；最后 wb.save('scores.xlsx') 保存。",
+      "exp": "考查 openpyxl 读写完整闭环：读单元格计算 → 写入新列 → save 写回文件 → 打擂台法求最值。判题依据为输出的最高分学生姓名。",
+      "tags": [
+        "openpyxl",
+        "Excel",
+        "最值"
+      ]
+    },
+    {
+      "id": "code-l7-013",
+      "level": 7,
+      "title": "matplotlib 绘制气温折线图",
+      "desc": "起始代码已给出 12 个月的月份列表 months 和月平均气温列表 temps。要求：①用 plt.plot 绘制气温随月份变化的折线图，并用 plt.savefig('t.png') 把图形保存为图片 t.png；②按月份顺序逐行输出“月:气温”，例如 1:5；③最后输出一行平均气温，格式如：平均气温:19.5（保留 1 位小数）。判题只看 print 输出，不看图片。",
+      "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\n",
+      "tests": [
+        {
+          "stdin": "",
+          "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+        },
+        {
+          "stdin": "",
+          "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+        }
+      ],
+      "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\nplt.plot(months, temps)\nplt.savefig('t.png')\nfor i in range(12):\n    print('{}:{}'.format(months[i], temps[i]))\nprint('平均气温:{:.1f}'.format(sum(temps) / len(temps)))",
+      "hint": "plt.plot( months, temps ) 画折线，plt.savefig('t.png') 存图；平均气温 = sum(temps) / len(temps)，用 '{:.1f}'.format() 保留 1 位小数。",
+      "exp": "考查 matplotlib 折线图绘制与保存（plot + savefig），以及列表遍历输出与平均值统计；判题通过打印数据验证，绘图仅要求代码正确执行。",
+      "tags": [
+        "matplotlib",
+        "可视化",
+        "统计"
+      ]
+    }
+  ]
+}

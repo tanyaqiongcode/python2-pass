@@ -1,0 +1,40 @@
+{
+  "kind": "fix",
+  "items": [
+    {
+      "id": "fix-l1-001",
+      "level": 1,
+      "title": "华氏温度转摄氏温度",
+      "desc": "输入一个华氏温度（可能带小数），输出对应的摄氏温度，保留 1 位小数，输出格式如：摄氏温度为36.7度。换算公式：摄氏温度 = (华氏温度 - 32) × 5 / 9。程序有 3 处错误，请修改（不增删语句）。",
+      "buggy": "f = input()\nc = (f - 32) * 5 // 9\nprint('摄氏温度为{:.2f}度'.format(c))",
+      "stdin": "98\n",
+      "expected": "摄氏温度为36.7度",
+      "errors": [
+        {"line": 1, "hint": "input() 得到的是字符串，参与算术运算前要用 float() 转换成数"},
+        {"line": 2, "hint": "// 是整除（截断小数），温度换算要用普通除法 /"},
+        {"line": 3, "hint": "题目要求保留 1 位小数，格式占位符应为 {:.1f}"}
+      ],
+      "ref": "f = float(input())\nc = (f - 32) * 5 / 9\nprint('摄氏温度为{:.1f}度'.format(c))",
+      "exp": "考查 input 的类型转换、整除 // 与除法 / 的区别、格式化占位符 {:.1f}。三处都是一级考试高频错误点。"
+    },
+    {
+      "id": "fix-l5-003",
+      "level": 5,
+      "title": "统计文件行数与最长单词",
+      "desc": "站内已提供文件 words.txt（UTF-8 编码），每行存放一个英文单词。程序要输出：第一行为单词行数，如“共 5 行”；第二行为最长的单词。程序有 3 处错误，请修改（不增删语句）。",
+      "buggy": "f = open('words.txt', 'w', encoding='utf-8')\nlines = f.readlines()\nf.close()\nprint('共', len(lines), '行')\nmx = lines[len(lines)]\nfor line in lines:\n    if len(line) > len(mx):\n        mx = line\nprint(mx, end='')",
+      "stdin": "",
+      "expected": "共 5 行\nwonderful",
+      "files": [
+        {"name": "words.txt", "content": "hi\nhello\nwonderful\nok\npython\n"}
+      ],
+      "errors": [
+        {"line": 1, "hint": "读取文件要用 'r' 模式，'w' 模式会清空文件且不能读"},
+        {"line": 5, "hint": "lines[len(lines)] 下标越界：最大合法下标是 len(lines)-1，应取第 1 行 lines[0] 作初始值"},
+        {"line": 7, "hint": "readlines 读到的每行末尾带换行符 \\n，比较长度前要用 strip() 去掉（mx 同样要用去掉换行的内容）"}
+      ],
+      "ref": "f = open('words.txt', 'r', encoding='utf-8')\nlines = f.readlines()\nf.close()\nprint('共', len(lines), '行')\nmx = lines[0].strip()\nfor line in lines:\n    if len(line.strip()) > len(mx):\n        mx = line.strip()\nprint(mx, end='')",
+      "exp": "考查文件打开模式（w 清空且不可读）、readlines 的下标范围（len(lines) 越界）、逐行读取后 strip() 去换行再比较。三处错误层层递进，是 L5 文件题的典型组合。"
+    }
+  ]
+}

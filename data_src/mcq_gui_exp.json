@@ -1,0 +1,125 @@
+{
+  "kind": "mcq",
+  "items": [
+    {
+      "id": "mcq-l6-021",
+      "level": 6,
+      "topic": "tkinter 控件布局",
+      "q": "有如下程序：\nimport tkinter as tk\n\nroot = tk.Tk()\nroot.title('登录')\ntk.Label(root, text='用户名').pack()\ntk.Entry(root).pack()\ntk.Button(root, text='确定').pack()\nroot.mainloop()\n运行后，窗口中控件从上到下的排列顺序是____。",
+      "opts": [
+        "Button 在最上面，Label 在最下面",
+        "Label 与 Entry 左右并排在一行",
+        "Label“用户名”、Entry 输入框、Button“确定”自上而下依次排列",
+        "三个控件重叠挤在窗口中心"
+      ],
+      "ans": 2,
+      "exp": "pack() 不带参数时默认从窗口顶部开始自上而下依次堆放控件，所以顺序就是创建顺序：标签、输入框、按钮；要左右并排须用 pack(side=...) 设置，本题未设置；控件也不会重叠或颠倒。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l6-022",
+      "level": 6,
+      "topic": "Button 的 command 回调",
+      "q": "有如下程序：\nimport tkinter as tk\n\ndef hello():\n    print('欢迎')\n\nroot = tk.Tk()\ntk.Button(root, text='点我', command=hello).pack()\nroot.mainloop()\n程序运行后，下列说法正确的是____。",
+      "opts": [
+        "创建按钮的那一行执行时立即调用 hello 并打印“欢迎”",
+        "command=hello 不加括号，是把函数交给按钮保存，点击按钮时才执行并打印“欢迎”",
+        "必须写成 command=hello()，否则点击按钮没有任何反应",
+        "点击按钮会打印函数对象本身，如 <function hello>"
+      ],
+      "ans": 1,
+      "exp": "command 绑定的是“函数名”（函数对象），不加括号表示“点击时再调用”；写成 command=hello() 会在创建按钮时立即执行一次，点击后反而不响应。点击按钮时才调用 hello，打印“欢迎”。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l6-023",
+      "level": 6,
+      "topic": "Entry 取值 get()",
+      "q": "有如下程序：\nimport tkinter as tk\n\ndef show():\n    print(e.get())\n\nroot = tk.Tk()\ne = tk.Entry(root)\ne.pack()\ntk.Button(root, text='显示', command=show).pack()\nroot.mainloop()\n运行后在输入框中输入 Python，再点击“显示”按钮，结果是____。",
+      "opts": [
+        "在控制台打印 Python",
+        "在控制台打印空字符串",
+        "打印 Entry 控件对象的信息",
+        "程序报错，因为定义 show 时变量 e 还不存在"
+      ],
+      "ans": 0,
+      "exp": "Entry 的 get() 方法返回输入框当前的内容。函数定义时函数体不执行，点击按钮调用 show 时全局变量 e 已创建，get() 返回 Python 并打印；定义顺序在前并不影响调用时取值。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l6-024",
+      "level": 6,
+      "topic": "mainloop 的作用",
+      "q": "关于 tkinter 程序最后的 root.mainloop()，下列说法正确的是____。",
+      "opts": [
+        "它销毁所有控件并立即结束程序",
+        "它只负责把窗口画出来，画完就接着执行下一行代码",
+        "它必须在创建任何控件之前调用，否则窗口无法显示",
+        "它进入事件监听循环，等待并处理按钮点击、键盘输入等事件；没有它窗口无法持续显示和响应用户操作"
+      ],
+      "ans": 3,
+      "exp": "mainloop() 启动消息循环，程序停在这里不断接收用户事件并触发对应回调；它应放在窗口和控件都创建完成之后调用，一般写在程序最后一行，其后代码通常不会再执行。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l6-025",
+      "level": 6,
+      "topic": "openpyxl 修改与保存",
+      "q": "有如下程序（score.xlsx 是已存在的工作簿）：\nfrom openpyxl import load_workbook\n\nwb = load_workbook('score.xlsx')\nws = wb.active\nws['B1'] = '总分'\nwb.save('score.xlsx')\n程序执行后，下列说法正确的是____。",
+      "opts": [
+        "程序报错，load_workbook 不能打开已存在的文件",
+        "B1 单元格被写入“总分”，调用 save 后修改被写回 score.xlsx 文件",
+        "ws['B1'] = '总分' 只改了内存中的数据，score.xlsx 的文件内容不变",
+        "save 会另存为一个新文件，原文件保持不变"
+      ],
+      "ans": 1,
+      "exp": "load_workbook 用于打开已有工作簿；对单元格赋值先修改内存中的工作簿对象，wb.save('score.xlsx') 再把修改写回文件（保存到同名文件即覆盖更新）。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l6-026",
+      "level": 6,
+      "topic": "openpyxl cell(row, column)",
+      "q": "有如下程序（data.xlsx 中已有数据）：\nfrom openpyxl import load_workbook\n\nwb = load_workbook('data.xlsx')\nws = wb.active\nprint(ws.cell(row=3, column=2).value)\n这条 print 输出的是____。",
+      "opts": [
+        "工作表的名称（如 Sheet）",
+        "第 2 行第 3 列（C2）单元格的值",
+        "第 3 行第 2 列（B3）单元格的值",
+        "第 3 行第 3 列（C3）单元格的值"
+      ],
+      "ans": 2,
+      "exp": "cell(row=行号, column=列号) 中 row 在前、column 在后，row=3、column=2 即第 3 行第 2 列，也就是 B3 单元格，加 .value 取其值；C2 是第 2 行第 3 列，C3 是第 3 行第 3 列。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l7-037",
+      "level": 7,
+      "topic": "matplotlib bar 柱状图",
+      "q": "有如下程序：\nimport matplotlib.pyplot as plt\n\nplt.bar(['苹果', '香蕉', '橘子'], [30, 45, 25])\nplt.show()\n运行后显示的图形是____。",
+      "opts": [
+        "柱状图：横轴是三种水果名称，柱子高度分别对应 30、45、25",
+        "折线图：把三个数据点用折线依次连接",
+        "饼图：三块扇形分别表示三种水果的占比",
+        "散点图：在坐标系中画出三个孤立的点"
+      ],
+      "ans": 0,
+      "exp": "plt.bar() 绘制柱状图，第一个参数是横轴上的类目，第二个参数是对应柱子的高度；plot 画折线图、pie 画饼图、scatter 画散点图。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l7-038",
+      "level": 7,
+      "topic": "matplotlib 图例 legend",
+      "q": "有如下程序：\nimport matplotlib.pyplot as plt\n\nplt.plot([1, 2, 3], [5, 7, 6], label='北京')\nplt.plot([1, 2, 3], [9, 4, 8], label='上海')\nplt.legend()\nplt.show()\n下列说法正确的是____。",
+      "opts": [
+        "第二条 plot 会覆盖第一条，图中最终只有一条折线",
+        "图例中只显示“北京”，因为 legend() 默认只取第一个 label",
+        "legend() 必须传入图例文字参数，否则无法显示图例",
+        "图中同时画出两条折线，图例中同时出现“北京”和“上海”两项"
+      ],
+      "ans": 3,
+      "exp": "连续调用 plot 会在同一坐标系中叠加多条线而不是覆盖；每条线的 label 都会被 legend() 自动收集，因此图例同时显示“北京”和“上海”两项；legend() 不带参数即可使用此前设置的 label。",
+      "difficulty": 2
+    }
+  ]
+}
