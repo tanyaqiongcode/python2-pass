@@ -3,3 +3,6 @@ node_modules/
 *.log
 __pycache__/
 stu.db
+t.png
+sales.png
+*.pyc
