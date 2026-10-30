@@ -131,8 +131,8 @@ const Store = {
     catch (e) { return {}; }
   },
   save(state) {
-    try { localStorage.setItem(this.key, JSON.stringify(state)); }
-    catch (e) { console.warn('存储失败', e); }
+    try { localStorage.setItem(this.key, JSON.stringify(state)); return true; }
+    catch (e) { console.warn('存储失败', e); return false; }
   }
 };
 

@@ -148,9 +148,13 @@
       Object.keys(src).forEach(function (qid) {
         var a = src[qid];
         var b = out[k][qid];
+        // 单选用 correct，代码题用 passed——两者都视为“通过”标记，
+        // 合并永不倒退：通过记录不会被更新的未通过记录覆盖
+        var aPassed = a.correct === true || a.passed === true;
+        var bPassed = !!b && (b.correct === true || b.passed === true);
         var better = !b ||
-          (!!a.passed && !b.passed) ||
-          ((a.ts || 0) > (b.ts || 0) && !!a.passed >= !!b.passed);
+          (aPassed && !bPassed) ||
+          ((a.ts || 0) >= (b.ts || 0) && aPassed === bPassed);
         if (better) { out[k][qid] = a; counts.questions++; }
       });
     });

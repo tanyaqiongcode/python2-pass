@@ -27,7 +27,7 @@ const State = {
     return this.data;
   },
 
-  save() { Store.save(this.data); },
+  save() { return Store.save(this.data); },
 
   examDate() { return this._examDate; },
   setExamDate(d) {
@@ -77,7 +77,7 @@ const State = {
 
   addMockRun(run) {
     this.data.mockRuns.push(run);
-    this.save();
+    return this.save(); // 显式返回保存结果，失败时调用方保留答卷
   },
 
   /* ---- 统计 ---- */

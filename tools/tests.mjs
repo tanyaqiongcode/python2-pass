@@ -132,3 +132,19 @@ print('embedded python OK')
 `], { encoding: 'utf8' });
   assert.equal(r.status, 0, '内嵌 Python 编译失败: ' + r.stderr.slice(0, 300));
 });
+
+test('mergeProgress：较新的错误单选不得倒退覆盖已有正确记录（评审回归）', () => {
+  const local = { mcq: { q1: { choice: 2, correct: true, ts: 1000 } } };
+  const imp = { mcq: { q1: { choice: 0, correct: false, ts: 2000 } } };  // 更新但答错
+  const r = C.mergeProgress(local, imp);
+  assert.equal(r.merged.mcq.q1.correct, true, '正确记录被倒退覆盖');
+  assert.equal(r.merged.mcq.q1.ts, 1000);
+  // 反向：导入的是更晚的正确记录 → 采用
+  const r2 = C.mergeProgress({ mcq: { q1: { choice: 0, correct: false, ts: 1000 } } },
+    { mcq: { q1: { choice: 2, correct: true, ts: 2000 } } });
+  assert.equal(r2.merged.mcq.q1.correct, true);
+  // 代码题 passed 语义不受影响
+  const r3 = C.mergeProgress({ coding: { c1: { passed: true, ts: 1000 } } },
+    { coding: { c1: { passed: false, ts: 2000 } } });
+  assert.equal(r3.merged.coding.c1.passed, true);
+});

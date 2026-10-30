@@ -665,7 +665,7 @@ const Engine = {
       if (ok) {
         this.mode = 'main';
         this.status = 'ready';
-        this.chip('判题引擎：就绪 ✓', 'chip-ok');
+        this.chip('判题引擎：就绪 ✓（主线程降级——个别代码可能阻塞页面）', 'chip-warn');
         return true;
       }
     } catch (e) {
@@ -812,15 +812,19 @@ del _turtle_src
 
   _runMain(code, opts, timeoutS, maxEvents) {
     return (async () => {
+      const withTimeout = (p, ms, what) => Promise.race([
+        p,
+        new Promise((_, rej) => setTimeout(() => rej(new Error(what + ' 超时（' + Math.round(ms / 1000) + 's）')), ms))
+      ]);
       const py = this.pyodide;
       try {
         for (const p of detectPackages(code)) {
-          if (p === 'matplotlib') await py.loadPackage('matplotlib');
+          if (p === 'matplotlib') await withTimeout(py.loadPackage('matplotlib'), 120000, '加载 matplotlib');
           else {
-            await py.loadPackage('micropip');
+            await withTimeout(py.loadPackage('micropip'), 60000, '加载 micropip');
             const pin = (window.CONFIG.packagePins || {})[p];
             const spec = pin ? p + '==' + pin : p;
-            await py.runPythonAsync('import micropip; await micropip.install(' + JSON.stringify(spec) + ')');
+            await withTimeout(py.runPythonAsync('import micropip; await micropip.install(' + JSON.stringify(spec) + ')'), 120000, '安装 ' + p);
           }
         }
         let mountId = null;

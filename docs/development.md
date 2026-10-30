@@ -29,3 +29,9 @@ for f in js/*.js; do node --check "$f"; done
 2. 判题：任一代码题"运行并判题"通过；turtle 画布题出图；官方卷 p27-c4（SQLite）判分
 3. 模拟考：开考后切到别的页面再回来计时仍在；把系统时间调快过 endAt（或等超时）验证自动交卷；刷新后答卷恢复
 4. 诊断：答完出现起点推荐，路径页"下一步"与之一致
+
+## 安全说明
+
+- `vendor/pyodide/` 内嵌的是 Pyodide v314.0.7 官方 npm 发行包（来源 registry.npmmirror.com 的 pyodide-314.0.7.tgz），**未做完整依赖漏洞审计**，请勿在任何安全敏感场景把学生代码当可信输入之外使用；升级流程：下载新版 npm tarball → 解包替换本目录 6 个文件 → `node tools/tests.mjs` + `python3 tools/build_data.py` 全过 → 浏览器按验收清单回归
+- 学生代码在 Worker/主线程均通过 `settrace` 看门狗 + 主线程 deadline 双重限制执行，仅访问浏览器内存文件系统
+- CI 校验依赖已锁精确版本（matplotlib 3.10.6 / openpyxl 3.1.5），与本地验证环境一致

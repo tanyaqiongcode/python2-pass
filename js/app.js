@@ -610,10 +610,13 @@ const App = {
   renderCodeTasks(box, kind, qs) {
     if (!qs.length) { box.append(h('div', { class: 'card' }, '本类题目整理中…')); return; }
     const kindName = { blank: '程序填空', fix: '调试改错', coding: '编程题' }[kind];
+    const modeNote = Engine.status === 'ready' && Engine.mode === 'main'
+      ? ' ⚠ 当前为主线程降级模式：个别极端代码可能短暂阻塞页面，建议刷新页面重试后台线程模式。' : '';
     box.append(h('div', { class: 'notice' },
       h('b', null, '判题说明：'),
       ' 代码在浏览器内真实运行（首次判题会加载引擎，约 10~20MB，需联网）。程序请求输入时，测试输入会自动喂给 input()；',
-      '比对输出时空行与行尾空格会被忽略。若引擎加载失败，可展开参考答案对照自评。🎓 = 三级重点题。'));
+      '比对输出时空行与行尾空格会被忽略。若引擎加载失败，可展开参考答案对照自评。🎓 = 三级重点题。',
+      h('span', { class: 'muted' }, modeNote)));
     const sorted = qs.slice().sort((a, b) => (a.difficulty || 2) - (b.difficulty || 2) || a.id.localeCompare(b.id));
     let lastDiff = 0;
     const stageName = { 1: '★ 基础', 2: '★★ 进阶', 3: '★★★ 挑战' };
@@ -1369,12 +1372,34 @@ const Mock = {
       lv.got += d.score; lv.full += d.full;
     });
     const run = { ts: Date.now(), score, grade, variant: this.variant, t3Score: Math.round(t3Score * 10) / 10, t3Full: Math.round(t3Full * 10) / 10, byLevel, detail };
-    State.addMockRun(run);   // 成绩落盘成功
-    localStorage.removeItem(this.KEY);  // 此后才清理答卷草稿
-    this._submitting = false;
-    this.lastResult = run;
-    if (App.parse()[0] !== 'mock') location.hash = '#mock'; // 交卷后回到结果页
-    App.render();
+    const saved = State.addMockRun(run);   // 显式保存
+    if (saved) {
+      localStorage.removeItem(this.KEY);  // 成绩落盘成功 → 此后才清理答卷草稿
+      this._submitting = false;
+      this.lastResult = run;
+      if (App.parse()[0] !== 'mock') location.hash = '#mock';
+      App.render();
+    } else {
+      // 保存失败（如存储配额）：保留答卷草稿，允许下次进入自动重判；并提供救援下载
+      this.active = false;
+      this._submitting = false;
+      try {
+        const rescue = { app: 'py2pass-rescue', exportedAt: new Date().toISOString(), run,
+          mockDraft: { seed: this.seed, variant: this.variant, qs: this.qs, answers: this.answers } };
+        const blob = new Blob([JSON.stringify(rescue, null, 1)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'py2pass-rescue-' + Date.now() + '.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        alert('成绩保存失败（浏览器存储不可用）。答卷草稿已保留，并已下载救援文件——请勿清空浏览器数据，稍后在关于页“导入进度备份”可恢复学习进度。');
+      } catch (e) {
+        alert('成绩保存失败，且救援下载也失败：' + String(e.message || e));
+      }
+      this.lastResult = run;
+      if (App.parse()[0] !== 'mock') location.hash = '#mock';
+      App.render();
+    }
   },
 
   /* ---- 结果页 ---- */
