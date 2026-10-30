@@ -136,6 +136,32 @@
     return m ? parseInt(m[1], 10) : null;
   }
 
+  /* ---------- 错题间隔重复（SM-2 简化阶梯，无外部依赖） ---------- */
+  var SRS_LADDER = [1, 2, 4, 7, 15, 30]; // 天
+
+  /** 计算复习卡片的下一次调度。card 可为 null（首次做错）。
+   *  pass=true 且无旧卡 → 不生成卡片（掌握的题不进复习队列） */
+  function srsNext(card, pass, now) {
+    var t = now || Date.now();
+    var DAY = 86400000;
+    if (!pass) {
+      return { interval: 0, streak: 0, due: t + DAY, last: t }; // 明天再来
+    }
+    if (!card) return null; // 一次做对的题不需要复习
+    var streak = (card.streak || 0) + 1;
+    var interval = SRS_LADDER[Math.min(streak - 1, SRS_LADDER.length - 1)];
+    return { interval: interval, streak: streak, due: t + interval * DAY, last: t };
+  }
+
+  /** 到期复习队列：due <= now 的卡片按到期时间升序 */
+  function srsDue(cards, now) {
+    var t = now || Date.now();
+    return Object.keys(cards || {})
+      .filter(function (qid) { return cards[qid] && cards[qid].due <= t; })
+      .sort(function (a, b) { return cards[a].due - cards[b].due; })
+      .map(function (qid) { return { qid: qid, card: cards[qid] }; });
+  }
+
   /** 学习进度合并：本地与导入文件取更优记录，成绩按时间去重拼接 */
   function mergeProgress(local, imported) {
     var out = JSON.parse(JSON.stringify(local || {}));
@@ -159,6 +185,7 @@
       });
     });
     out.lessonRead = Object.assign({}, out.lessonRead || {}, imp.lessonRead || {});
+    out.srs = Object.assign({}, out.srs || {}, imp.srs || {}); // 复习卡：导入并集（同卡取后写入者，导出文件通常更新）
     out.drafts = Object.assign({}, out.drafts || {}, imp.drafts || {});
     var runs = (out.mockRuns || []).concat(imp.mockRuns || []);
     runs.sort(function (x, y) { return (x.ts || 0) - (y.ts || 0); });
@@ -204,6 +231,9 @@
     mockExpired: mockExpired,
     mergeProgress: mergeProgress,
     friendlyError: friendlyError,
+    srsNext: srsNext,
+    srsDue: srsDue,
+    SRS_LADDER: SRS_LADDER,
     errorLine: errorLine,
     gradeMcq: gradeMcq,
     judgeTest: judgeTest

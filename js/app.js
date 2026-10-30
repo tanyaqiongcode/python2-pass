@@ -100,8 +100,9 @@ const App = {
       )
     );
 
+    const dueN = State.srsDueItems().length;
     const progCard = h('div', { class: 'card' },
-      h('h2', null, '总进度'),
+      h('h2', null, '总进度', dueN ? h('a', { class: 'badge badge-master', style: 'float:right;margin-top:4px', href: '#wrong' }, `⏰ 今日待复习 ${dueN} 题`) : null),
       h('div', { class: 'progressbar' }, h('div', { style: `width:${(prog * 100).toFixed(1)}%` })),
       h('div', { class: 'progress-meta' },
         h('span', null, `已通过 ${Math.round(prog * 100)}%`),
@@ -834,10 +835,36 @@ const App = {
     app.innerHTML = '';
     const items = State.wrongItems();
     app.append(h('h1', { class: 'page-title' }, '📕 错题本'),
-      h('p', { class: 'page-sub' }, '做错或尚未通过的题目会出现在这里，通过后自动移出。'));
-    if (!items.length) {
+      h('p', { class: 'page-sub' }, '做错或尚未通过的题目会出现在这里，通过后自动移出。错题按间隔重复排期：答对一次隔 1-2 天再见，连对拉长到 30 天。'));
+    // 今日待复习队列
+    const dueItems = State.srsDueItems();
+    if (dueItems.length) {
+      const kindCn2 = { mcq: '单选', blank: '填空', fix: '改错', coding: '编程' };
+      const BB = window.BANK;
+      const qOf = (qid) => BB.mcq.find(x => x.id === qid) || BB.blanks.find(x => x.id === qid) ||
+        BB.fixes.find(x => x.id === qid) || BB.coding.find(x => x.id === qid);
+      const rev = h('div', { class: 'card', style: 'border-color:#e8c9a0;background:#fffaf2' },
+        h('h2', null, `⏰ 今日待复习（${dueItems.length}）`),
+        h('div', { class: 'muted small', style: 'margin-bottom:10px' }, '到期错题按先后排队，点进去重做一遍；答对后自动排到更远的日期。'),
+        h('div', { class: 'res-list' }, dueItems.map(x => {
+          const q = qOf(x.qid);
+          const lv = q ? q.level : '?';
+          const title = q ? (q.title || q.topic || q.q.slice(0, 24)) : x.qid;
+          return h('a', { class: 'res-item', href: q && q.level ? `#level/${lv}/${x.kind === 'mcq' ? 'mcq' : x.kind}` : '#wrong' },
+            h('span', { class: 'res-ico' }, { mcq: '✅', blank: '✏️', fix: '🐞', coding: '💻' }[x.kind] || '📌'),
+            h('span', null, h('b', null, `${kindCn2[x.kind]} · ${title}`),
+              h('div', { class: 'res-desc' }, `第 ${lv} 关 · 连对 ${x.streak} 次`)));
+        })));
+      app.append(rev);
+    }
+    if (!items.length && !dueItems.length) {
       app.append(h('div', { class: 'card', style: 'text-align:center;padding:40px' },
         h('div', { style: 'font-size:40px' }, '🎉'), h('p', null, '错题本是空的，继续保持！')));
+      return;
+    }
+    if (!items.length) {
+      app.append(h('div', { class: 'card', style: 'text-align:center;padding:20px' },
+        h('p', { class: 'muted', style: 'margin:0' }, '当前没有未通过的题目——今日待复习的错题见上方队列，做完即可。')));
       return;
     }
     const B = window.BANK;

@@ -148,3 +148,35 @@ test('mergeProgress：较新的错误单选不得倒退覆盖已有正确记录�
     { coding: { c1: { passed: false, ts: 2000 } } });
   assert.equal(r3.merged.coding.c1.passed, true);
 });
+
+test('srsNext：阶梯间隔与失败重置', () => {
+  const now = 1700000000000, DAY = 86400000;
+  // 首次做错 → 明天复习
+  const c1 = C.srsNext(null, false, now);
+  assert.equal(c1.due, now + DAY);
+  assert.equal(c1.streak, 0);
+  // 连续答对走阶梯 1→2→4→7→15→30
+  let card = c1;
+  const expect = [1, 2, 4, 7, 15, 30, 30];
+  expect.forEach((d, i) => {
+    card = C.srsNext(card, true, now + i * DAY);
+    assert.equal(card.interval, d, '第' + (i + 1) + '次答对间隔应为' + d + '天');
+  });
+  // 中途又错 → 重置回明天、清零
+  const reset = C.srsNext(card, false, now);
+  assert.equal(reset.interval, 0);
+  assert.equal(reset.streak, 0);
+  // 一次做对的题不生成复习卡
+  assert.equal(C.srsNext(null, true, now), null);
+});
+
+test('srsDue：到期队列排序', () => {
+  const now = 1700000000000;
+  const cards = {
+    a: { due: now - 2000, streak: 1 },
+    b: { due: now - 1000, streak: 2 },
+    c: { due: now + 5000, streak: 1 }
+  };
+  const due = C.srsDue(cards, now);
+  assert.deepEqual([...due.map(x => x.qid)], ['a', 'b']); // c 未到期（展开为当前 realm 数组）
+});

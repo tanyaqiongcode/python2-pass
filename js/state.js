@@ -16,6 +16,7 @@ const State = {
       mockRuns: [],   // {ts, score, grade, detail}
       settings: { examDate: null, target: 't3p' }, // 考试日期覆盖 + 目标等第
       drafts: {},     // 代码草稿 kind:qid -> code
+      srs: {},        // 复习卡 qid -> {kind, interval, streak, due, last}
       diagnosis: null // 入学诊断结果 {ts, perLevel, startLevel}
     };
   },
@@ -54,6 +55,7 @@ const State = {
   answerMcq(qid, choice, correct) {
     const prev = this.data.mcq[qid];
     this.data.mcq[qid] = { choice, correct, ts: Date.now(), wrongBefore: (prev && prev.wrongBefore) || !correct };
+    if (this.data.srs) this.srsUpdate('mcq', qid, correct);
     this.save();
   },
   mcqStat(qid) { return this.data.mcq[qid] || null; },
@@ -65,6 +67,7 @@ const State = {
     rec.passed = rec.passed || passed;
     rec.ts = Date.now();
     this.data[kind][qid] = rec;
+    if (this.data.srs) this.srsUpdate(kind, qid, passed);
     this.save();
   },
   codeStat(kind, qid) { return this.data[kind][qid] || null; },
@@ -78,6 +81,25 @@ const State = {
   addMockRun(run) {
     this.data.mockRuns.push(run);
     return this.save(); // 显式返回保存结果，失败时调用方保留答卷
+  },
+
+  /* ---- 错题间隔重复 ---- */
+  /** 做错 → 生成/重置复习卡；此前错过而这次通过 → 阶梯晋级。一次做对不建卡 */
+  srsUpdate(kind, qid, pass) {
+    const card = this.data.srs[qid];
+    const next = PY2CORE.srsNext(card, pass);
+    if (next) {
+      next.kind = kind;
+      this.data.srs[qid] = next;
+    } else if (card) {
+      delete this.data.srs[qid]; // 已晋级出队列
+    }
+    this.save();
+  },
+  srsDueItems(now) {
+    return PY2CORE.srsDue(this.data.srs, now).map(x => ({
+      qid: x.qid, kind: x.card.kind, due: x.card.due, streak: x.card.streak
+    }));
   },
 
   /* ---- 统计 ---- */
