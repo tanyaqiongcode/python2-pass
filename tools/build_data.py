@@ -201,6 +201,41 @@ def validate_fix(q, fname):
     return n
 
 
+def validate_parsons(q, fname):
+    n = 0
+    for f in ("id", "level", "title", "desc", "lines", "tests", "exp"):
+        if f not in q:
+            n += err(f'{fname}: {q.get("id", "?")} 缺字段 {f}')
+    if q.get("level") not in LEVEL_RANGE:
+        n += err(f'{fname}: {q.get("id")} level 非法')
+    lines = q.get("lines", [])
+    if not isinstance(lines, list) or len(lines) < 4:
+        n += err(f'{fname}: {q.get("id")} lines 至少 4 行')
+    if lines and any(not isinstance(l, str) for l in lines):
+        n += err(f'{fname}: {q.get("id")} lines 必须全是字符串')
+    ref = q.get("ref", "")
+    if lines and ref != "\n".join(lines):
+        n += err(f'{fname}: {q.get("id")} ref 必须等于 lines 按序 join')
+    for d in q.get("distractors", []):
+        if d in lines:
+            n += err(f'{fname}: {q.get("id")} distractor 与正确行重复')
+    return n
+
+
+def run_parsons(q):
+    n = 0
+    for i, t in enumerate(q.get("tests", [])):
+        r = _run(q["ref"], t.get("stdin", ""), q)
+        want = t.get("expected", "")
+        if not r["ok"] or norm(r["stdout"]) != norm(want):
+            n += err(
+                f"{q['id']}: test#{i + 1} 参考代码输出不符"
+                + (f"（错误: {r['error']}）" if not r["ok"] else
+                   f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(want)[:80]!r}）")
+            )
+    return n
+
+
 def run_coding(q):
     n = 0
     for i, t in enumerate(q.get("tests", [])):
@@ -258,6 +293,7 @@ def main():
     mcq, blanks, fixes, codings = [], [], [], []
     lessons = {}
     resources = []
+    parsons = []
     official_meta = None
     nerr = 0
     seen_ids = set()
@@ -297,6 +333,11 @@ def main():
                 nerr += err(f"{fname}: lesson 需要 level(1-7) 与 md")
             else:
                 lessons[int(lv)] = data["md"]
+        elif kind == "parsons":
+            for q in items:
+                nerr += validate_parsons(q, fname)
+                nerr += check_files(q, fname, 0)
+                parsons.append(q)
         elif kind == "official":
             meta = data.get("meta", {})
             for q in data.get("mcq", []):
@@ -351,11 +392,13 @@ def main():
             nrun += run_fix(q)
         for q in codings:
             nrun += run_coding(q)
+        for q in parsons:
+            nrun += run_parsons(q)
 
     nerr += nrun
     print("\n== 汇总 ==")
     print(
-        f"选择题 {len(mcq)} | 填空 {len(blanks)} | 改错 {len(fixes)} | 编程 {len(codings)} | 课程 {len(lessons)} | 资源 {len(resources)}"
+        f"选择题 {len(mcq)} | 填空 {len(blanks)} | 改错 {len(fixes)} | 编程 {len(codings)} | 拼程序 {len(parsons)} | 课程 {len(lessons)} | 资源 {len(resources)}"
     )
     print(f"错误 {nerr}")
     if nerr:
@@ -367,6 +410,7 @@ def main():
         "blanks": blanks,
         "fixes": fixes,
         "coding": codings,
+        "parsons": parsons,
         "lessons": {str(k): v for k, v in sorted(lessons.items())},
         "resources": resources,
     }

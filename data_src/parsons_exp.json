@@ -1,0 +1,114 @@
+{
+ "kind": "parsons",
+ "items": [
+  {
+   "id": "par-l2-001",
+   "level": 2,
+   "title": "拼程序：九九乘法表（前3行）",
+   "desc": "把右侧打乱的代码行拖拽/点选成正确顺序，组成一个打印九九乘法表前 3 行的程序。行数较多，注意内外层循环与 print 位置的配对。",
+   "lines": [
+    "for i in range(1, 4):",
+    "    for j in range(1, i + 1):",
+    "        print(f'{j}x{i}={i*j}', end='\\t')",
+    "    print()"
+   ],
+   "distractors": [
+    "for j in range(1, 4):",
+    "        print(f'{j}x{i}={i*j}')",
+    "print(i)"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "1x1=1\n1x2=2\t2x2=4\n1x3=3\t2x3=6\t3x3=9"
+    }
+   ],
+   "exp": "外层控制行，内层控制列；end='\\t' 让同行不换行，每行结束后单独 print() 换行。",
+   "ref": "for i in range(1, 4):\n    for j in range(1, i + 1):\n        print(f'{j}x{i}={i*j}', end='\\t')\n    print()"
+  },
+  {
+   "id": "par-l3-001",
+   "level": 3,
+   "title": "拼程序：成绩统计",
+   "desc": "scores 里存放 5 个成绩，拼出统计平均分与最高分的程序（平均分保留 1 位小数）。",
+   "lines": [
+    "scores = [78, 92, 85, 66, 94]",
+    "total = 0",
+    "for s in scores:",
+    "    total += s",
+    "avg = total / len(scores)",
+    "print('平均分:{:.1f} 最高分:{}'.format(avg, max(scores)))"
+   ],
+   "distractors": [
+    "avg = total // len(scores)",
+    "for s in total:",
+    "print(avg, max(scores))"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "平均分:83.0 最高分:94"
+    }
+   ],
+   "exp": "累加器先归零，循环内累加；平均分 = 总分 / 个数，用 len() 取个数。",
+   "ref": "scores = [78, 92, 85, 66, 94]\ntotal = 0\nfor s in scores:\n    total += s\navg = total / len(scores)\nprint('平均分:{:.1f} 最高分:{}'.format(avg, max(scores)))"
+  },
+  {
+   "id": "par-l5-001",
+   "level": 5,
+   "title": "拼程序：读取文件逐行处理",
+   "desc": "data.txt 有 3 行城市名（已提供）。拼出「打开文件→逐行打印（去掉换行）→关闭文件」的程序。行内缩进已含在行文本中。",
+   "files": [
+    {
+     "name": "data.txt",
+     "content": "上海\n北京\n广州\n"
+    }
+   ],
+   "lines": [
+    "f = open('data.txt', 'r', encoding='utf-8')",
+    "for line in f:",
+    "    print(line.strip())",
+    "f.close()"
+   ],
+   "distractors": [
+    "f = open('data.txt', 'w', encoding='utf-8')",
+    "    print(line)",
+    "f.read()"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "上海\n北京\n广州"
+    }
+   ],
+   "exp": "读文件用 'r' 模式；for line in f 逐行迭代且行尾带 \\n，strip() 去掉后再打印；用完 close()。",
+   "ref": "f = open('data.txt', 'r', encoding='utf-8')\nfor line in f:\n    print(line.strip())\nf.close()"
+  },
+  {
+   "id": "par-l7-001",
+   "level": 7,
+   "title": "拼程序：正则提取手机号",
+   "desc": "拼出「导入 re → 定义文本 → findall 提取全部手机号 → 逐个打印」的程序。",
+   "lines": [
+    "import re",
+    "text = '联系:13812345678 备用:15987654321'",
+    "phones = re.findall(r'1[35789]\\d{9}', text)",
+    "for p in phones:",
+    "    print(p)"
+   ],
+   "distractors": [
+    "phones = re.match(r'1[35789]\\d{9}', text)",
+    "import json",
+    "    print(text)"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "13812345678\n15987654321"
+    }
+   ],
+   "exp": "findall 返回所有匹配组成的列表；match 只从头匹配。手机号模式 1[35789]\\d{9}。",
+   "ref": "import re\ntext = '联系:13812345678 备用:15987654321'\nphones = re.findall(r'1[35789]\\d{9}', text)\nfor p in phones:\n    print(p)"
+  }
+ ]
+}

@@ -6985,6 +6985,117 @@ window.BANK = {
    "score": 13
   }
  ],
+ "parsons": [
+  {
+   "id": "par-l2-001",
+   "level": 2,
+   "title": "拼程序：九九乘法表（前3行）",
+   "desc": "把右侧打乱的代码行拖拽/点选成正确顺序，组成一个打印九九乘法表前 3 行的程序。行数较多，注意内外层循环与 print 位置的配对。",
+   "lines": [
+    "for i in range(1, 4):",
+    "    for j in range(1, i + 1):",
+    "        print(f'{j}x{i}={i*j}', end='\\t')",
+    "    print()"
+   ],
+   "distractors": [
+    "for j in range(1, 4):",
+    "        print(f'{j}x{i}={i*j}')",
+    "print(i)"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "1x1=1\n1x2=2\t2x2=4\n1x3=3\t2x3=6\t3x3=9"
+    }
+   ],
+   "exp": "外层控制行，内层控制列；end='\\t' 让同行不换行，每行结束后单独 print() 换行。",
+   "ref": "for i in range(1, 4):\n    for j in range(1, i + 1):\n        print(f'{j}x{i}={i*j}', end='\\t')\n    print()"
+  },
+  {
+   "id": "par-l3-001",
+   "level": 3,
+   "title": "拼程序：成绩统计",
+   "desc": "scores 里存放 5 个成绩，拼出统计平均分与最高分的程序（平均分保留 1 位小数）。",
+   "lines": [
+    "scores = [78, 92, 85, 66, 94]",
+    "total = 0",
+    "for s in scores:",
+    "    total += s",
+    "avg = total / len(scores)",
+    "print('平均分:{:.1f} 最高分:{}'.format(avg, max(scores)))"
+   ],
+   "distractors": [
+    "avg = total // len(scores)",
+    "for s in total:",
+    "print(avg, max(scores))"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "平均分:83.0 最高分:94"
+    }
+   ],
+   "exp": "累加器先归零，循环内累加；平均分 = 总分 / 个数，用 len() 取个数。",
+   "ref": "scores = [78, 92, 85, 66, 94]\ntotal = 0\nfor s in scores:\n    total += s\navg = total / len(scores)\nprint('平均分:{:.1f} 最高分:{}'.format(avg, max(scores)))"
+  },
+  {
+   "id": "par-l5-001",
+   "level": 5,
+   "title": "拼程序：读取文件逐行处理",
+   "desc": "data.txt 有 3 行城市名（已提供）。拼出「打开文件→逐行打印（去掉换行）→关闭文件」的程序。行内缩进已含在行文本中。",
+   "files": [
+    {
+     "name": "data.txt",
+     "content": "上海\n北京\n广州\n"
+    }
+   ],
+   "lines": [
+    "f = open('data.txt', 'r', encoding='utf-8')",
+    "for line in f:",
+    "    print(line.strip())",
+    "f.close()"
+   ],
+   "distractors": [
+    "f = open('data.txt', 'w', encoding='utf-8')",
+    "    print(line)",
+    "f.read()"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "上海\n北京\n广州"
+    }
+   ],
+   "exp": "读文件用 'r' 模式；for line in f 逐行迭代且行尾带 \\n，strip() 去掉后再打印；用完 close()。",
+   "ref": "f = open('data.txt', 'r', encoding='utf-8')\nfor line in f:\n    print(line.strip())\nf.close()"
+  },
+  {
+   "id": "par-l7-001",
+   "level": 7,
+   "title": "拼程序：正则提取手机号",
+   "desc": "拼出「导入 re → 定义文本 → findall 提取全部手机号 → 逐个打印」的程序。",
+   "lines": [
+    "import re",
+    "text = '联系:13812345678 备用:15987654321'",
+    "phones = re.findall(r'1[35789]\\d{9}', text)",
+    "for p in phones:",
+    "    print(p)"
+   ],
+   "distractors": [
+    "phones = re.match(r'1[35789]\\d{9}', text)",
+    "import json",
+    "    print(text)"
+   ],
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "13812345678\n15987654321"
+    }
+   ],
+   "exp": "findall 返回所有匹配组成的列表；match 只从头匹配。手机号模式 1[35789]\\d{9}。",
+   "ref": "import re\ntext = '联系:13812345678 备用:15987654321'\nphones = re.findall(r'1[35789]\\d{9}', text)\nfor p in phones:\n    print(p)"
+  }
+ ],
  "lessons": {
   "1": "本关是整张试卷的**地基**：选择题年年考标识符规则、类型转换细节、`/` 与 `//` 的区别、`-3**2` 的值、`and/or` 的返回值，编程大题的每一行也都建立在本关语法之上。概念多、坑多、分值稳，是性价比最高的抢分关。\n\n### 标识符、关键字与书写格式\n\n- 标识符（变量名）规则：由字母、数字、下划线（和中文）组成，**不能以数字开头**，不能与关键字重名，区分大小写（`Age` 与 `age` 是两个变量）。\n- 关键字是 Python 保留字：`if、for、while、def、return、import、and、or、not、in、is` 等。注意 **`True`、`False`、`None` 首字母必须大写**。\n- 书写格式：一句一行，行尾**不需要分号**；缩进（一般 4 个空格）表示代码层次，同一块必须对齐；`#` 后是注释。\n- 一行写不下可用 `\\` 续行，或写在 `()`、`[]`、`{}` 里自然换行。\n\n```python\nimport keyword\nprint(keyword.kwlist)      # 查看全部关键字\nlong_name = (1 + 2 +\n             3 * 4)        # 括号内可自然换行\n```\n\n| 判定 | 标识符 | 原因 |\n| --- | --- | --- |\n| 合法 | `_score`、`name2`、`姓名` | 下划线/中文合法，数字不在开头 |\n| 非法 | `2nd_name` | 不能以数字开头 |\n| 非法 | `for`、`if` | 与关键字重名 |\n| 非法 | `my-name` | 不能出现连字符 `-` |\n\n### 编程环境与程序运行方式\n\n- Python 是**解释型**语言，源程序是扩展名为 `.py` 的文本文件，由解释器逐行翻译执行。\n- 两种运行方式：**交互式**（IDLE 的 `>>>` 提示符下输入一行执行一行，适合试验）与**文件式**（代码保存为 `.py` 文件整体运行，IDLE 中按 F5）。\n- 区别：交互式中表达式的值会自动回显；文件式中**必须用 `print()`** 才能看到输出。\n- 常见环境：IDLE（考试自带）、PyCharm、Jupyter Notebook。\n\n```python\n# test.py —— 文件式程序，保存后按 F5 运行\nprint('Hello')             # 不写 print 就看不到输出\n3 + 4                      # 文件式中这行没有任何效果\n```\n\n### input()、print() 与 eval()\n\n- `input()`：读入一行，**返回值永远是字符串**；可以带提示语 `input('请输入：')`。\n- `print(值1, 值2, ..., sep=' ', end='\\n')`：`sep` 是多个值之间的**分隔符**（默认空格），`end` 是打印完的**结尾符**（默认换行）。\n- `eval(s)`：**去掉字符串外侧引号**，把内容当 Python 表达式求值，是常用的\"字符串转数值\"手段。\n\n```python\na = input()                # 输入 12，a 是字符串 '12'\nprint(a + '5')             # 125（字符串拼接，不是加法！）\nn = eval(input())          # 输入 12，n 是整数 12\nprint(n + 5)               # 17\nprint(1, 2, sep='*', end='!')\nprint('ok')                # 连成一行：1*2!ok\n```\n\n### 六大基本数据类型\n\n| 类型 | 写法示例 | 要点 |\n| --- | --- | --- |\n| 整型 int | `100`、`-5`、`0x1F`、`0b101`、`0o17` | 位数不限不会溢出；`0x`/`0b`/`0o` 分别是十六/二/八进制 |\n| 浮点型 float | `3.14`、`1e-3`、`2.5e8` | 科学计数法；有精度误差 `0.1+0.2 != 0.3` |\n| 复数 complex | `3+4j` | `.real` 实部、`.imag` 虚部、`abs()` 求模 |\n| 字符串 str | `'abc'`、`\"abc\"`、`'''可跨行'''` | 有序、**不可变**的序列 |\n| 布尔 bool | `True`、`False` | 是 int 的子类：`True + True` 得 `2` |\n| 空值 None | `None` | 表示\"什么都没有\"，不是 0 也不是空串 |\n\n```python\nprint(type(3.14))          # <class 'float'>\nprint((3 + 4j).imag)       # 4.0\nprint(abs(3 + 4j))         # 5.0（复数的模）\nprint(True + True)         # 2\nprint(0.1 + 0.2 == 0.3)    # False\n```\n\n### 变量与多重、链式赋值\n\n- 变量**无需声明类型**，赋什么值就是什么类型，同一变量可随时换成其他类型；用 `type()` 查看类型。\n- **链式赋值**：`a = b = c = 10`，三个名字指向同一个值。\n- **多重赋值（序列解包）**：`a, b = 1, 2`，右边元素个数必须与左边变量个数一致；`a, b = '12'` 合法（`a='1'`、`b='2'`），但 `a, b = '123'` 报错。\n- **交换两个变量**不需要临时变量：`a, b = b, a`。\n\n```python\na = b = c = 10             # 链式赋值\nx, y = 3, 5\nx, y = y, x                # 交换后 x=5，y=3\nm, n = '12'                # m='1'，n='2'\np, q = [1, 2, 3]           # 报错！个数不匹配\n```\n\n### 类型转换细节（最爱考）\n\n| 函数 | 作用 | 考点细节 |\n| --- | --- | --- |\n| `int(x)` | 转整数 | `int(3.9)` 得 `3`（**直接截断，不是四舍五入**）；`int('35')` 合法；**`int('3.5')` 报错 ValueError** |\n| `float(x)` | 转浮点 | `float('3.5')` 得 `3.5`；`float(3)` 得 `3.0` |\n| `str(x)` | 转字符串 | 任何类型都能转：`str(3.0)` 得 `'3.0'` |\n| `eval(s)` | 还原表达式 | `eval('3.5')` 得 `3.5`；`eval('1+2')` 得 `3` |\n| `round(x, n)` | 保留 n 位小数 | **五取偶**：`round(2.5)` 得 `2`，`round(3.5)` 得 `4` |\n| `bool(x)` | 转布尔 | `0`、`0.0`、`''`、`[]`、`None` 都是 `False`，其余为 `True` |\n\n```python\nprint(int(3.9))            # 3（丢掉小数部分）\nprint(int('35') + 1)       # 36\nprint(float('3.5') + 0.5)  # 4.0\nprint(str(3) + '5')        # '35'\nprint(round(3.14159, 2))   # 3.14\n```\n\n### 算术运算符与优先级\n\n| 运算符 | 含义 | 示例 | 注意 |\n| --- | --- | --- | --- |\n| `/` | 除 | `7/2` 得 `3.5`，`6/3` 得 **`2.0`** | 结果**永远是浮点数** |\n| `//` | 整除（向下取整） | `7//2` 得 `3`；`-7//2` 得 **`-4`** | 向数轴**负方向**取整 |\n| `%` | 取余 | `7%3` 得 `1`；`-7%3` 得 **`2`** | 余数符号**跟除数** |\n| `**` | 幂 | `2**3` 得 `8`；`2**0.5` 是平方根 | **右结合**：`2**3**2` 得 `512` |\n| `*`、`+` | 乘、加 | `'ab' * 3` 得 `'ababab'` | 字符串可重复、拼接 |\n\n- 优先级从高到低：`()` → `**` → 一元 `+/-` → `* / // %` → 二元 `+ -` → 比较运算 → `not` → `and` → `or`；记不清就加括号。\n- **`-3**2 = -(3**2) = -9`，`(-3)**2 = 9`**——幂的优先级高于负号，选择题高频。\n- 不同数值类型混合运算**自动向精度高的类型转换**：int 与 float 运算得 float，再与 complex 运算得 complex。\n\n```python\nprint(6 / 3)        # 2.0\nprint(-7 // 2)      # -4\nprint(-7 % 3)       # 2\nprint(-3 ** 2)      # -9\nprint((-3) ** 2)    # 9\nprint(3 + 2.0)      # 5.0（int 自动转 float）\n```\n\n### 比较与逻辑运算：and/or 的返回值\n\n- 比较运算的结果是布尔值，还可以**连写**：`1 < x <= 10` 等价于 `1 < x and x <= 10`。\n- 字符串比较按 Unicode 编码逐位进行：`'abc' < 'abd'` 为 True，`'9' > '100'` 也为 True（逐位比 `'9' > '1'`）。\n- 逻辑运算优先级：`not` > `and` > `or`。\n- **`and`/`or` 返回的是操作数本身，不一定是布尔值**：\n  - `a and b`：a 为假则返回 a（**短路**，b 不再计算）；a 为真则返回 b；\n  - `a or b`：a 为真则返回 a（**短路**）；a 为假则返回 b；\n  - `not` 一定返回 True/False。\n\n```python\nprint(3 and 5)      # 5（都真返回后一个）\nprint(0 and 5)      # 0（短路，直接返回假值）\nprint(3 or 5)       # 3（都真返回前一个）\nprint(0 or 5)       # 5\nprint(not 3)        # False\nprint(3 > 2 == 1)   # False（等价 3>2 and 2==1）\n```\n\n### 必背清单\n\n- 标识符规则：字母/数字/下划线/中文，**不以数字开头**、不与关键字重名、区分大小写。\n- `input()` 返回字符串；`print(sep=分隔符, end=结尾符)`；`eval()` 去引号求值。\n- 六大类型：int、float、complex、str、bool、None；`type()` 查类型；`True/False/None` 首字母大写。\n- `int('3.5')` 报错；`int(3.9)` 截断为 3；`round(2.5)` 得 2、`round(3.5)` 得 4。\n- `6/3` 得 `2.0`；`7//2=3`、`-7//2=-4`；`-7%3=2`；`-3**2=-9`、`(-3)**2=9`、幂右结合。\n- `and` 返回第一个假值或最后一个真值；`or` 返回第一个真值；两者都可能短路。\n- 优先级：`**` > `* / // %` > `+ -` > 比较 > `not` > `and` > `or`。\n- 链式赋值 `a = b = c = 1`；解包赋值 `a, b = 1, 2`；交换 `a, b = b, a`。\n\n### 易错点\n\n- `input()` 拿到的永远是字符串，参与算术运算前必须 `int()`/`float()`/`eval()` 转换。\n- `int('3.5')` 直接报错；含小数点的字符串要先 `float()` 再 `int()`。\n- `/` 的结果一定是浮点数，`6/3` 是 `2.0` 而不是 `2`。\n- `-7//2` 是 `-4` 不是 `-3`（整除向负无穷方向取整）。\n- `-7%3` 是 `2` 不是 `-1`（余数的符号跟除数一致）。\n- `-3**2` 等于 `-9`：幂运算优先级高于负号，想算负数的平方要写 `(-3)**2`。\n- `true`、`false`、`none` 全是错的，必须写 `True`、`False`、`None`。\n- `'a' and 'b'` 的结果是 `'b'` 而不是 True——`and/or` 返回操作数，只有 `not` 保证返回布尔值。\n- `0.1 + 0.2 == 0.3` 为 False，浮点数不能直接用 `==` 判等。\n- 同一缩进块混用 Tab 和空格会报 IndentationError，缩进错误也是语法错误。\n",
   "2": "控制流程是**程序填空题和改错题的主干**：几乎每道大题都是\"输入 → 分支判断 → 循环处理 → 按格式输出\"的骨架，本关的 `range()`、`break/continue`、双层循环缩进是最常见的设错点。本关末尾的经典算法小抄（素数、水仙花数、斐波那契、辗转相除等）务必练到能默写。\n\n### 三种基本结构\n\n- **顺序结构**：语句从上到下依次执行；**分支（选择）结构**：按条件走不同路线；**循环结构**：让某段代码重复执行。\n- 任何算法都由这三种结构组合而成，选择题常考结构识别与流程图对应。\n- Python 靠**缩进**表达\"谁属于谁\"，不用花括号。\n\n```python\nn = int(input())            # 顺序\nif n % 2 == 0:              # 分支\n    print('偶数')\nelse:\n    print('奇数')\n```\n\n### if / elif / else 与嵌套\n\n- 单分支 `if 条件:`；双分支 `if...else`；多分支 `if...elif...else`，**从上往下依次判断，命中一个分支后其余全部跳过**。\n- 条件后必须有冒号 `:`；`else` 与**同缩进的 if** 配对，嵌套分支靠缩进区分层次。\n- 条件表达式（三元运算）：`变量 = 值1 if 条件 else 值2`。\n- 条件可以是任何对象：**非零数值、非空字符串/列表都算 True**，`0`、`''`、`[]`、`None` 都算 False。\n\n```python\nscore = int(input())\nif score >= 90:\n    grade = '优秀'\nelif score >= 80:\n    grade = '良好'\nelif score >= 60:\n    grade = '及格'\nelse:\n    grade = '不及格'\nprint(grade)\nprint('及格' if score >= 60 else '不及格')   # 三元表达式\n```\n\n### while 循环\n\n- `while 条件:` 适合**循环次数不确定**的场合；循环体内必须有让条件趋向结束的语句，否则死循环。\n- 万能套路 `while True:` + `if 结束条件: break`——\"不断读输入直到空行\"的标准写法（填空题高频）。\n\n```python\ni, s = 1, 0\nwhile i <= 100:        # 1 加到 100\n    s += i\n    i += 1             # 忘了这行就是死循环\nprint(s)               # 5050\n\nwhile True:            # 持续读入，空行结束\n    line = input()\n    if line == '':\n        break\n    print('你输入了', line)\n```\n\n### for 与 range() 三参数\n\n- `for 变量 in 序列:` 依次取出序列中的每个元素；配 `range()` 实现指定次数循环。\n- **`range(start, stop, step)` 含头不含尾**，step 省略默认 1，可为负。\n\n| 写法 | 生成的序列 |\n| --- | --- |\n| `range(5)` | 0, 1, 2, 3, 4 |\n| `range(1, 6)` | 1, 2, 3, 4, 5 |\n| `range(1, 10, 2)` | 1, 3, 5, 7, 9 |\n| `range(10, 0, -1)` | 10, 9, 8, ..., 1 |\n| `range(10, 0)` | 空！步长为正却往小走，循环体一次都不执行 |\n\n- `range()` 本身不是列表，`list(range(5))` 才得到 `[0, 1, 2, 3, 4]`。\n- 直接遍历字符串：`for ch in 'Python':`。\n\n```python\ntotal = 0\nfor i in range(1, 101):    # i 取 1..100\n    total += i\nprint(total)               # 5050\nfor ch in 'Python':\n    print(ch, end=' ')     # P y t h o n\n```\n\n### break、continue 与 for-else\n\n- `break`：**立即跳出本层整个循环**；`continue`：**跳过本次剩余语句，直接进入下一次循环**。\n- 两者只对**所在那一层**循环生效，多层嵌套时外层不受影响。\n- `for...else` / `while...else`：循环**没有被 break 打断**、正常跑完时执行 `else` 块——查找、判素数的惯用法。\n\n```python\nfor i in range(5):\n    if i == 3:\n        break\n    print(i, end=' ')      # 0 1 2（3 及以后全没了）\nprint()\nfor i in range(5):\n    if i == 3:\n        continue\n    print(i, end=' ')      # 0 1 2 4（只跳过 3）\nprint()\nfor n in [2, 4, 6, 8]:\n    if n % 2 == 1:\n        break\nelse:\n    print('没有奇数')       # 循环没被 break，else 执行\n```\n\n### 循环嵌套：乘法表与图形打印\n\n- 外层控制**行**、内层控制**列**；外层执行 1 次，内层完整执行一遍。\n- 固定搭配：内层用 `print(x, end='')` 控制不换行，外层循环末尾用 `print()` 换行。\n\n```python\n# 九九乘法表（下三角）\nfor i in range(1, 10):\n    for j in range(1, i + 1):\n        print('{}*{}={}\\t'.format(i, j, i * j), end='')\n    print()\n\n# 星号金字塔：4 行\nn = 4\nfor i in range(1, n + 1):\n    print(' ' * (n - i) + '*' * (2 * i - 1))\n```\n\n### try-except 异常处理【知道】\n\n- 把可能出错的语句放进 `try`，一旦出错程序**不崩溃**，转去执行类型匹配的 `except`；可以写多个 except；`finally` 中的语句**无论是否出错都执行**。\n- 要认识常见异常名：`ZeroDivisionError` 除零、`ValueError` 类型转换失败、`IndexError` 下标越界、`NameError` 变量未定义、`TypeError` 类型错误。\n\n```python\ntry:\n    a = int(input())\n    print(10 / a)\nexcept ZeroDivisionError:\n    print('除数不能为0')\nexcept ValueError:\n    print('输入的不是整数')\nfinally:\n    print('程序结束')\n```\n\n### 经典算法小抄（必须练到默写）\n\n**素数判断**（试除 + for-else，只需试除到平方根）：\n\n```python\nn = int(input())\nfor i in range(2, int(n ** 0.5) + 1):\n    if n % i == 0:\n        print(n, '不是素数')\n        break\nelse:\n    print(n, '是素数')\n```\n\n**水仙花数**（三位数，各位数字立方和等于自身；取位套路通用）：\n\n```python\nfor n in range(100, 1000):\n    a = n // 100          # 百位\n    b = n // 10 % 10      # 十位\n    c = n % 10            # 个位\n    if a ** 3 + b ** 3 + c ** 3 == n:\n        print(n)          # 153 370 371 407\n```\n\n**斐波那契数列**（1 1 2 3 5 8...，双变量同时更新是核心）：\n\n```python\na, b = 1, 1\nfor i in range(20):\n    print(a, end=' ')\n    a, b = b, a + b\n```\n\n**辗转相除求最大公约数**（最小公倍数 = 两数之积 ÷ 最大公约数）：\n\n```python\nm, n = int(input()), int(input())\na, b = m, n\nwhile b != 0:\n    a, b = b, a % b       # 余数不为 0 就继续除\nprint('最大公约数', a, '最小公倍数', m * n // a)\n```\n\n**累加、累乘、计数与最值**（初始化是关键）：\n\n```python\nnums = [3, 7, 2, 9, 4]\ns, t, cnt = 0, 1, 0        # 累加器 0 / 累乘器 1 / 计数器 0\nmx = nums[0]               # 求最值用第一个元素初始化\nfor x in nums:\n    s += x                 # 累加\n    t *= x                 # 累乘\n    if x > mx:             # 打擂台求最大\n        mx = x\n    if x % 2 == 0:         # 满足条件才计数\n        cnt += 1\nprint(s, t, cnt, mx)       # 25 1512 2 9\n```\n\n### 必背清单\n\n- `range(start, stop, step)` 含头不含尾；`range(1,10,2)`、`range(10,0,-1)`、`range(10,0)` 的结果。\n- `while True:` + `if ...: break` 读输入到空行的模板。\n- 九九乘法表双层循环：内层 `end=''`，外层末尾 `print()`。\n- 素数判断：试除 2 到 `int(n**0.5)+1`，配 for-else 或标志变量。\n- 水仙花数取位：`n//100`、`n//10%10`、`n%10`。\n- 斐波那契：`a, b = 1, 1` 与 `a, b = b, a + b`。\n- 辗转相除：`while b != 0: a, b = b, a % b`，最小公倍数 `m*n//a`。\n- 初始化：累加器 `0`、累乘器 `1`、计数器 `0`、最值用首元素。\n\n### 易错点\n\n- `range(1, 10)` 不包含 10，只有 1 到 9。\n- 倒序必须写负步长 `range(10, 0, -1)`；`range(10, 0)` 是空序列，循环体一次都不执行。\n- `break` 只跳出**当前这一层**循环，嵌套时外层循环继续。\n- `continue` 只是跳过本次，循环变量照常更新，不会造成死循环。\n- `for-else` 的 `else` 在循环**未被 break 打断**时执行，与循环体里有没有 if 无关。\n- `while` 循环忘了更新循环变量（如 `i += 1`）就是死循环。\n- `else` 与哪个 `if` 配对完全由缩进决定，缩进错位逻辑全变。\n- 从 `input()` 读到的数字参与比较或计算前忘了 `int()` 转换。\n- 1 和 0 都不是素数，2 是最小的素数；上面的素数模板默认 `n >= 2`。\n- 计数器、累加器必须在循环外初始化，累乘器初值是 1 不是 0。\n",

@@ -16,6 +16,7 @@ const State = {
       mockRuns: [],   // {ts, score, grade, detail}
       settings: { examDate: null, target: 't3p' }, // 考试日期覆盖 + 目标等第
       drafts: {},     // 代码草稿 kind:qid -> code
+      parsons: {},    // 拼程序记录 qid -> {tries, passed}
       srs: {},        // 复习卡 qid -> {kind, interval, streak, due, last}
       diagnosis: null // 入学诊断结果 {ts, perLevel, startLevel}
     };
@@ -62,6 +63,7 @@ const State = {
 
   /* ---- 代码类题目 ---- */
   recordCode(kind, qid, passed) {
+    this.data[kind] = this.data[kind] || {};
     const rec = this.data[kind][qid] || { tries: 0, passed: false };
     rec.tries += 1;
     rec.passed = rec.passed || passed;
@@ -70,7 +72,7 @@ const State = {
     if (this.data.srs) this.srsUpdate(kind, qid, passed);
     this.save();
   },
-  codeStat(kind, qid) { return this.data[kind][qid] || null; },
+  codeStat(kind, qid) { return (this.data[kind] || {})[qid] || null; },
 
   markLessonRead(level) {
     this.data.lessonRead[level] = true;
@@ -115,7 +117,8 @@ const State = {
     const codeItems = [
       ...B.blanks.filter(q => q.level === level).map(q => ['blank', q]),
       ...B.fixes.filter(q => q.level === level).map(q => ['fix', q]),
-      ...B.coding.filter(q => q.level === level).map(q => ['coding', q])
+      ...B.coding.filter(q => q.level === level).map(q => ['coding', q]),
+      ...((B.parsons || []).filter(q => q.level === level).map(q => ['parsons', q]))
     ];
     let mcqDone = 0, mcqRight = 0;
     for (const q of mcqs) {
@@ -186,7 +189,7 @@ const State = {
       const st = this.mcqStat(q.id);
       if (st && !st.correct) out.push({ kind: 'mcq', q });
     }
-    for (const [kind, arr] of [['blank', B.blanks], ['fix', B.fixes], ['coding', B.coding]]) {
+    for (const [kind, arr] of [['blank', B.blanks], ['fix', B.fixes], ['coding', B.coding], ['parsons', B.parsons || []]]) {
       for (const q of arr) {
         const st = this.codeStat(kind, q.id);
         if (st && st.tries > 0 && !st.passed) out.push({ kind, q });

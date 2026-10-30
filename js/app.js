@@ -117,7 +117,8 @@ const App = {
       const mcqN = B.mcq.filter(q => q.level === m.no).length;
       const codeN = B.blanks.filter(q => q.level === m.no).length +
         B.fixes.filter(q => q.level === m.no).length +
-        B.coding.filter(q => q.level === m.no).length;
+        B.coding.filter(q => q.level === m.no).length +
+        (B.parsons || []).filter(q => q.level === m.no).length;
       map.append(
         h('a', { class: 'levelcard' + (st.cleared ? ' done' : ''), href: `#level/${m.no}/lesson` },
           h('div', { class: 'lv-no' }, '0' + m.no),
@@ -423,6 +424,110 @@ const App = {
   },
 
   /* ============================================================
+   * Parsons 拼程序：打乱代码行 → 点选拼装 → 真实判题
+   * ============================================================ */
+  renderParsons(box, qs) {
+    if (!qs.length) { box.append(h('div', { class: 'card' }, '本关暂无拼程序题')); return; }
+    box.append(h('div', { class: 'notice' },
+      h('b', null, '玩法：'),
+      ' 代码行被打乱，按正确逻辑顺序<b>点击</b>加入下方程序区（点已选行可撤回）。判题会把拼好的程序真实运行——顺序对了才能通过。',
+      ' 🧩 = 读程序写结果能力的专项训练。'));
+    qs.forEach(q => box.append(this.parsonsCard(q)));
+  },
+
+  parsonsCard(q) {
+    const card = h('div', { class: 'qcard' });
+    const st = State.codeStat('parsons', q.id);
+    card.append(h('div', { class: 'qhead' },
+      h('span', { class: 'qno' }, `${q.title}`),
+      h('span', { class: 'qtag' }, '拼程序' + (st && st.passed ? ' · 已通过 ✓' : ''))));
+    card.append(h('div', { class: 'qtext', html: miniMdInline(q.desc || '') }));
+
+    // 确定性洗牌（qid 哈希为种子），带干扰行
+    let h1 = 0;
+    for (const c of q.id) h1 = (h1 * 31 + c.charCodeAt(0)) >>> 0;
+    const pool = q.lines.concat(q.distractors || []);
+    const shuffled = pool.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      h1 = (h1 * 1103515245 + 12345) >>> 0;
+      const j = h1 % (i + 1);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const picked = [];
+    const poolBox = h('div', { class: 'opts', style: 'margin:8px 0' });
+    const seqBox = h('pre', { class: 'output', style: 'min-height:56px;white-space:pre-wrap' });
+    const redraw = () => {
+      poolBox.innerHTML = '';
+      shuffled.forEach((line, idx) => {
+        const usedAt = picked.indexOf(idx);
+        const chip = h('div', {
+          class: 'opt' + (usedAt >= 0 ? ' selected' : ''),
+          style: 'font-family:var(--mono);font-size:13.5px;padding:7px 12px;margin:4px 0;white-space:pre-wrap',
+          onclick: () => {
+            if (usedAt >= 0) picked.splice(usedAt, 1);
+            else picked.push(idx);
+            redraw();
+          }
+        }, (usedAt >= 0 ? (usedAt + 1) + '. ' : '') + line);
+        poolBox.append(chip);
+      });
+      seqBox.textContent = picked.length
+        ? picked.map((idx, i) => (i + 1) + '  ' + shuffled[idx]).join('\n')
+        : '（点击上方代码行，按正确顺序组装程序…）';
+    };
+    redraw();
+
+    const outBox = h('div');
+    const runBtn = h('button', { class: 'btn btn-green' }, st && st.passed ? '▶ 重新判题' : '▶ 判题');
+    const resetBtn = h('button', { class: 'btn btn-ghost btn-sm' }, '重新组装');
+    const showRefBtn = h('button', { class: 'btn btn-ghost btn-sm', style: 'display:none' }, '显示参考答案');
+    runBtn.addEventListener('click', async () => {
+      if (!picked.length) {
+        outBox.innerHTML = '';
+        outBox.append(h('div', { class: 'result-banner fail' }, '请先点击上方代码行，按正确顺序组装程序（干扰行不要选）。'));
+        return;
+      }
+      runBtn.disabled = true; runBtn.textContent = '⏳ 运行中…';
+      const assembled = picked.map(idx => shuffled[idx]).join('\n');
+      const canvasBox = h('div', { class: 'canvas-box' });
+      outBox.innerHTML = '';
+      outBox.append(canvasBox);
+      const r = await Engine.run(assembled, { stdin: (q.tests && q.tests[0] ? q.tests[0].stdin : '') || '', files: q.files, mount: canvasBox });
+      const cmp = compareOutput(r.stdout, (q.tests && q.tests[0] ? q.tests[0].expected : '') || '');
+      const passed = PY2CORE.judgeTest(r, (q.tests && q.tests[0]) || {});
+      outBox.append(h('div', { class: 'result-banner ' + (passed ? 'pass' : 'fail') },
+        passed ? '✅ 拼装正确，程序运行通过！' : '❌ 拼装顺序不对（程序运行结果与期望不符）。'));
+      const pre = h('pre', { class: 'output' }); pre.textContent = r.stdout || '（无输出）';
+      outBox.append(pre);
+      if (r.error) outBox.append(h('pre', { class: 'output' }, h('span', { class: 'out-err' }, '⚠ ' + r.error)));
+      const lineNo = PY2CORE.errorLine(r.tb || '');
+      const hint = PY2CORE.friendlyError(r.error);
+      if (hint || lineNo) {
+        const parts = [];
+        if (lineNo) parts.push('💡 第 ' + lineNo + ' 行附近出错。');
+        if (hint) parts.push('💡 ' + hint);
+        outBox.append(h('div', { class: 'tip' }, parts.join(' ')));
+      }
+      State.recordCode('parsons', q.id, passed);
+      if (passed) showRefBtn.style.display = 'inline-block';
+      runBtn.disabled = false; runBtn.textContent = '▶ 重新判题';
+    });
+    resetBtn.addEventListener('click', () => { picked.length = 0; redraw(); outBox.innerHTML = ''; });
+    showRefBtn.addEventListener('click', () => {
+      outBox.innerHTML = '';
+      outBox.append(h('div', { class: 'io-label' }, '参考程序：'), codeBlock(q.ref));
+      showRefBtn.style.display = 'none';
+    });
+
+    card.append(h('div', { class: 'io-label' }, '打乱的代码行（点选加入程序）：'), poolBox);
+    card.append(h('div', { class: 'io-label' }, '你的程序：'), seqBox);
+    card.append(h('div', { style: 'display:flex;gap:10px;margin-top:10px;flex-wrap:wrap' }, runBtn, resetBtn, showRefBtn));
+    card.append(outBox);
+    return card;
+  },
+
+  /* ============================================================
    * 题库总览
    * ============================================================ */
   viewBank(app) {
@@ -456,14 +561,16 @@ const App = {
       mcq: B.mcq.filter(q => q.level === level).length,
       blank: B.blanks.filter(q => q.level === level).length,
       fix: B.fixes.filter(q => q.level === level).length,
-      coding: B.coding.filter(q => q.level === level).length
+      coding: B.coding.filter(q => q.level === level).length,
+      parsons: (B.parsons || []).filter(q => q.level === level).length
     };
     const tabs = h('div', { class: 'tabs' },
       h('a', { href: `#level/${level}/lesson`, class: tab === 'lesson' ? 'active' : '' }, '📖 知识点速览 ', counts.lesson ? h('span', { class: 'done-tick' }, counts.lesson) : ''),
       h('a', { href: `#level/${level}/mcq`, class: tab === 'mcq' ? 'active' : '' }, `✅ 单选题（${counts.mcq}）`),
       counts.blank ? h('a', { href: `#level/${level}/blank`, class: tab === 'blank' ? 'active' : '' }, `✏️ 程序填空（${counts.blank}）`) : null,
       counts.fix ? h('a', { href: `#level/${level}/fix`, class: tab === 'fix' ? 'active' : '' }, `🐞 调试改错（${counts.fix}）`) : null,
-      counts.coding ? h('a', { href: `#level/${level}/coding`, class: tab === 'coding' ? 'active' : '' }, `💻 编程题（${counts.coding}）`) : null
+      counts.coding ? h('a', { href: `#level/${level}/coding`, class: tab === 'coding' ? 'active' : '' }, `💻 编程题（${counts.coding}）`) : null,
+      counts.parsons ? h('a', { href: `#level/${level}/parsons`, class: tab === 'parsons' ? 'active' : '' }, `🧩 拼程序（${counts.parsons}）`) : null
     );
     app.append(
       h('h1', { class: 'page-title' }, `第 ${meta.no} 关 · ${meta.title}`),
@@ -477,6 +584,7 @@ const App = {
     if (tab === 'blank') this.renderCodeTasks(box, 'blank', B.blanks.filter(q => q.level === level));
     if (tab === 'fix') this.renderCodeTasks(box, 'fix', B.fixes.filter(q => q.level === level));
     if (tab === 'coding') this.renderCodeTasks(box, 'coding', B.coding.filter(q => q.level === level));
+    if (tab === 'parsons') this.renderParsons(box, (B.parsons || []).filter(q => q.level === level));
 
     // 关底导航
     const next = LEVEL_META.find(m => m.no === level + 1);
@@ -874,7 +982,7 @@ const App = {
       app.append(h('h2', null, `单选题（${byKind.mcq.length}）`));
       byKind.mcq.forEach((q, i) => app.append(this.mcqCard(q, i + 1, State.mcqStat(q.id))));
     }
-    for (const [kind, label] of [['blank', '程序填空'], ['fix', '调试改错'], ['coding', '编程题']]) {
+    for (const [kind, label] of [['blank', '程序填空'], ['fix', '调试改错'], ['coding', '编程题'], ['parsons', '拼程序']]) {
       if (byKind[kind].length) {
         app.append(h('h2', null, `${label}（${byKind[kind].length}）`));
         this.renderCodeTasks(app, kind, byKind[kind]);
@@ -1010,7 +1118,7 @@ function renderResult(outBox, r, expected, passed, perBlank, details) {
     passed ? '✅ 通过！运行结果与期望一致。' : '❌ 未通过，请对照下方输出检查。'));
   if (details && details.length > 1) {
     const tb = h('table', { class: 'testtable' },
-      h('tr', null, h('th', null, '测试点'), h('th', null, '输入'), h('th', null, '期望输出'), h('th', null, '实际输出'), h('th', null, '结果')));
+      h('tr', null, h('th', null, '测试点'), h('th', null, '输入'), h('th', null, '期望输出'), h('th', null, '实际输出'), h('th', null, '结果'), h('th', null, '耗时')));
     details.forEach((d, i) => {
       const okv = d.pass !== undefined ? d.pass : d.cmp.ok;
       tb.append(h('tr', null,
@@ -1018,7 +1126,8 @@ function renderResult(outBox, r, expected, passed, perBlank, details) {
         h('td', null, h('pre', { class: 'output', style: 'max-width:160px' }, d.t.stdin || '（无）')),
         h('td', null, h('pre', { class: 'output', style: 'max-width:200px' }, d.t.expected || (d.t.expectCanvas ? '（运行并画出画布）' : ''))),
         h('td', null, h('pre', { class: 'output', style: 'max-width:200px' }, d.r.stdout || '')),
-        h('td', null, h('span', { class: okv ? 'pass-cell' : 'fail-cell' }, okv ? '✓' : '✗'))
+        h('td', null, h('span', { class: okv ? 'pass-cell' : 'fail-cell' }, okv ? '✓' : '✗')),
+        h('td', null, d.r.durationMs !== undefined ? d.r.durationMs + 'ms' : '—')
       ));
     });
     outBox.append(tb);
@@ -1056,6 +1165,9 @@ function renderResult(outBox, r, expected, passed, perBlank, details) {
       if (d.t.expected) {
         outBox.append(h('div', { class: 'io-label' }, '期望输出：'));
         outBox.append(h('pre', { class: 'output' }, d.t.expected));
+      }
+      if (d.r.durationMs !== undefined) {
+        outBox.append(h('div', { class: 'muted small' }, '⏱ 运行耗时 ' + d.r.durationMs + ' ms'));
       }
     }
     if (perBlank) {

@@ -16,7 +16,7 @@ class _Watchdog(Exception):
     pass
 
 class _Ctx:
-    __slots__ = ('inputs', 'i', 'events', 'deadline', 'max_events', 'prompts', 'ops')
+    __slots__ = ('inputs', 'i', 'events', 'deadline', 'max_events', 'prompts', 'ops', 'duration')
 
 def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=None, ops=None):
     ctx = _Ctx()
@@ -69,6 +69,7 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
     except Exception:
         _turtle_mod = None
 
+    _t0 = time.monotonic()
     saved_stdin = sys.stdin
     saved_stdout = sys.stdout
     saved_path = sys.path[:]
@@ -104,6 +105,7 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
         except Exception:
             pass
     finally:
+        ctx.duration = int((time.monotonic() - _t0) * 1000)
         builtins.input = old_input
         sys.stdin = saved_stdin
         sys.stdout = saved_stdout
@@ -115,7 +117,7 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
                 pass
 
     return {'ok': err == '', 'stdout': out.getvalue(), 'prompts': '\\n'.join(ctx.prompts),
-            'error': err, 'tb': tb, 'canvasOps': ctx.ops}
+            'error': err, 'tb': tb, 'canvasOps': ctx.ops, 'durationMs': ctx.duration}
 `;
 
 /* ============================================================

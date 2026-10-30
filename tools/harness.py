@@ -40,6 +40,7 @@ def run_user(
         "max_events": max_events,
         "deadline": time.monotonic() + timeout_s,
         "prompts": [],
+        "duration": 0,
     }
     out = io.StringIO()
 
@@ -82,6 +83,7 @@ def run_user(
     except Exception:
         turtle_mod = None
 
+    _t0 = time.monotonic()
     saved_stdin, saved_stdout = sys.stdin, sys.stdout
     saved_path = sys.path[:]
     if "" not in saved_path and os.getcwd() not in saved_path:
@@ -115,6 +117,7 @@ def run_user(
         except Exception:
             pass
     finally:
+        ctx["duration"] = int((time.monotonic() - _t0) * 1000)
         builtins.input = old_input
         sys.stdin, sys.stdout = saved_stdin, saved_stdout
         sys.path[:] = saved_path
@@ -130,4 +133,5 @@ def run_user(
         "prompts": "\n".join(ctx["prompts"]),
         "error": err,
         "tb": tb,
+        "durationMs": ctx["duration"],
     }

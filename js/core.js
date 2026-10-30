@@ -167,7 +167,7 @@
     var out = JSON.parse(JSON.stringify(local || {}));
     var imp = imported || {};
     var counts = { questions: 0, mocks: 0 };
-    var kinds = ['mcq', 'blank', 'fix', 'coding'];
+    var kinds = ['mcq', 'blank', 'fix', 'coding', 'parsons'];
     kinds.forEach(function (k) {
       var src = imp[k] || {};
       out[k] = out[k] || {};
