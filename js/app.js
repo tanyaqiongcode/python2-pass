@@ -52,6 +52,7 @@ const App = {
     try {
       if (parts[0] === 'home') return this.viewHome(app);
       if (parts[0] === 'plan') return this.viewPlan(app);
+      if (parts[0] === 'sprint') return this.viewSprint(app);
       if (parts[0] === 'path') return this.viewPath(app);
       if (parts[0] === 'diagnostic') return this.viewDiagnostic(app);
       if (parts[0] === 'bank') return this.viewBank(app);
@@ -180,6 +181,9 @@ const App = {
 
     const quick = h('div', { class: 'card' },
       h('h2', null, '快捷入口'),
+      h('div', { style: 'margin:-8px 0 10px' },
+        h('a', { class: 'badge badge-master', href: '#sprint' }, `⚡ 冲刺20天计划（今天：${(() => { const d = new Date(); return `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })()}）`),
+        h('a', { class: 'badge', href: '#sprint' }, '📌 每日一题')),
       h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap' },
         h('a', { class: 'btn', href: '#level/1/lesson' }, '从第 1 关开始'),
         h('a', { class: 'btn btn-ghost', href: '#bank' }, '按题型刷题'),
@@ -253,6 +257,125 @@ const App = {
     localStorage.removeItem(Mock.KEY);
     State.init();
     this.render();
+  },
+
+  /* ============================================================
+   * 20 天冲刺（逐日任务卡 + 考前须知 + 每日一题）
+   * ============================================================ */
+  SPRINT_DAYS: [
+    { d: '11-07', t: '入学诊断 + 第 1 关速览与单选', link: '#diagnostic', why: '先测起点，再打地基' },
+    { d: '11-08', t: '第 1 关代码题通关（input/print/类型转换）', link: '#level/1/coding', why: '第一天就动手写' },
+    { d: '11-09', t: '第 2 关速览与单选 + 代码题（分支/循环）', link: '#level/2/lesson', why: '控制流程是编程题地基' },
+    { d: '11-10', t: '第 2 关通关：素数/角谷/乘法表实操', link: '#level/2/coding', why: '经典循环算法' },
+    { d: '11-11', t: '第 3 关速览与单选（字符串/列表/字典）', link: '#level/3/lesson', why: '考试占比最重的数据结构' },
+    { d: '11-12', t: '第 3 关代码题：回文/频次/分段统计', link: '#level/3/coding', why: '数据处理基本功' },
+    { d: '11-13', t: '第 3 关通关 + 冒泡排序实操', link: '#level/3/parsons', why: '拼程序巩固读程序能力' },
+    { d: '11-14', t: '第 4 关速览与单选 + 函数编程题', link: '#level/4/lesson', why: '参数/作用域/递归' },
+    { d: '11-15', t: '第 4 关通关 + 第一场标准模拟考', link: '#mock', why: '首次全真检验' },
+    { d: '11-16', t: '模拟考复盘 + 错题本清零', link: '#wrong', why: '暴露弱点的价值在修复' },
+    { d: '11-17', t: '第 5 关速览与单选（文件读写）', link: '#level/5/lesson', why: '编程大题主战场' },
+    { d: '11-18', t: '第 5 关编程：CSV 数据分析套路 ×3', link: '#level/5/coding', why: '读文件→split→统计→输出' },
+    { d: '11-19', t: '第 5 关通关 + 词频统计套路默写', link: '#level/5/coding', why: '大题模板化' },
+    { d: '11-20', t: '第 6 关速览与单选（random/math/turtle）', link: '#level/6/lesson', why: '常考库函数' },
+    { d: '11-21', t: '第 6 关通关 + 第二场模拟考（官方 A 卷）', link: '#mock', why: '官方卷最接近真实' },
+    { d: '11-22', t: '官方卷复盘 + 错题清零', link: '#wrong', why: '按关卡看薄弱点' },
+    { d: '11-23', t: '第 7 关正则（冲三级优秀/保底跳过）', link: '#level/7/lesson', why: '三级增量第一站' },
+    { d: '11-24', t: '第 7 关 SQLite 实操', link: '#level/7/coding', why: '数据库大题套路' },
+    { d: '11-25', t: '第三场三级冲刺卷 + 错题二刷', link: '#mock', why: '检验三级成色' },
+    { d: '11-26', t: '错题速过 + 每日一题保持手感', link: '#wrong', why: '考前不学新东西' },
+    { d: '11-27', t: '休整：准考证/证件/路线，早睡', link: '#about', why: '考试状态也是分数' }
+  ],
+
+  viewSprint(app) {
+    app.innerHTML = '';
+    const today = new Date();
+    const mmdd = (d) => `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const ymd = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    const todayKey = mmdd(today);
+    const examKey = '11-28';
+    const wk = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+
+    app.append(h('h1', { class: 'page-title' }, '⚡ 20 天冲刺计划'),
+      h('p', { class: 'page-sub' }, '每天 2~2.5 小时：1 关内容 + 5 道实操 + 错题复习。已过的天数会按你的实际进度显示 ✓ / ✗。'));
+
+    // 每日一题
+    const seed = Number(ymd(today));
+    const pool = window.BANK.mcq.filter(q => q.level <= 6);
+    const dq = pool[seed % pool.length];
+    const letters = ['A', 'B', 'C', 'D'];
+    let picked = null;
+    const qCard = h('div', { class: 'card' },
+      h('h2', null, '📌 每日一题'),
+      h('div', { class: 'qno' }, dq.q),
+      (() => {
+        const box = h('div', { class: 'opts' });
+        dq.opts.forEach((o, j) => {
+          box.append(h('div', { class: 'opt', onclick: (e) => {
+            if (picked !== null) return;
+            picked = j;
+            const right = j === dq.ans;
+            e.currentTarget.classList.add(right ? 'right' : 'wrong');
+            box.querySelectorAll('.opt').forEach((el, jj) => { if (jj === dq.ans) el.classList.add('right'); el.style.pointerEvents = 'none'; });
+            box.after(h('div', { class: 'explain' },
+              h('span', { class: 'verdict ' + (right ? 'ok' : 'no') }, right ? '✓ 答对了，保持手感' : '✗ 今天的第一道提醒'),
+              h('div', { html: miniMdInline(dq.exp || '') }),
+              h('a', { href: `#level/${dq.level}/mcq`, class: 'small' }, `去第 ${dq.level} 关刷同类题 →`)));
+          } },
+            h('span', { class: 'opt-key' }, letters[j] + '.'), h('span', null, o)));
+        });
+        return box;
+      })());
+    app.append(qCard);
+
+    // 逐日任务
+    const list = h('div');
+    let sawToday = false;
+    this.SPRINT_DAYS.forEach((day, i) => {
+      const isToday = day.d === todayKey && !sawToday;
+      if (isToday) sawToday = true;
+      const past = day.d < todayKey;
+      const dateObj = new Date('2026-' + day.d + 'T12:00:00');
+      const wkLabel = wk[dateObj.getDay()];
+      const st = past ? (State.totalProgress() > i / this.SPRINT_DAYS.length * 0.9 ? '✓' : '△') : (isToday ? '▶' : '·');
+      list.append(h('div', {
+        class: 'plan-week' + (isToday ? '' : ''),
+        style: isToday ? 'outline:2px solid var(--green);border-radius:12px' : (past ? 'opacity:.75' : '')
+      },
+        h('div', { class: 'wk' }, day.d, h('small', null, wkLabel + (isToday ? ' · 今天' : ''))),
+        h('div', { class: 'wk-body' },
+          h('b', null, st + ' ' + day.t),
+          h('div', { class: 'muted small' }, day.why + '　'),
+          h('a', { href: day.link, class: 'small' }, '去做 →'))));
+    });
+    app.append(list);
+
+    // 考试日卡 + 考前须知
+    const examCard = h('div', { class: 'card', style: 'border-color:#f2c9c7;background:#fffaf9' });
+    examCard.append(h('h2', null, '🎂 11-28（周六）考试日'));
+    const examUl = h('ul');
+    examUl.append(h('li', null, '带齐：身份证 + 准考证'));
+    const printLink = h('a', { href: 'https://scite.shmeea.edu.cn:8001/home/QuickPrintTestTicket', target: '_blank', rel: 'noopener' }, '准考证打印入口');
+    const liPrint = h('li');
+    liPrint.append(printLink);
+    examUl.append(liPrint);
+    examUl.append(h('li', null, '上机环境是 Windows + IDLE/PyCharm，不是本站浏览器——文件存 c:/ks、改错行尾加 #### 标记'));
+    examUl.append(h('li', null, '交卷前检查：文件是否保存到指定目录、程序是否跑过一遍'));
+    examCard.append(examUl);
+    app.append(examCard);
+
+    const diffCard = h('div', { class: 'card' });
+    diffCard.append(h('h2', null, '⚠ 与真实考场的信息差（本站判题已尽量贴近）'));
+    const diffUl = h('ul');
+    diffUl.append(h('li', null, '真实考试改错题要求在修改行尾加 #### 标记——本站按运行结果判分，练习时建议养成加标记习惯'));
+    diffUl.append(h('li', null, '真实考试数据文件在 c:/素材/，程序存 c:/ks/——本站自动准备文件，注意题目里的文件名'));
+    diffUl.append(h('li', null, '考试可自带安装了 PyCharm/IDLE 的电脑（不联网）；本站浏览器判题环境为 CPython 3.14，考试为 3.8，个别新语法别用'));
+    diffUl.append(h('li', null, '2025 年起发放电子证书（随申办亮证），成绩 12 月底公布'));
+    diffCard.append(diffUl);
+    app.append(diffCard);
+
+    app.append(h('div', { style: 'margin-top:8px' },
+      h('a', { class: 'btn btn-ghost btn-sm', href: '#plan' }, '查看七周计划'), ' ',
+      h('a', { class: 'btn btn-ghost btn-sm', href: '#path' }, '查看学习路径')));
   },
 
   /* ============================================================
