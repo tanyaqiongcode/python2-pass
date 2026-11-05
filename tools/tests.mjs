@@ -180,3 +180,72 @@ test('srsDue：到期队列排序', () => {
   const due = C.srsDue(cards, now);
   assert.deepEqual([...due.map(x => x.qid)], ['a', 'b']); // c 未到期（展开为当前 realm 数组）
 });
+
+test('judgeTest：带运行后检查时必须 checkOk === true', () => {
+  const t = { expected: 'drawn', check: 'check_polygon(segs, 4, 100, "red")' };
+  assert.equal(C.judgeTest({ ok: true, stdout: 'drawn', checkOk: true }, t), true);
+  assert.equal(C.judgeTest({ ok: true, stdout: 'drawn', checkOk: false }, t), false, '输出对但图画错 → 不通过');
+  assert.equal(C.judgeTest({ ok: true, stdout: 'drawn' }, t), false, '检查没跑（旧引擎）→ 不通过');
+  assert.equal(C.judgeTest({ ok: true, stdout: 'x', checkOk: true }, t), false, '图对但输出错 → 不通过');
+  // 带 check、无 expected：不比对输出
+  assert.equal(C.judgeTest({ ok: true, stdout: 'anything', checkOk: true }, { check: 'x' }), true);
+  // 旧式画布题仍可用
+  assert.equal(C.judgeTest({ ok: true, stdout: '', hasCanvas: true }, { expectCanvas: true }), true);
+  assert.equal(C.judgeTest({ ok: true, stdout: '', hasCanvas: false }, { expectCanvas: true }), false);
+  // check 优先于 expectCanvas：有画布但检查失败 → 不通过
+  assert.equal(C.judgeTest({ ok: true, stdout: '', hasCanvas: true, checkOk: false }, { expectCanvas: true, check: 'x' }), false);
+  assert.equal(C.judgeTest({ ok: false, stdout: '', checkOk: true }, { check: 'x' }), false);
+});
+
+test('unjudgedPoints：只认正数分值', () => {
+  assert.equal(C.unjudgedPoints({ unjudged: { points: 3, note: 'whl' } }), 3);
+  assert.equal(C.unjudgedPoints({}), 0);
+  assert.equal(C.unjudgedPoints({ unjudged: { points: 0 } }), 0);
+});
+
+const PLAN_COUNTS = { 1: { mcq: 26, code: 8 }, 2: { mcq: 26, code: 25 }, 3: { mcq: 26, code: 23 }, 4: { mcq: 28, code: 17 },
+  5: { mcq: 20, code: 19 }, 6: { mcq: 26, code: 10 }, 7: { mcq: 38, code: 28 } };
+const plan = (days, target, startLevel) => C.buildCountdownPlan({
+  today: new Date(2026, 10, 6, 15, 30).getTime(), exam: new Date(2026, 10, 6 + days, 9, 0).getTime(),
+  target, startLevel, counts: PLAN_COUNTS });
+
+test('buildCountdownPlan：22 天冲三级', () => {
+  const p = plan(22, 't3p', 1);
+  assert.equal(p.longPlan, false);
+  assert.equal(p.days.length, 22, '每天一张卡，排到考前一天');
+  assert.equal(p.days[0].date, '2026-11-06');
+  assert.equal(p.days[21].date, '2026-11-27');
+  assert.equal(p.days[21].kind, 'rest', '最后一天休息');
+  const kinds = p.days.map(d => d.kind);
+  assert.equal(kinds.filter(k => k === 'mock').length >= 3, true, '至少 3 场模拟');
+  assert.equal(kinds.filter(k => k === 'offline').length, 2, '三级目标 2 个本机实操日');
+  const studied = new Set(p.days.filter(d => d.kind === 'study').flatMap(d => [...d.levels]));
+  assert.deepEqual([...studied].sort(), [1, 2, 3, 4, 5, 6, 7], '七关全部排到');
+  const official = p.days.findIndex(d => d.kind === 'mock' && d.title.includes('官方'));
+  const lastStudy = kinds.lastIndexOf('study');
+  assert.ok(official > lastStudy, '官方卷排在学完所有关之后');
+  // 关卡按顺序推进
+  const order = Array.from(p.days.filter(d => d.kind === 'study'), d => d.levels[0]);
+  assert.deepEqual(order, [...order].sort((a, b) => a - b));
+});
+
+test('buildCountdownPlan：二级目标不排第 7 关、诊断起点跳过已掌握关', () => {
+  const p = plan(22, 't2p', 3);
+  const studied = new Set(p.days.filter(d => d.kind === 'study').flatMap(d => [...d.levels]));
+  assert.deepEqual([...studied].sort(), [3, 4, 5, 6]);
+  assert.equal(p.days.length, 22);
+});
+
+test('buildCountdownPlan：天数少时合并关卡、天数为 0 或过多', () => {
+  for (const n of [1, 2, 3, 5, 8, 10, 12, 30, 49]) {
+    const p = plan(n, 't3p', 1);
+    assert.equal(p.days.length, n, n + ' 天应排 ' + n + ' 张卡');
+    assert.equal(p.days[n - 1].kind, 'rest');
+    if (n >= 3) {
+      const studied = new Set(p.days.filter(d => d.kind === 'study').flatMap(d => [...d.levels]));
+      assert.equal(studied.size, 7, n + ' 天也要覆盖全部 7 关（合并）');
+    }
+  }
+  assert.equal(plan(0, 't3p', 1).days.length, 0);
+  assert.equal(plan(50, 't3p', 1).longPlan, true);
+});

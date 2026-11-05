@@ -92,20 +92,23 @@
       "id": "code-l6-004",
       "level": 6,
       "title": "turtle 画正多边形",
-      "desc": "第一行输入正多边形的边数 n（3~8 的整数），第二行输入边长 d（正整数）。用红色画笔画这个正多边形：画笔从默认位置 (0,0)、朝向右方出发，每画一条长 d 的边就右转 360/n 度，共画 n 条边。画完后输出三行验证信息：第一行\"外角: X\"（X 为 360/n 的值，用 / 除法，形如 90.0）；第二行\"落点: X Y\"（画完后画笔的横、纵坐标，用 `round()` 取整）；第三行\"画笔颜色: red\"。本站已内置 turtle 画布，可直接运行。",
+      "desc": "第一行输入正多边形的边数 n（3~8 的整数），第二行输入边长 d（正整数）。用红色画笔画这个正多边形：画笔从默认位置 (0,0)、朝向右方出发，每画一条长 d 的边就右转 360/n 度，共画 n 条边。画完后输出三行验证信息：第一行\"外角: X\"（X 为 360/n 的值，用 / 除法，形如 90.0）；第二行\"落点: X Y\"（画完后画笔的横、纵坐标，用 `round()` 取整）；第三行\"画笔颜色: red\"。本站已内置 turtle 画布，可直接运行。判题同时检查画布：红色线条必须恰好构成边长 d 的闭合正 n 边形。",
       "starter": "import turtle\n\nn = int(input())\nd = int(input())\nt = turtle.Turtle()\n# 请补全：设红色画笔，循环画 n 条边（每条边后右转 360/n 度），最后打印三行验证信息\n",
       "tests": [
         {
           "stdin": "4\n100\n",
-          "expected": "外角: 90.0\n落点: 0 0\n画笔颜色: red\n"
+          "expected": "外角: 90.0\n落点: 0 0\n画笔颜色: red\n",
+          "check": "n, d = map(int, stdin.split())\ncheck_polygon(segs, n, d, 'red')"
         },
         {
           "stdin": "3\n100\n",
-          "expected": "外角: 120.0\n落点: 0 0\n画笔颜色: red\n"
+          "expected": "外角: 120.0\n落点: 0 0\n画笔颜色: red\n",
+          "check": "n, d = map(int, stdin.split())\ncheck_polygon(segs, n, d, 'red')"
         },
         {
           "stdin": "6\n50\n",
-          "expected": "外角: 60.0\n落点: 0 0\n画笔颜色: red\n"
+          "expected": "外角: 60.0\n落点: 0 0\n画笔颜色: red\n",
+          "check": "n, d = map(int, stdin.split())\ncheck_polygon(segs, n, d, 'red')"
         }
       ],
       "ref": "import turtle\n\nn = int(input())\nd = int(input())\nt = turtle.Turtle()\nt.pencolor('red')\nang = 360 / n\nfor i in range(n):\n    t.forward(d)\n    t.right(ang)\nprint('外角:', ang)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔颜色:', t.pencolor())",

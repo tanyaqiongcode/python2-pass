@@ -9,6 +9,8 @@ import types
 
 
 class Turtle:
+    _segs = None  # make_module 绑定：画笔落下时记录线段，供运行后检查（tools/py2check.py）
+
     def __init__(self):
         self.x, self.y, self._hd = 0.0, 0.0, 0.0
         self.pen_down = True
@@ -19,6 +21,8 @@ class Turtle:
         self.speed_v = 6
 
     def _seg(self, nx, ny):
+        if self.pen_down and self._segs is not None:
+            self._segs.append((self.x, self.y, nx, ny, self.color_v))
         self.x, self.y = nx, ny
 
     def forward(self, d):
@@ -209,22 +213,25 @@ class Screen:
         return _noop
 
 
-def make_module():
+def make_module(segs=None):
     mod = types.ModuleType('turtle')
     state = {'t': None}
 
+    class BoundTurtle(Turtle):
+        _segs = segs
+
     def _get():
         if state['t'] is None:
-            state['t'] = Turtle()
+            state['t'] = BoundTurtle()
         return state['t']
 
     def _module_getattr(name):
         return getattr(_get(), name)
 
     mod.__getattr__ = _module_getattr
-    mod.Turtle = Turtle
-    mod.Pen = Turtle
-    mod.RawTurtle = Turtle
+    mod.Turtle = BoundTurtle
+    mod.Pen = BoundTurtle
+    mod.RawTurtle = BoundTurtle
     mod.Screen = Screen
     mod.getscreen = lambda *a, **k: Screen()
     mod.__all__ = ['Turtle', 'Pen', 'RawTurtle', 'Screen', 'getscreen'] + [

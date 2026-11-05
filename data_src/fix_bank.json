@@ -367,7 +367,7 @@
    "id": "fix-l6-001",
    "level": 6,
    "title": "turtle 画正方形",
-   "desc": "程序要用红色画笔画一个边长 100 的正方形（每画完一条边左转 90 度），画完抬起画笔，然后打印验证信息。正确输出：画笔颜色: red、落点: 0 0、画笔按下: False。程序有 3 处错误，请修改（不增删语句）。本站已内置 turtle 画布。",
+   "desc": "程序要用红色画笔画一个边长 100 的正方形（每画完一条边左转 90 度），画完抬起画笔，然后打印验证信息。正确输出：画笔颜色: red、落点: 0 0、画笔按下: False。程序有 3 处错误，请修改（不增删语句）。本站已内置 turtle 画布。判题同时检查画布：必须画出边长 100、首尾相接的红色正方形。",
    "buggy": "import turtle\nt = turtle.Turtle()\nt.pencolor('blue')\nfor i in range(4):\n    t.forward(100)\n    t.left(45)\nt.pendown()\nprint('画笔颜色:', t.pencolor())\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
    "stdin": "",
    "expected": "画笔颜色: red\n落点: 0 0\n画笔按下: False",
@@ -386,7 +386,8 @@
     }
    ],
    "ref": "import turtle\nt = turtle.Turtle()\nt.pencolor('red')\nfor i in range(4):\n    t.forward(100)\n    t.left(90)\nt.penup()\nprint('画笔颜色:', t.pencolor())\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
-   "exp": "考查 turtle 画笔颜色、正方形转角 90 度与 penup/pendown 画笔状态。"
+   "exp": "考查 turtle 画笔颜色、正方形转角 90 度与 penup/pendown 画笔状态。",
+   "check": "check_polygon(segs, 4, 100, 'red')"
   }
  ]
 }

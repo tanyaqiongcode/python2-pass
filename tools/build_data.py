@@ -44,11 +44,12 @@ import contextlib
 
 @contextlib.contextmanager
 def run_dir(q):
-    """若题目带 files，则在临时目录写入文件后 chdir 运行。"""
+    """每道题都在独立临时目录里运行（带 files 时先写入素材）。
+
+    不能在仓库根目录跑：参考答案里的 savefig('sales.png') / 写文件会覆盖仓库文件，
+    运行后检查的 cleanup 也会删掉同名文件。
+    """
     files = q.get("files") or []
-    if not files:
-        yield
-        return
     old = os.getcwd()
     with tempfile.TemporaryDirectory() as td:
         import base64
@@ -69,9 +70,29 @@ def run_dir(q):
             os.chdir(old)
 
 
-def _run(code, stdin, q):
+def _run(code, stdin, q, t=None):
+    """运行一次；t 为测试点（编程/拼程序题），否则用题目本身的 check/cleanup（填空/改错题）。"""
+    spec = t if t is not None else q
     with run_dir(q):
-        return run_user(code, stdin)
+        return run_user(code, stdin, check=spec.get("check"), cleanup=spec.get("cleanup"))
+
+
+def _passes(r, want, spec):
+    """与 js/core.js judgeTest 同一判定：带 check 时检查必须通过；带 check 且无 expected 时不比对输出。"""
+    if not r["ok"]:
+        return False
+    out_ok = True if (spec.get("check") and not want) else norm(r["stdout"]) == norm(want)
+    if spec.get("check"):
+        return out_ok and r.get("checkOk") is True
+    return out_ok
+
+
+def _why(r, want):
+    if not r["ok"]:
+        return f"（运行错误: {r['error']}）"
+    if r.get("checkOk") is False:
+        return f"（绘图/文件检查未通过: {r.get('checkMsg')}）"
+    return f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(want)[:80]!r}）"
 
 
 def err(msg):
@@ -122,15 +143,8 @@ def run_blank(q):
     for bb in q["blanks"]:
         filled = filled.replace(f"___({bb['n']})___", bb["answers"][0])
     r = _run(filled, stdin, q)
-    if not r["ok"] or norm(r["stdout"]) != norm(q["expected"]):
-        n += err(
-            f"{q['id']}: 参考答案整体运行结果与 expected 不符"
-            + (
-                f"（运行错误: {r['error']}）"
-                if not r["ok"]
-                else f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(q['expected'])[:80]!r}）"
-            )
-        )
+    if not _passes(r, q["expected"], q):
+        n += err(f"{q['id']}: 参考答案整体运行结果与 expected 不符" + _why(r, q["expected"]))
     # 逐空验证其余可接受答案（其他空用第一个答案代入）
     for b in q["blanks"]:
         for ans in b["answers"][1:]:
@@ -139,15 +153,8 @@ def run_blank(q):
                 repl = ans if bb["n"] == b["n"] else bb["answers"][0]
                 filled = filled.replace(f"___({bb['n']})___", repl)
             r = _run(filled, stdin, q)
-            if not r["ok"] or norm(r["stdout"]) != norm(q["expected"]):
-                n += err(
-                    f"{q['id']}: 第{b['n']}空答案 {ans!r} 未得到期望输出"
-                    + (
-                        f"（运行错误: {r['error']}）"
-                        if not r["ok"]
-                        else f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(q['expected'])[:80]!r}）"
-                    )
-                )
+            if not _passes(r, q["expected"], q):
+                n += err(f"{q['id']}: 第{b['n']}空答案 {ans!r} 未得到期望输出" + _why(r, q["expected"]))
     return n
 
 
@@ -170,17 +177,10 @@ def validate_blank(q, fname):
 def run_fix(q):
     n = 0
     r = _run(q["ref"], q.get("stdin", ""), q)
-    if not r["ok"] or norm(r["stdout"]) != norm(q["expected"]):
-        n += err(
-            f"{q['id']}: ref 运行结果与 expected 不符"
-            + (
-                f"（错误: {r['error']}）"
-                if not r["ok"]
-                else f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(q['expected'])[:80]!r}）"
-            )
-        )
+    if not _passes(r, q["expected"], q):
+        n += err(f"{q['id']}: ref 运行结果与 expected 不符" + _why(r, q["expected"]))
     rb = _run(q["buggy"], q.get("stdin", ""), q)
-    if rb["ok"] and norm(rb["stdout"]) == norm(q["expected"]):
+    if _passes(rb, q["expected"], q):
         n += err(f"{q['id']}: buggy 代码已经能通过——改错题必须真的有错")
     if not q.get("errors"):
         n += err(f"{q['id']}: 缺 errors 提示")
@@ -225,36 +225,25 @@ def validate_parsons(q, fname):
 def run_parsons(q):
     n = 0
     for i, t in enumerate(q.get("tests", [])):
-        r = _run(q["ref"], t.get("stdin", ""), q)
+        r = _run(q["ref"], t.get("stdin", ""), q, t)
         want = t.get("expected", "")
-        if not r["ok"] or norm(r["stdout"]) != norm(want):
-            n += err(
-                f"{q['id']}: test#{i + 1} 参考代码输出不符"
-                + (f"（错误: {r['error']}）" if not r["ok"] else
-                   f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(want)[:80]!r}）")
-            )
+        if not _passes(r, want, t):
+            n += err(f"{q['id']}: test#{i + 1} 参考代码输出不符" + _why(r, want))
     return n
 
 
 def run_coding(q):
     n = 0
     for i, t in enumerate(q.get("tests", [])):
-        r = _run(q["ref"], t.get("stdin", ""), q)
+        r = _run(q["ref"], t.get("stdin", ""), q, t)
         want = t.get("expected", "")
-        if t.get("expectCanvas") and not want:
-            # 画布题：本地无法验证 canvas，仅验证可运行且 stdout 符合预期
+        if t.get("expectCanvas") and not want and not t.get("check"):
+            # 旧式画布题（无运行后检查）：本地只能验证可运行
             ok = r["ok"]
         else:
-            ok = r["ok"] and norm(r["stdout"]) == norm(want)
+            ok = _passes(r, want, t)
         if not ok:
-            n += err(
-                f"{q['id']}: test#{i + 1} 参考代码输出不符"
-                + (
-                    f"（错误: {r['error']}）"
-                    if not r["ok"]
-                    else f"（实际: {norm(r['stdout'])[:80]!r} 期望: {norm(want)[:80]!r}）"
-                )
-            )
+            n += err(f"{q['id']}: test#{i + 1} 参考代码输出不符" + _why(r, want))
     return n
 
 
@@ -419,6 +408,10 @@ def main():
     js = (
         "/* 本文件由 tools/build_data.py 自动生成，请勿手改；源数据在 data_src/ */\n"
         "window.BANK = " + json.dumps(bank, ensure_ascii=False, indent=1) + ";\n"
+        "/* 运行后检查源码（tools/py2check.py 原样打包；浏览器判题装成 py2check 模块） */\n"
+        "window.PY2CHECK_SRC = "
+        + json.dumps(open(os.path.join(ROOT, "tools", "py2check.py"), encoding="utf-8").read(), ensure_ascii=False)
+        + ";\n"
     )
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(js)

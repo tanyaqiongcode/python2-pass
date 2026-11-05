@@ -69,21 +69,29 @@
       "id": "code-l7-013",
       "level": 7,
       "title": "matplotlib 绘制气温折线图",
-      "desc": "起始代码已给出 12 个月的月份列表 months 和月平均气温列表 temps。要求：①用 plt.plot 绘制气温随月份变化的折线图，并用 plt.savefig('t.png') 把图形保存为图片 t.png；②按月份顺序逐行输出“月:气温”，例如 1:5；③最后输出一行平均气温，格式如：平均气温:19.5（保留 1 位小数）。判题只看 print 输出，不看图片。",
+      "desc": "起始代码已给出 12 个月的月份列表 months 和月平均气温列表 temps。要求：①用 plt.plot 绘制气温随月份变化的折线图，并用 plt.savefig('t.png') 把图形保存为图片 t.png；②按月份顺序逐行输出“月:气温”，例如 1:5；③最后输出一行平均气温，格式如：平均气温:19.5（保留 1 位小数）。判题除了比对 print 输出，还检查折线的 x/y 数据是否为 months/temps，以及 t.png 是否真的保存成了 PNG 图片。",
       "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\n",
       "tests": [
         {
           "stdin": "",
-          "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+          "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5",
+          "check": "check_mpl_line(mpl, list(range(1, 13)), [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6])\ncheck_png('t.png')",
+          "cleanup": [
+            "t.png"
+          ]
         },
         {
           "stdin": "",
-          "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+          "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5",
+          "check": "check_mpl_line(mpl, list(range(1, 13)), [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6])\ncheck_png('t.png')",
+          "cleanup": [
+            "t.png"
+          ]
         }
       ],
       "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\nplt.plot(months, temps)\nplt.savefig('t.png')\nfor i in range(12):\n    print('{}:{}'.format(months[i], temps[i]))\nprint('平均气温:{:.1f}'.format(sum(temps) / len(temps)))",
       "hint": "plt.plot( months, temps ) 画折线，plt.savefig('t.png') 存图；平均气温 = sum(temps) / len(temps)，用 '{:.1f}'.format() 保留 1 位小数。",
-      "exp": "考查 matplotlib 折线图绘制与保存（plot + savefig），以及列表遍历输出与平均值统计；判题通过打印数据验证，绘图仅要求代码正确执行。",
+      "exp": "考查 matplotlib 折线图绘制与保存（plot + savefig），以及列表遍历输出与平均值统计；判题同时检查折线数据与保存的图片文件。",
       "tags": [
         "matplotlib",
         "可视化",

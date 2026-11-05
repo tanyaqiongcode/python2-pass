@@ -141,6 +141,20 @@ const App = {
         h('div', { class: 'muted small' }, ns.desc)),
       h('a', { class: 'btn btn-green', href: ns.href }, ns.cta));
 
+    let todayCard = null;
+    try {
+      const plan = countdownPlan();
+      const td = plan && !plan.longPlan && plan.days.find(d => d.date === PY2CORE.ymd(Date.now()));
+      if (td) {
+        todayCard = h('div', { class: 'card' },
+          h('h2', null, `🗓 今日计划 · 第 ${td.index}/${plan.totalDays} 天`,
+            h('a', { class: 'badge', style: 'float:right;margin-top:4px', href: '#plan' }, '看完整计划 →')),
+          h('b', null, td.title),
+          h('ul', { style: 'margin:6px 0 0;padding-left:20px' },
+            td.tasks.map(t => h('li', null, h('a', { href: t.href }, t.text)))));
+      }
+    } catch (e) { console.warn('倒排计划生成失败', e); }
+
     const tgtCard = h('div', { class: 'card' },
       h('h2', null, '🎯 目标等第'),
       h('div', { class: 'muted small', style: 'margin-bottom:8px' },
@@ -194,7 +208,7 @@ const App = {
       )
     );
 
-    app.append(hero, nextCard, tgtCard, progCard,
+    app.append(hero, nextCard, ...(todayCard ? [todayCard] : []), tgtCard, progCard,
       h('h2', { style: 'margin:18px 0 10px' }, '关卡地图'), map,
       milestone, quick);
   },
@@ -214,7 +228,9 @@ const App = {
    * ============================================================ */
   viewPlan(app) {
     app.innerHTML = '';
-    app.append(h('h1', { class: 'page-title' }, '🗓 七周备考计划'), h('p', { class: 'page-sub' }, '从今天到考试日的节奏表：每周一个主攻关卡 + 一场模拟考。可与关卡地图配合使用。'));
+    const plan = countdownPlan();
+    if (plan && !plan.longPlan && plan.days.length) return this.viewCountdownPlan(app, plan);
+    app.append(h('h1', { class: 'page-title' }, '🗓 七周备考计划'), h('p', { class: 'page-sub' }, '从今天到考试日的节奏表：每周一个主攻关卡 + 一场模拟考。可与关卡地图配合使用。（距考试 49 天以内时自动切换为逐日倒排计划）'));
     for (const p of PLAN) {
       app.append(h('div', { class: 'plan-week' },
         h('div', { class: 'wk' }, p.date, h('small', null, p.goal.split(' ')[0])),
@@ -223,6 +239,67 @@ const App = {
     }
     app.append(h('div', { class: 'notice' }, h('b', null, '提示：'),
       ' 二三级同卷同场、按分数划档：总分率 ≥60% 二级合格参考，≥75% 且三级题得分率 ≥60% 三级合格参考，≥90% 且三级题 ≥80% 三级优秀参考。目标定三级——同样的考试，分数够高自动拿三级证书。'));
+  },
+
+  /* ---- 逐日倒排计划（距考试 ≤49 天） ---- */
+  viewCountdownPlan(app, plan) {
+    const today = PY2CORE.ymd(Date.now());
+    const todayDay = plan.days.find(d => d.date === today);
+    const kindIco = { study: '📘', mock: '📝', offline: '💻', review: '🔁', rest: '🛌' };
+    const counts = { study: 0, mock: 0, offline: 0, review: 0 };
+    plan.days.forEach(d => { if (counts[d.kind] !== undefined) counts[d.kind]++; });
+    app.append(
+      h('h1', { class: 'page-title' }, `🗓 ${plan.totalDays} 天倒排计划`),
+      h('p', { class: 'page-sub' },
+        `从 ${plan.days[0].date} 排到考前一天（考试 ${new Date(State.examDate()).toLocaleDateString('zh-CN')}）：`
+        + `学习 ${counts.study} 天 · 全真模拟 ${counts.mock} 场 · 本机实操 ${counts.offline} 天 · 错题清零 ${counts.review} 天 · 考前休息 1 天。`
+        + `目标：${targetLabel(State.target())}${State.data.diagnosis ? `，按入学诊断从第 ${State.data.diagnosis.startLevel || 1} 关起步` : ''}。`),
+      h('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px' },
+        todayDay ? h('a', { class: 'btn btn-green', href: '#plan-today', onclick: (e) => {
+          e.preventDefault();
+          const el = document.getElementById('plan-today');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } }, `看今天（第 ${todayDay.index} 天）`) : null,
+        h('button', { class: 'btn btn-ghost', onclick: () => {
+          if (confirm('从今天起按剩余天数重新排计划？（学习进度不受影响）')) { State.setPlanStart(today); App.render(); }
+        } }, '从今天重新排'),
+        h('a', { class: 'btn btn-ghost', href: 'javascript:App.askExamDate()' }, '修改考试日期'))
+    );
+    if (!State.data.diagnosis) {
+      app.append(h('div', { class: 'notice' }, '还没做入学诊断：计划默认从第 1 关排起。', h('a', { href: '#diagnostic' }, '先做 14 题诊断（约 10 分钟）'), '，做完后点"从今天重新排"可跳过已掌握的关卡。'));
+    }
+    for (const d of plan.days) {
+      const isToday = d.date === today;
+      const past = d.date < today;
+      let status = null;
+      if (d.kind === 'study') {
+        const sts = d.levels.map(L => State.levelStat(L));
+        const done = sts.every(st => st.cleared);
+        const mcq = sts.reduce((a, st) => a + st.mcqDone, 0);
+        const mcqT = sts.reduce((a, st) => a + st.mcqTotal, 0);
+        const code = sts.reduce((a, st) => a + st.codeDone, 0);
+        const codeT = sts.reduce((a, st) => a + st.codeTotal, 0);
+        const lastOfLevel = !plan.days.some(x => x.index > d.index && x.kind === 'study' && x.levels.some(L => d.levels.includes(L)));
+        status = h('span', { class: 'small ' + (done ? 'pass-cell' : (past && lastOfLevel ? 'fail-cell' : 'muted')) },
+          done ? '✓ 本关已通关' : `进度：单选 ${mcq}/${mcqT} · 代码 ${code}/${codeT}` + (past && lastOfLevel ? ' · ⚠ 落后，今天补上' : ''));
+      } else if (d.kind === 'mock') {
+        const ran = State.data.mockRuns.some(r => PY2CORE.ymd(r.ts) === d.date);
+        status = ran ? h('span', { class: 'small pass-cell' }, '✓ 当天已考') : null;
+      }
+      const tasks = d.tasks.slice();
+      if (d.index === 1 && !State.data.diagnosis) tasks.unshift({ text: '入学诊断 14 题，定起点关卡', href: '#diagnostic' });
+      app.append(h('div', { class: 'plan-week' + (isToday ? ' plan-today' : ''), id: isToday ? 'plan-today' : null,
+        style: (past ? 'opacity:.6;' : '') + (isToday ? 'border:2px solid #2f9e5b;background:#f2fbf5;' : '') },
+        h('div', { class: 'wk' }, `第${d.index}天`, h('small', null, d.date.slice(5) + (isToday ? ' 今天' : ''))),
+        h('div', { class: 'wk-body' },
+          h('b', null, (kindIco[d.kind] || '') + ' ' + d.title), status ? ' ' : null, status,
+          h('ul', { style: 'margin:6px 0 0;padding-left:20px' },
+            tasks.map(t => h('li', null, t.href ? h('a', { href: t.href }, t.text) : t.text))))
+      ));
+    }
+    app.append(h('div', { class: 'notice' }, h('b', null, '怎么用：'),
+      ' 每天按当天卡片做；当天做不完的代码题，★★★ 挑战题可以留到"错题清零"日。学习日的进度来自你在关卡里的真实判题记录，过了排定日期还没通关会标"落后"。',
+      ' 模拟考的等第是本站自估（官方分数线由考委会划定、不公布），浏览器判不了的分值（如 whl 安装截图）不计入。'));
   },
 
   /* ---- 数据备份 ---- */
@@ -616,7 +693,8 @@ const App = {
       const canvasBox = h('div', { class: 'canvas-box' });
       outBox.innerHTML = '';
       outBox.append(canvasBox);
-      const r = await Engine.run(assembled, { stdin: (q.tests && q.tests[0] ? q.tests[0].stdin : '') || '', files: q.files, mount: canvasBox });
+      const t0 = (q.tests && q.tests[0]) || {};
+      const r = await Engine.run(assembled, { stdin: t0.stdin || '', files: q.files, mount: canvasBox, check: t0.check, cleanup: t0.cleanup });
       const cmp = compareOutput(r.stdout, (q.tests && q.tests[0] ? q.tests[0].expected : '') || '');
       const passed = PY2CORE.judgeTest(r, (q.tests && q.tests[0]) || {});
       outBox.append(h('div', { class: 'result-banner ' + (passed ? 'pass' : 'fail') },
@@ -921,7 +999,7 @@ const App = {
     }
 
     /* 测试输入预览 */
-    const tests = kind === 'coding' ? (q.tests || [{ stdin: q.stdin || '', expected: q.expected || '' }]) : [{ stdin: q.stdin || '', expected: q.expected || '' }];
+    const tests = kind === 'coding' && q.tests && q.tests.length ? q.tests : [questionTest(q)];
     if (tests.some(t => t.stdin)) {
       card.append(h('div', { class: 'io-label' }, '测试输入（自动喂给 input()）：'));
       tests.forEach(t => { if (t.stdin) card.append(h('pre', { class: 'output' }, t.stdin)); });
@@ -968,19 +1046,20 @@ const App = {
           }
           code = substituteBlanks(q.code, answers);
           outBox.append(canvasBox);
-          const r = await Engine.run(code, { stdin: q.stdin || '', files: q.files, mount: canvasBox });
-          passes = [r.ok && compareOutput(r.stdout, q.expected || '').ok];
+          const tq = questionTest(q);
+          const r = await Engine.run(code, { stdin: tq.stdin, files: q.files, mount: canvasBox, check: tq.check, cleanup: tq.cleanup });
+          passes = [PY2CORE.judgeTest(r, tq)];
           // 逐空反馈
           const perBlank = (q.blanks || []).map((b, i) => matchBlank(b, answers[i]));
-          renderResult(outBox, r, q.expected || '', passes[0], perBlank);
+          renderResult(outBox, r, q.expected || '', passes[0], perBlank, null, tq);
         } else {
           code = editor.value;
           let allPass = true;
           outBox.append(canvasBox);
           for (const t of tests) {
-            const r = await Engine.run(code, { stdin: t.stdin || '', files: q.files, mount: canvasBox });
+            const r = await Engine.run(code, { stdin: t.stdin || '', files: q.files, mount: canvasBox, check: t.check, cleanup: t.cleanup });
             const cmp = compareOutput(r.stdout, t.expected || '');
-            const pass = r.ok && (t.expectCanvas ? (r.hasCanvas && (!t.expected || cmp.ok)) : cmp.ok);
+            const pass = PY2CORE.judgeTest(r, t);
             passes.push(pass);
             if (!pass) allPass = false;
             details.push({ r, t, cmp, pass });
@@ -1032,7 +1111,7 @@ const App = {
     const variants = [
       { key: 'standard', name: '标准卷', desc: '按关卡比例均衡抽题，适合每周例行检查' },
       { key: 'tier3', name: '三级冲刺卷', desc: '60%+ 名额来自三级重点题（递归/正则/SQLite/可视化/OOP），冲刺三级的首选' },
-      { key: 'official', name: '官方 A 卷（27A）', desc: '2026 年官方模拟卷整卷还原（含 SQLite 数据库题、图形绘制题），判分标准同官方' }
+      { key: 'official', name: '官方 A 卷（27A）', desc: '2026 年官方模拟卷整卷还原（含 SQLite 数据库题、图形绘制题）。分值同官方；绘图题检查实际画出的坐标轴与函数线，写文件题检查文件内容与编码；whl 安装截图浏览器判不了，不计分' }
     ];
     const picker = h('div', { class: 'card' },
       h('h2', null, '选择卷型'),
@@ -1055,7 +1134,7 @@ const App = {
         h('p', { class: 'muted small', style: 'margin-bottom:0' },
           '官方模拟卷 PDF：', h('a', { href: 'docs/official/27A.pdf', target: '_blank', rel: 'noopener' }, '27A.pdf（考试院官网下载）'), '，判题素材已内置。'))
       ,
-      hist
+      ...(hist ? [hist] : [])
     );
   },
 
@@ -1192,6 +1271,37 @@ const isTier3 = PY2CORE.isTier3;
 const estimateGrade = PY2CORE.estimateGrade;
 const targetLabel = PY2CORE.targetLabel;
 
+/* 倒排计划：起始日首次生成时固定（State.planStart），之后每天推进；距考试 >49 天时 longPlan */
+function countdownPlan() {
+  const B = window.BANK;
+  const today = PY2CORE.ymd(Date.now());
+  let start = State.planStart();
+  const examYmd = PY2CORE.ymd(new Date(State.examDate()).getTime());
+  if (!start || start > today || start >= examYmd) {
+    start = today;
+    if (start < examYmd) State.setPlanStart(start);
+  }
+  const counts = {};
+  const levelNames = {};
+  for (const m of LEVEL_META) {
+    const L = m.no;
+    counts[L] = {
+      mcq: B.mcq.filter(q => q.level === L).length,
+      code: B.blanks.filter(q => q.level === L).length + B.fixes.filter(q => q.level === L).length +
+        B.coding.filter(q => q.level === L).length + (B.parsons || []).filter(q => q.level === L).length
+    };
+    levelNames[L] = m.title;
+  }
+  const [y, mo, d] = start.split('-').map(Number);
+  return PY2CORE.buildCountdownPlan({
+    today: new Date(y, mo - 1, d).getTime(),
+    exam: new Date(State.examDate()).getTime(),
+    target: State.target(),
+    startLevel: (State.data.diagnosis && State.data.diagnosis.startLevel) || 1,
+    counts, levelNames
+  });
+}
+
 /* 状态驱动的"下一步"：诊断 → 速览 → 单选 → 代码（难度递进）→ 下一关 → 模拟考 */
 function computeNextStep() {
   if (!State.data.diagnosis) {
@@ -1229,16 +1339,34 @@ function miniMdInline(s) {
   return mdInline(s);
 }
 
+/* 填空/改错题只有一组 stdin/expected：包装成测试点形状（含运行后检查 check/cleanup） */
+function questionTest(q) {
+  return { stdin: q.stdin || '', expected: q.expected || '', check: q.check || null, cleanup: q.cleanup || null };
+}
+
 /* ---------- 填空工具（实现移至 js/core.js） ---------- */
 const substituteBlanks = PY2CORE.substituteBlanks;
 const normAnswer = PY2CORE.normAnswer;
 const matchBlank = PY2CORE.matchBlank;
 
 /* ---------- 运行结果渲染 ---------- */
-function renderResult(outBox, r, expected, passed, perBlank, details) {
+function renderResult(outBox, r, expected, passed, perBlank, details, tq) {
   outBox.innerHTML = '';
+  const hasCheck = (details || []).some(d => d.t && d.t.check) || !!(tq && tq.check);
   outBox.append(h('div', { class: 'result-banner ' + (passed ? 'pass' : 'fail') },
-    passed ? '✅ 通过！运行结果与期望一致。' : '❌ 未通过，请对照下方输出检查。'));
+    passed ? (hasCheck ? '✅ 通过！输出与绘图/文件检查均符合要求。' : '✅ 通过！运行结果与期望一致。')
+      : '❌ 未通过，请对照下方输出检查。'));
+  // 运行后检查（绘图线段 / matplotlib 数据 / 输出文件）的失败原因
+  const checkMsgs = [];
+  (details && details.length ? details : (r ? [{ r }] : [])).forEach((d, i, arr) => {
+    if (d.r && d.r.checkOk === false && d.r.checkMsg) {
+      const m = (arr.length > 1 ? `测试点 #${i + 1}：` : '') + d.r.checkMsg;
+      if (!checkMsgs.includes(m)) checkMsgs.push(m);
+    }
+  });
+  if (checkMsgs.length) {
+    outBox.append(h('div', { class: 'tip' }, '🔍 绘图/文件检查未通过：', h('ul', { style: 'margin:4px 0 0;padding-left:20px' }, checkMsgs.slice(0, 3).map(m => h('li', null, m)))));
+  }
   if (details && details.length > 1) {
     const tb = h('table', { class: 'testtable' },
       h('tr', null, h('th', null, '测试点'), h('th', null, '输入'), h('th', null, '期望输出'), h('th', null, '实际输出'), h('th', null, '结果'), h('th', null, '耗时')));
@@ -1247,7 +1375,7 @@ function renderResult(outBox, r, expected, passed, perBlank, details) {
       tb.append(h('tr', null,
         h('td', null, `#${i + 1}`),
         h('td', null, h('pre', { class: 'output', style: 'max-width:160px' }, d.t.stdin || '（无）')),
-        h('td', null, h('pre', { class: 'output', style: 'max-width:200px' }, d.t.expected || (d.t.expectCanvas ? '（运行并画出画布）' : ''))),
+        h('td', null, h('pre', { class: 'output', style: 'max-width:200px' }, (d.t.expected || '') + (d.t.check ? (d.t.expected ? '\n' : '') + '＋检查绘图/文件' : (!d.t.expected && d.t.expectCanvas ? '（运行并画出画布）' : '')))),
         h('td', null, h('pre', { class: 'output', style: 'max-width:200px' }, d.r.stdout || '')),
         h('td', null, h('span', { class: okv ? 'pass-cell' : 'fail-cell' }, okv ? '✓' : '✗')),
         h('td', null, d.r.durationMs !== undefined ? d.r.durationMs + 'ms' : '—')
@@ -1555,11 +1683,12 @@ const Mock = {
     app.append(h('h1', { class: 'page-title' }, '正在评分…'),
       h('p', { class: 'page-sub' }, '编程题需要在浏览器内真实运行判题，请保持页面打开，约需 1~2 分钟。'));
 
-    let score = 0, t3Score = 0, t3Full = 0;
+    let score = 0, t3Score = 0, t3Full = 0, unjudged = 0;
     const detail = [];
+    const unjudgedNotes = [];
 
     const judgeCode = async (kind, q, userCode, full, perTestScore) => {
-      const tests = q.tests && q.tests.length ? q.tests : [{ stdin: q.stdin || '', expected: q.expected || '' }];
+      const tests = q.tests && q.tests.length ? q.tests : [questionTest(q)];
       let got = 0;
       const rows = [];
       // 隐藏挂载点：turtle 画布题需要真实 DOM 容器才能生成画布
@@ -1568,11 +1697,10 @@ const Mock = {
       document.body.appendChild(mount);
       try {
         for (const t of tests) {
-          const r = await Engine.run(userCode, { stdin: t.stdin || '', files: q.files, mount });
-          const cmp = compareOutput(r.stdout, t.expected || '');
-          const pass = r.ok && (t.expectCanvas ? (r.hasCanvas && (!t.expected || cmp.ok)) : cmp.ok);
+          const r = await Engine.run(userCode, { stdin: t.stdin || '', files: q.files, mount, check: t.check, cleanup: t.cleanup });
+          const pass = PY2CORE.judgeTest(r, t);
           if (pass) got += perTestScore;
-          rows.push({ i: rows.length + 1, pass, stdin: t.stdin || '', expected: t.expected || '', got: r.stdout || '', err: r.error || '' });
+          rows.push({ i: rows.length + 1, pass, stdin: t.stdin || '', expected: t.expected || '', got: r.stdout || '', err: r.error || r.checkMsg || '' });
         }
       } finally {
         mount.remove();
@@ -1617,23 +1745,28 @@ const Mock = {
 
     // 编程（按测试点比例，官方卷按题分值）
     for (const q of this.qs.coding) {
-      const full = official ? (q.score || 15) : s.coding.perScore;
+      const fullRaw = official ? (q.score || 15) : s.coding.perScore;
+      // 浏览器判不了的部分（如 whl 安装截图）既不给分也不计入满分，等第按可判分折算
+      const unj = Math.min(PY2CORE.unjudgedPoints(q), fullRaw);
+      const full = fullRaw - unj;
+      if (unj) { unjudged += unj; unjudgedNotes.push(`${q.title || q.id}：${q.unjudged.note || '部分操作'}（${unj} 分）`); }
       const code = this.answers.coding[q.id] !== undefined ? this.answers.coding[q.id] : (q.starter || '');
-      const tests = q.tests && q.tests.length ? q.tests : [{ stdin: q.stdin || '', expected: q.expected || '' }];
+      const tests = q.tests && q.tests.length ? q.tests : [questionTest(q)];
       const { got } = await judgeCode('coding', q, code, full, full / tests.length);
       score += got;
       if (isTier3(q)) { t3Score += got; t3Full += full; }
-      detail.push({ kind: '编程', level: q.level, tier3: isTier3(q), title: q.title || '', score: got, full });
+      detail.push({ kind: '编程', level: q.level, tier3: isTier3(q), title: (q.title || '') + (unj ? `（另有 ${unj} 分未判）` : ''), score: got, full });
     }
 
     score = Math.round(score * 10) / 10;
-    const grade = estimateGrade(score, 150, t3Score, t3Full);
+    const grade = estimateGrade(score, 150 - unjudged, t3Score, t3Full);
     const byLevel = {};
     detail.forEach(d => {
       const lv = byLevel[d.level] = byLevel[d.level] || { got: 0, full: 0 };
       lv.got += d.score; lv.full += d.full;
     });
-    const run = { ts: Date.now(), score, grade, variant: this.variant, t3Score: Math.round(t3Score * 10) / 10, t3Full: Math.round(t3Full * 10) / 10, byLevel, detail };
+    const run = { ts: Date.now(), score, grade, variant: this.variant, t3Score: Math.round(t3Score * 10) / 10, t3Full: Math.round(t3Full * 10) / 10, byLevel, detail,
+      unjudged, unjudgedNotes };
     const saved = State.addMockRun(run);   // 显式保存
     if (saved) {
       localStorage.removeItem(this.KEY);  // 成绩落盘成功 → 此后才清理答卷草稿
@@ -1674,6 +1807,8 @@ const Mock = {
         h('div', { class: 'muted' }, vName + ' · ' + new Date(r.ts).toLocaleString('zh-CN')),
         h('div', { class: 'big' }, String(r.score)),
         h('div', { class: 'muted' }, '/ 150 分'),
+        r.unjudged ? h('div', { class: 'muted small' },
+          `其中 ${r.unjudged} 分浏览器无法判分、未计入（${(r.unjudgedNotes || []).join('；')}）。等第按可判的 ${150 - r.unjudged} 分折算，考场上这部分请在本机练熟。`) : null,
         h('div', null, h('span', { class: 'grade-tag ' + (r.grade.startsWith('不合格') ? 'fail' : 'pass') }, r.grade)),
         h('div', { class: 'muted small', style: 'margin-top:6px' },
           `三级题得分率：${t3r === null ? '（本卷无三级重点题）' : t3r + '%'} · 预估模型：总分率≥60% 二级合格 / ≥75% 二级优秀 / 总分率≥75%且三级题≥60% 三级合格 / ≥90%且≥80% 三级优秀`),

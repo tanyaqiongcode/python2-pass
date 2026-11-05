@@ -238,7 +238,7 @@
       "id": "code-l5-009",
       "level": 5,
       "title": "凯撒加密写文件",
-      "desc": "当前目录下有 data.txt，存放若干行英文文本（UTF-8 编码）。程序对每一行做凯撒加密：每行先去掉行末换行符，然后将其中的字母循环右移 3 位（a→d、b→e、…、x→a、y→b、z→c，大写字母同理），非字母字符保持不变。按原行顺序把加密后的每一行打印出来，同时把加密后的内容逐行写入当前目录下的 out.txt（每行末尾写一个换行符）。",
+      "desc": "当前目录下有 data.txt，存放若干行英文文本（UTF-8 编码）。程序对每一行做凯撒加密：每行先去掉行末换行符，然后将其中的字母循环右移 3 位（a→d、b→e、…、x→a、y→b、z→c，大写字母同理），非字母字符保持不变。按原行顺序把加密后的每一行打印出来，同时把加密后的内容逐行写入当前目录下的 out.txt（每行末尾写一个换行符）。判题同时检查 out.txt 的内容是否与加密结果逐行一致。",
       "files": [
         {
           "name": "data.txt",
@@ -249,11 +249,19 @@
       "tests": [
         {
           "stdin": "",
-          "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n"
+          "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n",
+          "check": "check_lines('out.txt', [\"Khoor, Sbwkrq!\", \"Dwwdfn dw gdzq\", \"def ABC 123\"])",
+          "cleanup": [
+            "out.txt"
+          ]
         },
         {
           "stdin": "",
-          "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n"
+          "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n",
+          "check": "check_lines('out.txt', [\"Khoor, Sbwkrq!\", \"Dwwdfn dw gdzq\", \"def ABC 123\"])",
+          "cleanup": [
+            "out.txt"
+          ]
         }
       ],
       "ref": "f = open('data.txt', 'r', encoding='utf-8')\nout = open('out.txt', 'w', encoding='utf-8')\nfor line in f:\n    line = line.rstrip('\\n')\n    res = ''\n    for ch in line:\n        if 'a' <= ch <= 'z':\n            res += chr((ord(ch) - ord('a') + 3) % 26 + ord('a'))\n        elif 'A' <= ch <= 'Z':\n            res += chr((ord(ch) - ord('A') + 3) % 26 + ord('A'))\n        else:\n            res += ch\n    print(res)\n    out.write(res + '\\n')\nf.close()\nout.close()",
