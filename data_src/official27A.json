@@ -423,22 +423,26 @@
     "函数",
     "循环"
    ],
-   "score": 18
+   "score": 18,
+   "unjudged": {
+    "points": 3,
+    "note": "第(1)小题安装 whl 并截图 setup.jpg 需在本机完成（官方未公布该步分值，本站按 3 分估计）"
+   }
   },
   {
    "id": "p27-c3",
    "level": 6,
    "title": "编程3：图形绘制——y=4cos(x)−cos(6x)（15分）",
-   "desc": "创建 400×400 画布：以绿色实线绘制坐标轴；在 −π~π 范围内以步长 0.02 变化，绘制函数数据点向 y 轴的红色水平线（横、纵坐标均放大 30 倍），y = 4cos(x) − cos(6x)。正式考试可用 tkinter、matplotlib 或 turtle 任选；本站用内置 turtle 画布实现（已支持 goto/pendown/pencolor），判题要求：程序运行成功且画出画布，最后 print('drawn')。",
-   "starter": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴（横轴 -190~190，纵轴 190~-190）\n# 2. 红色水平线：x 取 0.02 步长，t.goto(0, y) 再 t.goto(30*x, y)\n",
+   "desc": "创建 400×400 画布：以绿色实线绘制坐标轴；在 −π~π 范围内以步长 0.02 变化，绘制函数数据点向 y 轴的红色水平线（横、纵坐标均放大 30 倍），y = 4cos(x) − cos(6x)。正式考试可用 tkinter、matplotlib 或 turtle 任选；本站支持 turtle（内置画布）和 matplotlib（tkinter 在浏览器里跑不了）。判题检查实际画出的图形：①有过原点的绿色横轴和纵轴；②红色水平线的一端在 y 轴上、另一端落在放大 30 倍后的函数点 (30x, 30y) 上，且覆盖 −π~π 的全部约 315 个采样点。不需要 print。",
+   "starter": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴（横轴 -190~190，纵轴 190~-190）\n# 2. 红色水平线：x 从 -math.pi 到 math.pi、步长 0.02；y = 4cos(x) - cos(6x)\n#    每个点 t.goto(0, 30*y) 抬笔到 y 轴，再落笔 t.goto(30*x, 30*y)\n",
    "tests": [
     {
      "stdin": "",
-     "expected": "drawn",
-     "expectCanvas": true
+     "expectCanvas": true,
+     "check": "check_function_hlines(segs, mpl, lambda x: 4 * math.cos(x) - math.cos(6 * x), -math.pi, math.pi, 0.02)"
     }
    ],
-   "ref": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\nt.pencolor('green')\nt.penup()\nt.goto(-190, 0)\nt.pendown()\nt.goto(190, 0)\nt.penup()\nt.goto(0, 190)\nt.pendown()\nt.goto(0, -190)\nt.pencolor('red')\ni = -314\nwhile i <= 314:\n    x = i * 0.02\n    y = 30 * (4 * math.cos(x) - math.cos(6 * x))\n    t.penup()\n    t.goto(0, y)\n    t.pendown()\n    t.goto(30 * x, y)\n    i += 2\nprint('drawn')",
+   "ref": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\nt.pencolor('green')\nt.penup()\nt.goto(-190, 0)\nt.pendown()\nt.goto(190, 0)\nt.penup()\nt.goto(0, 190)\nt.pendown()\nt.goto(0, -190)\nt.pencolor('red')\nx = -math.pi\nwhile x <= math.pi:\n    y = 4 * math.cos(x) - math.cos(6 * x)\n    t.penup()\n    t.goto(0, 30 * y)\n    t.pendown()\n    t.goto(30 * x, 30 * y)\n    x += 0.02\nt.hideturtle()\n",
    "hint": "坐标轴两条绿线；每个数据点画一条从 y 轴 (0, 30y) 到 (30x, 30y) 的红色水平线；penup 移动、pendown 画线",
    "exp": "考查 turtle 画笔状态、goto 定位与数学函数可视化的结合（本站画布会真实渲染）。",
    "tags": [
@@ -484,7 +488,7 @@
    "id": "p27-c5",
    "level": 7,
    "title": "编程5：文本分析——正则提取产品与网址（13分）",
-   "desc": "huaqiang.html（UTF-8）为某元器件网站首页静态文件，相关行形如：<li title=\" 产品 \">若干空白<a href=\" 网址 \" target=...>。用正则筛选其中产品与网址：网址需添加 https: 协议头（页面里是 // 开头），产品名去掉首尾空格。将结果写入 huaqiang.csv（GBK 编码，首行 产品,网址），并在屏幕逐行输出“产品 网址”。",
+   "desc": "huaqiang.html（UTF-8）为某元器件网站首页静态文件，相关行形如：<li title=\" 产品 \">若干空白<a href=\" 网址 \" target=...>。用正则筛选其中产品与网址：网址需添加 https: 协议头（页面里是 // 开头），产品名去掉首尾空格。将结果写入 huaqiang.csv（GBK 编码，首行 产品,网址），并在屏幕逐行输出“产品 网址”。判题同时检查 huaqiang.csv：必须能按 GBK 读出，首行为 产品,网址，其后每行 产品,网址。",
    "files": [
     {
      "name": "huaqiang.html",
@@ -495,7 +499,11 @@
    "tests": [
     {
      "stdin": "",
-     "expected": "通孔电阻 https://search.ickey.cn/cate-search?cate_id=010101\n贴片电阻 https://search.ickey.cn/cate-search?cate_id=010102\n网络阵列电阻 https://search.ickey.cn/cate-search?cate_id=010103\n电阻套件 https://search.ickey.cn/cate-search?cate_id=010104\n其它固定电阻 https://search.ickey.cn/cate-search?cate_id=010199\nNTC热敏电阻 https://search.ickey.cn/cate-search?cate_id=010201\n压敏电阻 https://search.ickey.cn/cate-search?cate_id=010202"
+     "expected": "通孔电阻 https://search.ickey.cn/cate-search?cate_id=010101\n贴片电阻 https://search.ickey.cn/cate-search?cate_id=010102\n网络阵列电阻 https://search.ickey.cn/cate-search?cate_id=010103\n电阻套件 https://search.ickey.cn/cate-search?cate_id=010104\n其它固定电阻 https://search.ickey.cn/cate-search?cate_id=010199\nNTC热敏电阻 https://search.ickey.cn/cate-search?cate_id=010201\n压敏电阻 https://search.ickey.cn/cate-search?cate_id=010202",
+     "check": "check_lines('huaqiang.csv', [\"产品,网址\", \"通孔电阻,https://search.ickey.cn/cate-search?cate_id=010101\", \"贴片电阻,https://search.ickey.cn/cate-search?cate_id=010102\", \"网络阵列电阻,https://search.ickey.cn/cate-search?cate_id=010103\", \"电阻套件,https://search.ickey.cn/cate-search?cate_id=010104\", \"其它固定电阻,https://search.ickey.cn/cate-search?cate_id=010199\", \"NTC热敏电阻,https://search.ickey.cn/cate-search?cate_id=010201\", \"压敏电阻,https://search.ickey.cn/cate-search?cate_id=010202\"], encoding='gbk')",
+     "cleanup": [
+      "huaqiang.csv"
+     ]
     }
    ],
    "ref": "import re\n\nhtml = open('huaqiang.html', encoding='utf-8').read()\npairs = re.findall(r'title=\" ?([^\" ]+?) ?\">\\s*<a href=\"([^\"]+)\"', html)\nf = open('huaqiang.csv', 'w', encoding='gbk')\nf.write('产品,网址\\n')\nfor name, url in pairs:\n    if url.startswith('//'):\n        url = 'https:' + url\n    f.write(name + ',' + url + '\\n')\n    print(name, url)\nf.close()",

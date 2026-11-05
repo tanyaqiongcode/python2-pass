@@ -3949,7 +3949,7 @@ window.BANK = {
    "id": "blk-l6-002",
    "level": 6,
    "title": "turtle 画正方形",
-   "desc": "用 turtle 画一个蓝色正方形（边长 100，每画完一条边右转 90 度），然后抬起画笔移到 (150, 0)，换成红色画笔写上文字 正方形，最后打印验证信息（格式：正方形颜色: blue、落点: 150 0、画笔按下: False）。本站已内置 turtle 画布，可直接运行。",
+   "desc": "用 turtle 画一个蓝色正方形（边长 100，每画完一条边右转 90 度），然后抬起画笔移到 (150, 0)，换成红色画笔写上文字 正方形，最后打印验证信息（格式：正方形颜色: blue、落点: 150 0、画笔按下: False）。本站已内置 turtle 画布，可直接运行。判题同时检查画布：必须画出边长 100、首尾相接的蓝色正方形。",
    "code": "import turtle\nt = turtle.Turtle()\nc1 = ___(1)___\nt.pencolor(c1)\nfor i in range(4):\n    t.forward(100)\n    t.right(90)\nt.penup()\nt.goto(___(2)___, 0)\nt.pencolor('red')\nt.write('正方形')\nprint('正方形颜色:', c1)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.___(3)___())",
    "blanks": [
     {
@@ -3979,7 +3979,8 @@ window.BANK = {
    "expected": "正方形颜色: blue\n落点: 150 0\n画笔按下: False",
    "hint": "penup() 抬笔后移动不会再画线；isdown() 返回 True/False",
    "exp": "考查 turtle 基本绘图：pencolor、forward/right 循环画正方形、penup/goto 移动、write 写字与 isdown 状态查询。",
-   "ref": "import turtle\nt = turtle.Turtle()\nc1 = 'blue'\nt.pencolor(c1)\nfor i in range(4):\n    t.forward(100)\n    t.right(90)\nt.penup()\nt.goto(150, 0)\nt.pencolor('red')\nt.write('正方形')\nprint('正方形颜色:', c1)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())"
+   "ref": "import turtle\nt = turtle.Turtle()\nc1 = 'blue'\nt.pencolor(c1)\nfor i in range(4):\n    t.forward(100)\n    t.right(90)\nt.penup()\nt.goto(150, 0)\nt.pencolor('red')\nt.write('正方形')\nprint('正方形颜色:', c1)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
+   "check": "check_polygon(segs, 4, 100, 'blue')"
   },
   {
    "id": "blk-l7-001",
@@ -4900,7 +4901,7 @@ window.BANK = {
    "id": "fix-l6-001",
    "level": 6,
    "title": "turtle 画正方形",
-   "desc": "程序要用红色画笔画一个边长 100 的正方形（每画完一条边左转 90 度），画完抬起画笔，然后打印验证信息。正确输出：画笔颜色: red、落点: 0 0、画笔按下: False。程序有 3 处错误，请修改（不增删语句）。本站已内置 turtle 画布。",
+   "desc": "程序要用红色画笔画一个边长 100 的正方形（每画完一条边左转 90 度），画完抬起画笔，然后打印验证信息。正确输出：画笔颜色: red、落点: 0 0、画笔按下: False。程序有 3 处错误，请修改（不增删语句）。本站已内置 turtle 画布。判题同时检查画布：必须画出边长 100、首尾相接的红色正方形。",
    "buggy": "import turtle\nt = turtle.Turtle()\nt.pencolor('blue')\nfor i in range(4):\n    t.forward(100)\n    t.left(45)\nt.pendown()\nprint('画笔颜色:', t.pencolor())\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
    "stdin": "",
    "expected": "画笔颜色: red\n落点: 0 0\n画笔按下: False",
@@ -4919,7 +4920,8 @@ window.BANK = {
     }
    ],
    "ref": "import turtle\nt = turtle.Turtle()\nt.pencolor('red')\nfor i in range(4):\n    t.forward(100)\n    t.left(90)\nt.penup()\nprint('画笔颜色:', t.pencolor())\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
-   "exp": "考查 turtle 画笔颜色、正方形转角 90 度与 penup/pendown 画笔状态。"
+   "exp": "考查 turtle 画笔颜色、正方形转角 90 度与 penup/pendown 画笔状态。",
+   "check": "check_polygon(segs, 4, 100, 'red')"
   },
   {
    "id": "fix-l7-002",
@@ -5401,21 +5403,29 @@ window.BANK = {
    "id": "code-l7-013",
    "level": 7,
    "title": "matplotlib 绘制气温折线图",
-   "desc": "起始代码已给出 12 个月的月份列表 months 和月平均气温列表 temps。要求：①用 plt.plot 绘制气温随月份变化的折线图，并用 plt.savefig('t.png') 把图形保存为图片 t.png；②按月份顺序逐行输出“月:气温”，例如 1:5；③最后输出一行平均气温，格式如：平均气温:19.5（保留 1 位小数）。判题只看 print 输出，不看图片。",
+   "desc": "起始代码已给出 12 个月的月份列表 months 和月平均气温列表 temps。要求：①用 plt.plot 绘制气温随月份变化的折线图，并用 plt.savefig('t.png') 把图形保存为图片 t.png；②按月份顺序逐行输出“月:气温”，例如 1:5；③最后输出一行平均气温，格式如：平均气温:19.5（保留 1 位小数）。判题除了比对 print 输出，还检查折线的 x/y 数据是否为 months/temps，以及 t.png 是否真的保存成了 PNG 图片。",
    "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\n",
    "tests": [
     {
      "stdin": "",
-     "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+     "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5",
+     "check": "check_mpl_line(mpl, list(range(1, 13)), [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6])\ncheck_png('t.png')",
+     "cleanup": [
+      "t.png"
+     ]
     },
     {
      "stdin": "",
-     "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5"
+     "expected": "1:5\n2:8\n3:14\n4:20\n5:26\n6:31\n7:33\n8:32\n9:27\n10:20\n11:12\n12:6\n平均气温:19.5",
+     "check": "check_mpl_line(mpl, list(range(1, 13)), [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6])\ncheck_png('t.png')",
+     "cleanup": [
+      "t.png"
+     ]
     }
    ],
    "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\nplt.plot(months, temps)\nplt.savefig('t.png')\nfor i in range(12):\n    print('{}:{}'.format(months[i], temps[i]))\nprint('平均气温:{:.1f}'.format(sum(temps) / len(temps)))",
    "hint": "plt.plot( months, temps ) 画折线，plt.savefig('t.png') 存图；平均气温 = sum(temps) / len(temps)，用 '{:.1f}'.format() 保留 1 位小数。",
-   "exp": "考查 matplotlib 折线图绘制与保存（plot + savefig），以及列表遍历输出与平均值统计；判题通过打印数据验证，绘图仅要求代码正确执行。",
+   "exp": "考查 matplotlib 折线图绘制与保存（plot + savefig），以及列表遍历输出与平均值统计；判题同时检查折线数据与保存的图片文件。",
    "tags": [
     "matplotlib",
     "可视化",
@@ -6181,7 +6191,7 @@ window.BANK = {
    "id": "code-l5-009",
    "level": 5,
    "title": "凯撒加密写文件",
-   "desc": "当前目录下有 data.txt，存放若干行英文文本（UTF-8 编码）。程序对每一行做凯撒加密：每行先去掉行末换行符，然后将其中的字母循环右移 3 位（a→d、b→e、…、x→a、y→b、z→c，大写字母同理），非字母字符保持不变。按原行顺序把加密后的每一行打印出来，同时把加密后的内容逐行写入当前目录下的 out.txt（每行末尾写一个换行符）。",
+   "desc": "当前目录下有 data.txt，存放若干行英文文本（UTF-8 编码）。程序对每一行做凯撒加密：每行先去掉行末换行符，然后将其中的字母循环右移 3 位（a→d、b→e、…、x→a、y→b、z→c，大写字母同理），非字母字符保持不变。按原行顺序把加密后的每一行打印出来，同时把加密后的内容逐行写入当前目录下的 out.txt（每行末尾写一个换行符）。判题同时检查 out.txt 的内容是否与加密结果逐行一致。",
    "files": [
     {
      "name": "data.txt",
@@ -6192,11 +6202,19 @@ window.BANK = {
    "tests": [
     {
      "stdin": "",
-     "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n"
+     "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n",
+     "check": "check_lines('out.txt', [\"Khoor, Sbwkrq!\", \"Dwwdfn dw gdzq\", \"def ABC 123\"])",
+     "cleanup": [
+      "out.txt"
+     ]
     },
     {
      "stdin": "",
-     "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n"
+     "expected": "Khoor, Sbwkrq!\nDwwdfn dw gdzq\ndef ABC 123\n",
+     "check": "check_lines('out.txt', [\"Khoor, Sbwkrq!\", \"Dwwdfn dw gdzq\", \"def ABC 123\"])",
+     "cleanup": [
+      "out.txt"
+     ]
     }
    ],
    "ref": "f = open('data.txt', 'r', encoding='utf-8')\nout = open('out.txt', 'w', encoding='utf-8')\nfor line in f:\n    line = line.rstrip('\\n')\n    res = ''\n    for ch in line:\n        if 'a' <= ch <= 'z':\n            res += chr((ord(ch) - ord('a') + 3) % 26 + ord('a'))\n        elif 'A' <= ch <= 'Z':\n            res += chr((ord(ch) - ord('A') + 3) % 26 + ord('A'))\n        else:\n            res += ch\n    print(res)\n    out.write(res + '\\n')\nf.close()\nout.close()",
@@ -6299,20 +6317,23 @@ window.BANK = {
    "id": "code-l6-004",
    "level": 6,
    "title": "turtle 画正多边形",
-   "desc": "第一行输入正多边形的边数 n（3~8 的整数），第二行输入边长 d（正整数）。用红色画笔画这个正多边形：画笔从默认位置 (0,0)、朝向右方出发，每画一条长 d 的边就右转 360/n 度，共画 n 条边。画完后输出三行验证信息：第一行\"外角: X\"（X 为 360/n 的值，用 / 除法，形如 90.0）；第二行\"落点: X Y\"（画完后画笔的横、纵坐标，用 `round()` 取整）；第三行\"画笔颜色: red\"。本站已内置 turtle 画布，可直接运行。",
+   "desc": "第一行输入正多边形的边数 n（3~8 的整数），第二行输入边长 d（正整数）。用红色画笔画这个正多边形：画笔从默认位置 (0,0)、朝向右方出发，每画一条长 d 的边就右转 360/n 度，共画 n 条边。画完后输出三行验证信息：第一行\"外角: X\"（X 为 360/n 的值，用 / 除法，形如 90.0）；第二行\"落点: X Y\"（画完后画笔的横、纵坐标，用 `round()` 取整）；第三行\"画笔颜色: red\"。本站已内置 turtle 画布，可直接运行。判题同时检查画布：红色线条必须恰好构成边长 d 的闭合正 n 边形。",
    "starter": "import turtle\n\nn = int(input())\nd = int(input())\nt = turtle.Turtle()\n# 请补全：设红色画笔，循环画 n 条边（每条边后右转 360/n 度），最后打印三行验证信息\n",
    "tests": [
     {
      "stdin": "4\n100\n",
-     "expected": "外角: 90.0\n落点: 0 0\n画笔颜色: red\n"
+     "expected": "外角: 90.0\n落点: 0 0\n画笔颜色: red\n",
+     "check": "n, d = map(int, stdin.split())\ncheck_polygon(segs, n, d, 'red')"
     },
     {
      "stdin": "3\n100\n",
-     "expected": "外角: 120.0\n落点: 0 0\n画笔颜色: red\n"
+     "expected": "外角: 120.0\n落点: 0 0\n画笔颜色: red\n",
+     "check": "n, d = map(int, stdin.split())\ncheck_polygon(segs, n, d, 'red')"
     },
     {
      "stdin": "6\n50\n",
-     "expected": "外角: 60.0\n落点: 0 0\n画笔颜色: red\n"
+     "expected": "外角: 60.0\n落点: 0 0\n画笔颜色: red\n",
+     "check": "n, d = map(int, stdin.split())\ncheck_polygon(segs, n, d, 'red')"
     }
    ],
    "ref": "import turtle\n\nn = int(input())\nd = int(input())\nt = turtle.Turtle()\nt.pencolor('red')\nang = 360 / n\nfor i in range(n):\n    t.forward(d)\n    t.right(ang)\nprint('外角:', ang)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔颜色:', t.pencolor())",
@@ -6594,26 +6615,38 @@ window.BANK = {
    "id": "code-l7-010",
    "level": 7,
    "title": "matplotlib 销售额折线图",
-   "desc": "第一行输入月份数 n（2≤n≤12），第二行输入 n 个整数（空格分隔），依次为 1~n 月的销售额。用 matplotlib 绘制折线图（x 轴为月份 1..n，画法用 plt.plot(xs, ys, 'o-')，即带圆点标记），保存为 sales.png（本站判题不显示图，不必调用 plt.show()，图不影响判题）；同时在屏幕输出 n 行“{月份}月:{销售额}”，最后一行输出“最高:{月份}月”（销售额最高的月份，数据保证唯一）。本站判题环境已支持 matplotlib。",
+   "desc": "第一行输入月份数 n（2≤n≤12），第二行输入 n 个整数（空格分隔），依次为 1~n 月的销售额。用 matplotlib 绘制折线图（x 轴为月份 1..n，画法用 plt.plot(xs, ys, 'o-')，即带圆点标记），保存为 sales.png（本站判题不显示图，不必调用 plt.show()；判题会检查折线的 x/y 数据、圆点标记 o，以及 sales.png 是否为有效图片）；同时在屏幕输出 n 行“{月份}月:{销售额}”，最后一行输出“最高:{月份}月”（销售额最高的月份，数据保证唯一）。本站判题环境已支持 matplotlib。",
    "files": [],
    "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nn = int(input())\nys = list(map(int, input().split()))\n# 1. 构造月份列表 xs = 1..n，plt.plot(xs, ys, 'o-') 后 plt.savefig('sales.png')\n# 2. 逐行输出每月销售额，最后输出最高销售额的月份\n",
    "tests": [
     {
      "stdin": "6\n45 51 38 62 57 70\n",
-     "expected": "1月:45\n2月:51\n3月:38\n4月:62\n5月:57\n6月:70\n最高:6月\n"
+     "expected": "1月:45\n2月:51\n3月:38\n4月:62\n5月:57\n6月:70\n最高:6月\n",
+     "check": "lines = stdin.split('\\n')\nn = int(lines[0])\nys = list(map(int, lines[1].split()))\ncheck_mpl_line(mpl, list(range(1, n + 1)), ys, marker='o')\ncheck_png('sales.png')",
+     "cleanup": [
+      "sales.png"
+     ]
     },
     {
      "stdin": "5\n88 92 79 95 83\n",
-     "expected": "1月:88\n2月:92\n3月:79\n4月:95\n5月:83\n最高:4月\n"
+     "expected": "1月:88\n2月:92\n3月:79\n4月:95\n5月:83\n最高:4月\n",
+     "check": "lines = stdin.split('\\n')\nn = int(lines[0])\nys = list(map(int, lines[1].split()))\ncheck_mpl_line(mpl, list(range(1, n + 1)), ys, marker='o')\ncheck_png('sales.png')",
+     "cleanup": [
+      "sales.png"
+     ]
     },
     {
      "stdin": "12\n30 42 38 55 61 58 72 69 84 77 90 86\n",
-     "expected": "1月:30\n2月:42\n3月:38\n4月:55\n5月:61\n6月:58\n7月:72\n8月:69\n9月:84\n10月:77\n11月:90\n12月:86\n最高:11月\n"
+     "expected": "1月:30\n2月:42\n3月:38\n4月:55\n5月:61\n6月:58\n7月:72\n8月:69\n9月:84\n10月:77\n11月:90\n12月:86\n最高:11月\n",
+     "check": "lines = stdin.split('\\n')\nn = int(lines[0])\nys = list(map(int, lines[1].split()))\ncheck_mpl_line(mpl, list(range(1, n + 1)), ys, marker='o')\ncheck_png('sales.png')",
+     "cleanup": [
+      "sales.png"
+     ]
     }
    ],
    "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nn = int(input())\nys = list(map(int, input().split()))\nxs = list(range(1, n + 1))\nplt.plot(xs, ys, 'o-')\nplt.savefig('sales.png')\nbest = 1\nfor i in range(1, n):\n    if ys[i] > ys[best - 1]:\n        best = i + 1\nfor i in range(n):\n    print('{}月:{}'.format(xs[i], ys[i]))\nprint('最高:{}月'.format(best))\n",
    "hint": "xs 用 list(range(1, n+1)) 生成；最高月份用打擂台（记录下标）或 ys.index(max(ys))+1 求出；savefig 之前不要调用 plt.show()。",
-   "exp": "考查 matplotlib 折线图绘制与 savefig 保存（Agg 后端），配合列表遍历求最值；判题以 print 的数据为准，图作为练习产物。",
+   "exp": "考查 matplotlib 折线图绘制与 savefig 保存（Agg 后端），配合列表遍历求最值；判题同时检查折线数据、标记样式与保存的 PNG 文件。",
    "tags": [
     "matplotlib",
     "数据可视化",
@@ -6899,22 +6932,26 @@ window.BANK = {
     "函数",
     "循环"
    ],
-   "score": 18
+   "score": 18,
+   "unjudged": {
+    "points": 3,
+    "note": "第(1)小题安装 whl 并截图 setup.jpg 需在本机完成（官方未公布该步分值，本站按 3 分估计）"
+   }
   },
   {
    "id": "p27-c3",
    "level": 6,
    "title": "编程3：图形绘制——y=4cos(x)−cos(6x)（15分）",
-   "desc": "创建 400×400 画布：以绿色实线绘制坐标轴；在 −π~π 范围内以步长 0.02 变化，绘制函数数据点向 y 轴的红色水平线（横、纵坐标均放大 30 倍），y = 4cos(x) − cos(6x)。正式考试可用 tkinter、matplotlib 或 turtle 任选；本站用内置 turtle 画布实现（已支持 goto/pendown/pencolor），判题要求：程序运行成功且画出画布，最后 print('drawn')。",
-   "starter": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴（横轴 -190~190，纵轴 190~-190）\n# 2. 红色水平线：x 取 0.02 步长，t.goto(0, y) 再 t.goto(30*x, y)\n",
+   "desc": "创建 400×400 画布：以绿色实线绘制坐标轴；在 −π~π 范围内以步长 0.02 变化，绘制函数数据点向 y 轴的红色水平线（横、纵坐标均放大 30 倍），y = 4cos(x) − cos(6x)。正式考试可用 tkinter、matplotlib 或 turtle 任选；本站支持 turtle（内置画布）和 matplotlib（tkinter 在浏览器里跑不了）。判题检查实际画出的图形：①有过原点的绿色横轴和纵轴；②红色水平线的一端在 y 轴上、另一端落在放大 30 倍后的函数点 (30x, 30y) 上，且覆盖 −π~π 的全部约 315 个采样点。不需要 print。",
+   "starter": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴（横轴 -190~190，纵轴 190~-190）\n# 2. 红色水平线：x 从 -math.pi 到 math.pi、步长 0.02；y = 4cos(x) - cos(6x)\n#    每个点 t.goto(0, 30*y) 抬笔到 y 轴，再落笔 t.goto(30*x, 30*y)\n",
    "tests": [
     {
      "stdin": "",
-     "expected": "drawn",
-     "expectCanvas": true
+     "expectCanvas": true,
+     "check": "check_function_hlines(segs, mpl, lambda x: 4 * math.cos(x) - math.cos(6 * x), -math.pi, math.pi, 0.02)"
     }
    ],
-   "ref": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\nt.pencolor('green')\nt.penup()\nt.goto(-190, 0)\nt.pendown()\nt.goto(190, 0)\nt.penup()\nt.goto(0, 190)\nt.pendown()\nt.goto(0, -190)\nt.pencolor('red')\ni = -314\nwhile i <= 314:\n    x = i * 0.02\n    y = 30 * (4 * math.cos(x) - math.cos(6 * x))\n    t.penup()\n    t.goto(0, y)\n    t.pendown()\n    t.goto(30 * x, y)\n    i += 2\nprint('drawn')",
+   "ref": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\nt.pencolor('green')\nt.penup()\nt.goto(-190, 0)\nt.pendown()\nt.goto(190, 0)\nt.penup()\nt.goto(0, 190)\nt.pendown()\nt.goto(0, -190)\nt.pencolor('red')\nx = -math.pi\nwhile x <= math.pi:\n    y = 4 * math.cos(x) - math.cos(6 * x)\n    t.penup()\n    t.goto(0, 30 * y)\n    t.pendown()\n    t.goto(30 * x, 30 * y)\n    x += 0.02\nt.hideturtle()\n",
    "hint": "坐标轴两条绿线；每个数据点画一条从 y 轴 (0, 30y) 到 (30x, 30y) 的红色水平线；penup 移动、pendown 画线",
    "exp": "考查 turtle 画笔状态、goto 定位与数学函数可视化的结合（本站画布会真实渲染）。",
    "tags": [
@@ -6960,7 +6997,7 @@ window.BANK = {
    "id": "p27-c5",
    "level": 7,
    "title": "编程5：文本分析——正则提取产品与网址（13分）",
-   "desc": "huaqiang.html（UTF-8）为某元器件网站首页静态文件，相关行形如：<li title=\" 产品 \">若干空白<a href=\" 网址 \" target=...>。用正则筛选其中产品与网址：网址需添加 https: 协议头（页面里是 // 开头），产品名去掉首尾空格。将结果写入 huaqiang.csv（GBK 编码，首行 产品,网址），并在屏幕逐行输出“产品 网址”。",
+   "desc": "huaqiang.html（UTF-8）为某元器件网站首页静态文件，相关行形如：<li title=\" 产品 \">若干空白<a href=\" 网址 \" target=...>。用正则筛选其中产品与网址：网址需添加 https: 协议头（页面里是 // 开头），产品名去掉首尾空格。将结果写入 huaqiang.csv（GBK 编码，首行 产品,网址），并在屏幕逐行输出“产品 网址”。判题同时检查 huaqiang.csv：必须能按 GBK 读出，首行为 产品,网址，其后每行 产品,网址。",
    "files": [
     {
      "name": "huaqiang.html",
@@ -6971,7 +7008,11 @@ window.BANK = {
    "tests": [
     {
      "stdin": "",
-     "expected": "通孔电阻 https://search.ickey.cn/cate-search?cate_id=010101\n贴片电阻 https://search.ickey.cn/cate-search?cate_id=010102\n网络阵列电阻 https://search.ickey.cn/cate-search?cate_id=010103\n电阻套件 https://search.ickey.cn/cate-search?cate_id=010104\n其它固定电阻 https://search.ickey.cn/cate-search?cate_id=010199\nNTC热敏电阻 https://search.ickey.cn/cate-search?cate_id=010201\n压敏电阻 https://search.ickey.cn/cate-search?cate_id=010202"
+     "expected": "通孔电阻 https://search.ickey.cn/cate-search?cate_id=010101\n贴片电阻 https://search.ickey.cn/cate-search?cate_id=010102\n网络阵列电阻 https://search.ickey.cn/cate-search?cate_id=010103\n电阻套件 https://search.ickey.cn/cate-search?cate_id=010104\n其它固定电阻 https://search.ickey.cn/cate-search?cate_id=010199\nNTC热敏电阻 https://search.ickey.cn/cate-search?cate_id=010201\n压敏电阻 https://search.ickey.cn/cate-search?cate_id=010202",
+     "check": "check_lines('huaqiang.csv', [\"产品,网址\", \"通孔电阻,https://search.ickey.cn/cate-search?cate_id=010101\", \"贴片电阻,https://search.ickey.cn/cate-search?cate_id=010102\", \"网络阵列电阻,https://search.ickey.cn/cate-search?cate_id=010103\", \"电阻套件,https://search.ickey.cn/cate-search?cate_id=010104\", \"其它固定电阻,https://search.ickey.cn/cate-search?cate_id=010199\", \"NTC热敏电阻,https://search.ickey.cn/cate-search?cate_id=010201\", \"压敏电阻,https://search.ickey.cn/cate-search?cate_id=010202\"], encoding='gbk')",
+     "cleanup": [
+      "huaqiang.csv"
+     ]
     }
    ],
    "ref": "import re\n\nhtml = open('huaqiang.html', encoding='utf-8').read()\npairs = re.findall(r'title=\" ?([^\" ]+?) ?\">\\s*<a href=\"([^\"]+)\"', html)\nf = open('huaqiang.csv', 'w', encoding='gbk')\nf.write('产品,网址\\n')\nfor name, url in pairs:\n    if url.startswith('//'):\n        url = 'https:' + url\n    f.write(name + ',' + url + '\\n')\n    print(name, url)\nf.close()",
@@ -7329,3 +7370,5 @@ window.BANK = {
   ]
  }
 };
+/* 运行后检查源码（tools/py2check.py 原样打包；浏览器判题装成 py2check 模块） */
+window.PY2CHECK_SRC = "\"\"\"运行后检查（post-run check）—— 浏览器 Pyodide 与本地 harness 共用同一份源码。\n\n为什么需要：绘图题、写文件题光看 print 输出判不出对错（画错了照样能 print）。\n测试点可带 \"check\" 字段（一段 Python），学生代码运行结束后执行，检查：\n  - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）\n  - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]\n  - 写出的文件（read_text / read_bytes / exists）\n  - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出\n检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。\n\n本文件由 tools/build_data.py 原样打包进 js/data.js（window.PY2CHECK_SRC），\n浏览器端以模块 py2check 载入，与本地校验逐字节一致。\n\"\"\"\nimport math\nimport os\n\n\nclass CheckFail(Exception):\n    pass\n\n\ndef fail(msg):\n    raise CheckFail(str(msg))\n\n\n# ---------------- 颜色 ----------------\n_NAMED = {\n    'red': (255, 0, 0), 'r': (255, 0, 0), 'green': (0, 128, 0), 'g': (0, 128, 0),\n    'lime': (0, 255, 0), 'blue': (0, 0, 255), 'b': (0, 0, 255), 'black': (0, 0, 0),\n    'k': (0, 0, 0), 'white': (255, 255, 255), 'w': (255, 255, 255),\n    'yellow': (255, 255, 0), 'y': (255, 255, 0), 'orange': (255, 165, 0),\n    'purple': (128, 0, 128), 'pink': (255, 192, 203), 'gray': (128, 128, 128),\n    'grey': (128, 128, 128), 'brown': (165, 42, 42), 'cyan': (0, 255, 255),\n    'c': (0, 255, 255), 'magenta': (255, 0, 255), 'm': (255, 0, 255),\n    'darkgreen': (0, 100, 0), 'darkred': (139, 0, 0), 'navy': (0, 0, 128),\n    'tab:red': (214, 39, 40), 'tab:green': (44, 160, 44), 'tab:blue': (31, 119, 180),\n}\n\n\ndef rgb(c):\n    \"\"\"把 'red' / '#ff0000' / (1, 0, 0) / (255, 0, 0) 统一成 0~255 的 (r, g, b)；认不出返回 None。\"\"\"\n    if c is None:\n        return None\n    if isinstance(c, (tuple, list)):\n        v = list(c)[:3]\n        if len(v) < 3:\n            return None\n        try:\n            v = [float(x) for x in v]\n        except (TypeError, ValueError):\n            return None\n        if all(0 <= x <= 1 for x in v):\n            return tuple(int(round(x * 255)) for x in v)\n        return tuple(int(round(x)) for x in v)\n    s = str(c).strip().lower()\n    if s in _NAMED:\n        return _NAMED[s]\n    if s.startswith('#') and len(s) in (4, 7, 9):\n        if len(s) == 4:\n            s = '#' + ''.join(ch * 2 for ch in s[1:])\n        try:\n            return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))\n        except ValueError:\n            return None\n    return None\n\n\ndef is_color(c, name):\n    \"\"\"颜色归类判断（宽松）：'red' 接受 red/#f00/#ff0000/(1,0,0)/'r'/'tab:red' 等。\"\"\"\n    v = rgb(c)\n    if v is None:\n        return False\n    r, g, b = v\n    hi, lo = 120, 110\n    name = name.lower()\n    if name == 'red':\n        return r >= hi and g < lo and b < lo\n    if name == 'green':\n        return g >= hi and r < lo + 20 and b < lo + 20\n    if name == 'blue':\n        return b >= hi and r < lo and g < lo + 60\n    if name == 'black':\n        return max(v) < 60\n    want = rgb(name)\n    return want is not None and all(abs(a - w) <= 40 for a, w in zip(v, want))\n\n\ndef approx(a, b, tol=1e-6):\n    return abs(float(a) - float(b)) <= tol\n\n\n# ---------------- 运行期采集 ----------------\ndef mpl_snapshot():\n    \"\"\"抓取当前所有 matplotlib 图形中的折线 / 线段集合 / 柱子（未导入 matplotlib 时返回 []）。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        return []\n    try:\n        from matplotlib import _pylab_helpers\n        from matplotlib.colors import to_hex\n    except Exception:\n        return []\n    out = []\n    for mgr in _pylab_helpers.Gcf.get_all_fig_managers():\n        fig = mgr.canvas.figure\n        for ax in fig.axes:\n            for ln in ax.get_lines():\n                try:\n                    xs = [float(x) for x in ln.get_xdata()]\n                    ys = [float(y) for y in ln.get_ydata()]\n                except (TypeError, ValueError):\n                    continue\n                item = {'kind': 'line', 'x': xs, 'y': ys,\n                        'color': to_hex(ln.get_color()), 'marker': str(ln.get_marker())}\n                # plt.axhline / axvline：数据坐标只有一维，另一维是 0~1 的轴坐标\n                tr = ln.get_transform()\n                if tr == ax.get_yaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'h', 'at': ys[0], 'color': item['color']}\n                elif tr == ax.get_xaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'v', 'at': xs[0], 'color': item['color']}\n                out.append(item)\n            for coll in ax.collections:\n                get_segments = getattr(coll, 'get_segments', None)\n                if get_segments is None:\n                    continue\n                colors = [to_hex(c) for c in coll.get_colors()] or ['#000000']\n                for i, seg in enumerate(get_segments()):\n                    if len(seg) >= 2:\n                        (x1, y1), (x2, y2) = seg[0], seg[-1]\n                        out.append({'kind': 'seg', 'x': [float(x1), float(x2)], 'y': [float(y1), float(y2)],\n                                    'color': colors[i % len(colors)]})\n            for p in ax.patches:\n                if hasattr(p, 'get_height') and hasattr(p, 'get_x'):\n                    out.append({'kind': 'bar', 'x': float(p.get_x() + p.get_width() / 2),\n                                'h': float(p.get_height()), 'color': to_hex(p.get_facecolor())})\n    return out\n\n\ndef install_mpl_hooks(store):\n    \"\"\"学生代码里的 plt.close() / plt.show() 会清掉或\"消费\"图形：调用前先快照。返回还原函数。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        try:\n            import matplotlib.pyplot  # noqa: F401  （matplotlib 题在 harness 中已预导入）\n        except Exception:\n            return lambda: None\n    plt = sys.modules['matplotlib.pyplot']\n    orig_close, orig_show = plt.close, plt.show\n\n    def close(*a, **k):\n        store.extend(mpl_snapshot())\n        return orig_close(*a, **k)\n\n    def show(*a, **k):\n        store.extend(mpl_snapshot())\n        return None\n\n    plt.close, plt.show = close, show\n\n    def restore():\n        plt.close, plt.show = orig_close, orig_show\n    return restore\n\n\ndef cleanup_files(names):\n    for n in names or []:\n        try:\n            os.remove(n)\n        except OSError:\n            pass\n\n\n# ---------------- 文件 ----------------\ndef exists(name):\n    return os.path.exists(name)\n\n\ndef read_bytes(name):\n    if not os.path.exists(name):\n        fail('没有找到程序应生成的文件 ' + name)\n    with open(name, 'rb') as f:\n        return f.read()\n\n\ndef read_text(name, encoding='utf-8'):\n    data = read_bytes(name)\n    try:\n        return data.decode(encoding)\n    except UnicodeDecodeError:\n        hint = ''\n        if encoding.lower() in ('gbk', 'gb2312', 'gb18030'):\n            try:\n                data.decode('utf-8')\n                hint = '（看起来是按 UTF-8 写的，open 时要写 encoding=\\'gbk\\'）'\n            except UnicodeDecodeError:\n                pass\n        fail('文件 ' + name + ' 不能按 ' + encoding + ' 编码读取' + hint)\n\n\ndef check_lines(name, expected_lines, encoding='utf-8'):\n    \"\"\"文件内容逐行比对（忽略行尾空白与末尾空行）。\"\"\"\n    got = [ln.rstrip() for ln in read_text(name, encoding).replace('\\r\\n', '\\n').split('\\n')]\n    while got and got[-1] == '':\n        got.pop()\n    want = [ln.rstrip() for ln in expected_lines]\n    if got != want:\n        for i in range(max(len(got), len(want))):\n            g = got[i] if i < len(got) else '（缺少这一行）'\n            w = want[i] if i < len(want) else '（多出这一行）'\n            if g != w:\n                fail('文件 {} 第 {} 行不对：应为 {!r}，实际 {!r}'.format(name, i + 1, w, g))\n\n\ndef check_png(name):\n    data = read_bytes(name)\n    if not data.startswith(b'\\x89PNG'):\n        fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')\n\n\n# ---------------- turtle ----------------\ndef _seglen(s):\n    return math.hypot(s[2] - s[0], s[3] - s[1])\n\n\ndef check_polygon(segs, n, side, color, tol=1.0):\n    \"\"\"画出的同色线段恰好构成一个边长 side 的闭合正 n 边形。\"\"\"\n    mine = [s for s in segs if is_color(s[4], color)]\n    if not mine:\n        fail('画布上没有{}色线条（检查 pencolor/color 的设置）'.format(_CN.get(color, color)))\n    if len(mine) != n:\n        fail('{}色线条应有 {} 条边，实际画了 {} 条'.format(_CN.get(color, color), n, len(mine)))\n    for i, s in enumerate(mine):\n        if abs(_seglen(s) - side) > tol:\n            fail('第 {} 条边长度约为 {:.1f}，应为 {}'.format(i + 1, _seglen(s), side))\n        nxt = mine[(i + 1) % n]\n        if math.hypot(s[2] - nxt[0], s[3] - nxt[1]) > tol:\n            fail('第 {} 条边与下一条边没有首尾相接，图形不闭合'.format(i + 1))\n    for i in range(n):\n        a, b = mine[i], mine[(i + 1) % n]\n        v1 = (a[2] - a[0], a[3] - a[1])\n        v2 = (b[2] - b[0], b[3] - b[1])\n        cosang = (v1[0] * v2[0] + v1[1] * v2[1]) / (side * side)\n        turn = math.degrees(math.acos(max(-1.0, min(1.0, cosang))))\n        if abs(turn - 360.0 / n) > 1.0:\n            fail('第 {} 个转角约 {:.0f}°，正 {} 边形每次应转 {:.0f}°'.format(i + 1, turn, n, 360.0 / n))\n\n\ndef _axis_ok(lines, color, min_len):\n    h = v = False\n    for (x1, y1, x2, y2, c) in lines:\n        if not is_color(c, color):\n            continue\n        if abs(y1) < 2 and abs(y2) < 2 and abs(x2 - x1) >= min_len and min(x1, x2) < 0 < max(x1, x2):\n            h = True\n        if abs(x1) < 2 and abs(x2) < 2 and abs(y2 - y1) >= min_len and min(y1, y2) < 0 < max(y1, y2):\n            v = True\n    return h, v\n\n\ndef _as_lines(segs, mpl):\n    \"\"\"turtle 线段 + matplotlib 线条统一成 (x1, y1, x2, y2, color) 线段列表。\"\"\"\n    out = list(segs)\n    for item in mpl:\n        if item['kind'] in ('line', 'seg'):\n            xs, ys = item['x'], item['y']\n            for i in range(len(xs) - 1):\n                out.append((xs[i], ys[i], xs[i + 1], ys[i + 1], item['color']))\n    return out\n\n\ndef check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1)):\n    \"\"\"函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 向 y 轴的 line_color 色水平线。\n\n    turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。\n    \"\"\"\n    lines = _as_lines(segs, mpl)\n    if not lines:\n        fail('没有检测到任何绘图（turtle 线条或 matplotlib 图形）')\n    mpl_lines = _as_lines([], mpl)\n    expect_n = int(round((x1 - x0) / step)) + 1\n    best = None\n    for k in scales:\n        hits, xs_cov = 0, []\n        for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):\n            if not is_color(c, line_color) or abs(b1 - b2) > 0.05 * k + 0.5:\n                continue\n            if abs(a1) <= 0.05 * k + 0.5:\n                ex, ey = a2, b2\n            elif abs(a2) <= 0.05 * k + 0.5:\n                ex, ey = a1, b1\n            else:\n                continue\n            x = ex / k\n            if x0 - step <= x <= x1 + step and abs(ey / k - f(x)) <= 0.05:\n                hits += 1\n                xs_cov.append(x)\n        if best is None or hits > best[0]:\n            best = (hits, k, xs_cov)\n    hits, k, xs_cov = best\n    if hits < 0.9 * expect_n:\n        fail('{}色水平线与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 y 轴）'\n             .format(_CN.get(line_color, line_color), hits, expect_n, scales[0]))\n    if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:\n        fail('水平线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'\n             .format(x0, x1, min(xs_cov), max(xs_cov)))\n    h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)\n    for item in mpl:\n        if item['kind'] == 'axline' and abs(item['at']) < 1e-9 and is_color(item['color'], axis_color):\n            h = h or item['dir'] == 'h'\n            v = v or item['dir'] == 'v'\n    if not (h and v):\n        missing = '、'.join(n for n, ok in (('横轴', h), ('纵轴', v)) if not ok)\n        fail('缺少{}色坐标轴：{}（应为过原点的实线）'.format(_CN.get(axis_color, axis_color), missing))\n\n\n# ---------------- matplotlib ----------------\ndef check_mpl_line(mpl, xs, ys, marker=None):\n    lines = [m for m in mpl if m['kind'] == 'line']\n    if not lines:\n        fail('没有检测到 matplotlib 折线（是否调用了 plt.plot？）')\n    xs = [float(x) for x in xs]\n    ys = [float(y) for y in ys]\n    for ln in lines:\n        if len(ln['x']) == len(xs) and all(approx(a, b, 1e-6) for a, b in zip(ln['x'], xs)) \\\n                and all(approx(a, b, 1e-6) for a, b in zip(ln['y'], ys)):\n            if marker and ln.get('marker') != marker:\n                fail('折线数据正确，但没有用 {!r} 标记数据点（plot 的格式串要带 o）'.format(marker))\n            return\n    got = lines[0]\n    fail('折线数据不对：应为 x={} y={}，实际画的是 x={} y={}'.format(\n        _short(xs), _short(ys), _short(got['x']), _short(got['y'])))\n\n\ndef _short(v):\n    v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]\n    return str(v if len(v) <= 8 else v[:8] + ['…'])\n\n\n_CN = {'red': '红', 'green': '绿', 'blue': '蓝', 'black': '黑'}\n\n\ndef run_check(src, ns):\n    \"\"\"执行一段检查代码，返回 (ok, msg)。\"\"\"\n    env = {name: globals()[name] for name in (\n        'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',\n        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line')}\n    env['math'] = math\n    env.update(ns)\n    try:\n        exec(compile(src, '<check>', 'exec'), env)\n        return True, ''\n    except CheckFail as e:\n        return False, str(e)\n    except AssertionError as e:\n        return False, str(e) or '绘图/文件检查未通过'\n    except Exception as e:\n        return False, '检查时出错：{}: {}'.format(e.__class__.__name__, e)\n";

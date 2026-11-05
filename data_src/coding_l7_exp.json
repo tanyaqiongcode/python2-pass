@@ -196,26 +196,38 @@
    "id": "code-l7-010",
    "level": 7,
    "title": "matplotlib 销售额折线图",
-   "desc": "第一行输入月份数 n（2≤n≤12），第二行输入 n 个整数（空格分隔），依次为 1~n 月的销售额。用 matplotlib 绘制折线图（x 轴为月份 1..n，画法用 plt.plot(xs, ys, 'o-')，即带圆点标记），保存为 sales.png（本站判题不显示图，不必调用 plt.show()，图不影响判题）；同时在屏幕输出 n 行“{月份}月:{销售额}”，最后一行输出“最高:{月份}月”（销售额最高的月份，数据保证唯一）。本站判题环境已支持 matplotlib。",
+   "desc": "第一行输入月份数 n（2≤n≤12），第二行输入 n 个整数（空格分隔），依次为 1~n 月的销售额。用 matplotlib 绘制折线图（x 轴为月份 1..n，画法用 plt.plot(xs, ys, 'o-')，即带圆点标记），保存为 sales.png（本站判题不显示图，不必调用 plt.show()；判题会检查折线的 x/y 数据、圆点标记 o，以及 sales.png 是否为有效图片）；同时在屏幕输出 n 行“{月份}月:{销售额}”，最后一行输出“最高:{月份}月”（销售额最高的月份，数据保证唯一）。本站判题环境已支持 matplotlib。",
    "files": [],
    "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nn = int(input())\nys = list(map(int, input().split()))\n# 1. 构造月份列表 xs = 1..n，plt.plot(xs, ys, 'o-') 后 plt.savefig('sales.png')\n# 2. 逐行输出每月销售额，最后输出最高销售额的月份\n",
    "tests": [
     {
      "stdin": "6\n45 51 38 62 57 70\n",
-     "expected": "1月:45\n2月:51\n3月:38\n4月:62\n5月:57\n6月:70\n最高:6月\n"
+     "expected": "1月:45\n2月:51\n3月:38\n4月:62\n5月:57\n6月:70\n最高:6月\n",
+     "check": "lines = stdin.split('\\n')\nn = int(lines[0])\nys = list(map(int, lines[1].split()))\ncheck_mpl_line(mpl, list(range(1, n + 1)), ys, marker='o')\ncheck_png('sales.png')",
+     "cleanup": [
+      "sales.png"
+     ]
     },
     {
      "stdin": "5\n88 92 79 95 83\n",
-     "expected": "1月:88\n2月:92\n3月:79\n4月:95\n5月:83\n最高:4月\n"
+     "expected": "1月:88\n2月:92\n3月:79\n4月:95\n5月:83\n最高:4月\n",
+     "check": "lines = stdin.split('\\n')\nn = int(lines[0])\nys = list(map(int, lines[1].split()))\ncheck_mpl_line(mpl, list(range(1, n + 1)), ys, marker='o')\ncheck_png('sales.png')",
+     "cleanup": [
+      "sales.png"
+     ]
     },
     {
      "stdin": "12\n30 42 38 55 61 58 72 69 84 77 90 86\n",
-     "expected": "1月:30\n2月:42\n3月:38\n4月:55\n5月:61\n6月:58\n7月:72\n8月:69\n9月:84\n10月:77\n11月:90\n12月:86\n最高:11月\n"
+     "expected": "1月:30\n2月:42\n3月:38\n4月:55\n5月:61\n6月:58\n7月:72\n8月:69\n9月:84\n10月:77\n11月:90\n12月:86\n最高:11月\n",
+     "check": "lines = stdin.split('\\n')\nn = int(lines[0])\nys = list(map(int, lines[1].split()))\ncheck_mpl_line(mpl, list(range(1, n + 1)), ys, marker='o')\ncheck_png('sales.png')",
+     "cleanup": [
+      "sales.png"
+     ]
     }
    ],
    "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nn = int(input())\nys = list(map(int, input().split()))\nxs = list(range(1, n + 1))\nplt.plot(xs, ys, 'o-')\nplt.savefig('sales.png')\nbest = 1\nfor i in range(1, n):\n    if ys[i] > ys[best - 1]:\n        best = i + 1\nfor i in range(n):\n    print('{}月:{}'.format(xs[i], ys[i]))\nprint('最高:{}月'.format(best))\n",
    "hint": "xs 用 list(range(1, n+1)) 生成；最高月份用打擂台（记录下标）或 ys.index(max(ys))+1 求出；savefig 之前不要调用 plt.show()。",
-   "exp": "考查 matplotlib 折线图绘制与 savefig 保存（Agg 后端），配合列表遍历求最值；判题以 print 的数据为准，图作为练习产物。",
+   "exp": "考查 matplotlib 折线图绘制与 savefig 保存（Agg 后端），配合列表遍历求最值；判题同时检查折线数据、标记样式与保存的 PNG 文件。",
    "tags": [
     "matplotlib",
     "数据可视化",

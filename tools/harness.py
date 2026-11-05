@@ -20,9 +20,17 @@ class Watchdog(Exception):
 
 
 def run_user(
-    code: str, stdin_text: str, timeout_s: float = 8.0, max_events: int = 2_000_000
+    code: str,
+    stdin_text: str,
+    timeout_s: float = 8.0,
+    max_events: int = 2_000_000,
+    check: str = None,
+    cleanup=None,
 ):
-    """运行用户代码，返回 dict(ok, stdout, prompts, error, tb)。
+    """运行用户代码，返回 dict(ok, stdout, prompts, error, tb, checkOk, checkMsg)。
+
+    check：运行后检查代码（见 tools/py2check.py），未提供时 checkOk 为 None；
+    cleanup：运行前删除的文件名列表（防止上一次运行留下的输出文件冒充本次结果）。
 
     与浏览器 HARNESS_PY 保持一致：prompt 进 prompts，不进 stdout。
     matplotlib 题自动放宽预算（与浏览器 runner.js 行为一致）。
@@ -73,11 +81,18 @@ def run_user(
 
     # turtle 桩：与浏览器 runner.js 注入的 turtle_shim 状态数学一致，
     # 本地/CI 校验不依赖 tkinter，判题依据的 print 状态值两端相同
+    import py2check
+
+    py2check.cleanup_files(cleanup)
+    segs = []
+    mpl_store = []
+    restore_mpl = py2check.install_mpl_hooks(mpl_store) if "matplotlib" in code else (lambda: None)
+
     turtle_mod = None
     try:
         from turtle_stub import make_module
 
-        turtle_mod = make_module()
+        turtle_mod = make_module(segs)
         env["turtle"] = turtle_mod
         sys.modules["turtle"] = turtle_mod
     except Exception:
@@ -127,6 +142,23 @@ def run_user(
             except Exception:
                 pass
 
+    check_ok, check_msg = None, ""
+    if check:
+        if err == "":
+            mpl_store.extend(py2check.mpl_snapshot())
+            check_ok, check_msg = py2check.run_check(
+                check,
+                {"segs": segs, "mpl": mpl_store, "user": env, "stdin": stdin_text, "stdout": out.getvalue()},
+            )
+        else:
+            check_ok = False
+    restore_mpl()
+    if "matplotlib.pyplot" in sys.modules:
+        try:
+            sys.modules["matplotlib.pyplot"].close("all")
+        except Exception:
+            pass
+
     return {
         "ok": err == "",
         "stdout": out.getvalue(),
@@ -134,4 +166,6 @@ def run_user(
         "error": err,
         "tb": tb,
         "durationMs": ctx["duration"],
+        "checkOk": check_ok,
+        "checkMsg": check_msg,
     }

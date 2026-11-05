@@ -207,14 +207,180 @@
     return choice === q.ans;
   }
 
-  /** 编程题单个测试点判定 */
+  /** 编程题单个测试点判定
+   *  t.check：运行后检查（绘图线段 / matplotlib 数据 / 输出文件，见 tools/py2check.py），
+   *           必须 r.checkOk === true；带 check 且无 expected 时不比对输出。
+   *  t.expectCanvas：旧式"画出画布即可"判定（仅在无 check 时生效）。 */
   function judgeTest(r, t) {
+    t = t || {};
     if (!r || !r.ok) return false;
-    var cmp = compareOutput(r.stdout, t.expected || '');
-    if (t.expectCanvas) {
-      return !!r.hasCanvas && (!t.expected || cmp.ok);
+    var outOk = (t.check && !t.expected) ? true : compareOutput(r.stdout, t.expected || '').ok;
+    if (t.check) return outOk && r.checkOk === true;
+    if (t.expectCanvas) return !!r.hasCanvas && (!t.expected || outOk);
+    return outOk;
+  }
+
+  /* ---------- 倒排备考计划（按剩余天数生成，纯函数便于测试） ---------- */
+  var DAY_MS = 86400000;
+  function dayStart(v) {
+    var d = new Date(v);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  }
+  function ymd(ms) {
+    var d = new Date(ms);
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  /** 把 S 个学习日分给各关：天数充足时每关至少 1 天、按工作量加权；不足时相邻关合并 */
+  function allocLevelDays(levels, weights, S) {
+    var total = levels.reduce(function (a, L) { return a + weights[L]; }, 0) || 1;
+    if (S >= levels.length) {
+      var alloc = levels.map(function () { return 1; });
+      var spare = S - levels.length;
+      var exact = levels.map(function (L) { return weights[L] / total * spare; });
+      var base = exact.map(Math.floor);
+      var left = spare - base.reduce(function (a, b) { return a + b; }, 0);
+      var order = exact.map(function (v, i) { return [v - base[i], i]; }).sort(function (a, b) { return b[0] - a[0]; });
+      for (var j = 0; j < left; j++) base[order[j][1]] += 1;
+      return levels.map(function (L, i) { return { levels: [L], days: alloc[i] + base[i] }; });
     }
-    return cmp.ok;
+    // 天数少于关卡数：按累计工作量把相邻关卡装进 S 个桶
+    var buckets = [];
+    var acc = 0;
+    var cur = [];
+    levels.forEach(function (L, i) {
+      cur.push(L);
+      acc += weights[L];
+      var remainingLevels = levels.length - i - 1;
+      var remainingBuckets = S - buckets.length - 1;
+      if (remainingBuckets > 0 && (acc >= total / S * (buckets.length + 1) || remainingLevels === remainingBuckets)) {
+        buckets.push({ levels: cur, days: 1 });
+        cur = [];
+      }
+    });
+    if (cur.length) buckets.push({ levels: cur, days: 1 });
+    return buckets;
+  }
+
+  /**
+   * 生成从 today 到考试前一天的逐日计划。
+   * o = { today, exam, target: 't2p'|'t2e'|'t3p'|'t3e', startLevel: 1..7,
+   *       counts: { L: { mcq, code } }, levelNames: { L: '名称' } }
+   * 返回 { totalDays, longPlan, days: [{ date, kind, title, tasks: [{ text, href }] , levels }] }
+   *   kind: study | mock | offline | review | rest
+   * 剩余超过 49 天时 longPlan=true（沿用七周计划）。
+   */
+  function buildCountdownPlan(o) {
+    var t0 = dayStart(o.today);
+    var D = Math.round((dayStart(o.exam) - t0) / DAY_MS);
+    if (D <= 0) return { totalDays: 0, longPlan: false, days: [] };
+    if (D > 49) return { totalDays: D, longPlan: true, days: [] };
+    var t3 = /^t3/.test(o.target || 't3p');
+    var names = o.levelNames || {};
+    var counts = o.counts || {};
+    var lastLevel = t3 ? 7 : 6;
+    var start = Math.min(Math.max(o.startLevel || 1, 1), lastLevel);
+    var levels = [];
+    for (var L = start; L <= lastLevel; L++) levels.push(L);
+    var weights = {};
+    levels.forEach(function (L) {
+      var c = counts[L] || { mcq: 20, code: 10 };
+      weights[L] = (c.code || 0) + (c.mcq || 0) / 4 + 1;
+    });
+
+    var offlineN = D >= 10 ? (t3 ? 2 : 1) : (D >= 5 ? 1 : 0);
+    var mockN = D >= 10 ? 2 : (D >= 4 ? 1 : 0);
+    var sprintN = D >= 12 ? Math.max(2, Math.round(D * 0.18)) : (D >= 8 ? 1 : 0);
+    var S = D - 1 - offlineN - mockN - sprintN;
+    while (S < 1 && (sprintN || offlineN || mockN)) {
+      if (sprintN) sprintN--; else if (offlineN) offlineN--; else mockN--;
+      S = D - 1 - offlineN - mockN - sprintN;
+    }
+    if (D === 1) S = 0;
+
+    var seq = [];
+    var buckets = S > 0 ? allocLevelDays(levels, weights, S) : [];
+    var lastDayOf = {};
+    buckets.forEach(function (b) {
+      for (var k = 0; k < b.days; k++) {
+        var tasks = [];
+        var merged = b.levels.length > 1;
+        b.levels.forEach(function (L) {
+          var c = counts[L] || { mcq: 0, code: 0 };
+          var nm = names[L] ? '第 ' + L + ' 关' + names[L] : '第 ' + L + ' 关';
+          if (k === 0) tasks.push({ text: nm + '：读知识点速览', href: '#level/' + L + '/lesson' });
+          var m = Math.ceil((c.mcq || 0) / b.days);
+          var cd = Math.ceil((c.code || 0) / b.days);
+          if (merged) {
+            tasks.push({ text: nm + '：单选全刷（' + (c.mcq || 0) + ' 题，错的进错题本）', href: '#level/' + L + '/mcq' });
+            tasks.push({ text: nm + '：代码题挑 ★/★★ 的做 ' + Math.min(cd, 4) + ' 道（填空→改错→编程）', href: '#level/' + L });
+          } else {
+            if (m) tasks.push({ text: nm + '：单选 ' + m + ' 题（正确率目标 80%）', href: '#level/' + L + '/mcq' });
+            if (cd) tasks.push({ text: nm + '：代码题 ' + cd + ' 道（按难度：填空→改错→编程）', href: '#level/' + L });
+          }
+        });
+        var title = b.levels.map(function (L) { return '第 ' + L + ' 关' + (names[L] ? ' · ' + names[L] : ''); }).join(' + ');
+        if (b.days > 1) title += '（' + (k + 1) + '/' + b.days + '）';
+        seq.push({ kind: 'study', title: title, tasks: tasks, levels: b.levels.slice() });
+        b.levels.forEach(function (L) { lastDayOf[L] = seq.length - 1; });
+      }
+    });
+
+    var mockDay = function (variant, label) {
+      return { kind: 'mock', title: '全真模拟 · ' + label, levels: [], tasks: [
+        { text: '150 分钟限时做一场' + label + '（中途不查资料）', href: '#mock' },
+        { text: '交卷后当天复盘：错题本里本场错题全部重做', href: '#wrong' }] };
+    };
+    var offlineDay = function (n) {
+      return { kind: 'offline', title: '本机实操日' + (n > 1 ? ' ' + n : '') + '（考场环境）', levels: [], tasks: n === 1 ? [
+        { text: '在电脑上用 IDLE/Anaconda（考场环境是 Windows + Python 3.8/Anaconda3）新建 c:/ks、c:/素材 文件夹，把 2 道文件编程题在本机写一遍', href: '#level/5/coding' },
+        { text: '练 pip install 本地 .whl 文件并截图保存（官方卷编程 2 的第一步，浏览器里练不到）', href: '#level/6/mcq' },
+        { text: '按考场要求保存：程序存为 c:/ks/4_1.py 这种文件名；改错题改过的行末加 ####', href: '#level/2/fix' }] : [
+        { text: '本机练 SQLite：用 sqlite3 打开 .db 文件，先查询、不存在再 INSERT，最后 commit', href: '#level/7/coding' },
+        { text: '本机练正则 + 写文件：读 html，re.findall 提取，open(..., "w", encoding="gbk") 写 CSV', href: '#level/7/coding' },
+        { text: '本机用 turtle 或 matplotlib 画一遍官方卷的函数图像（坐标轴 + 放大 30 倍）', href: '#mock' }] };
+    };
+
+    // 插入模拟考与实操日
+    var insertAfter = function (idx, item) { seq.splice(Math.min(idx + 1, seq.length), 0, item); };
+    if (mockN >= 2) {
+      var m1 = lastDayOf[4] !== undefined && lastDayOf[4] < seq.length - 1 ? lastDayOf[4] : Math.floor(seq.length / 2) - 1;
+      insertAfter(m1, mockDay('standard', '标准卷'));
+      for (var key in lastDayOf) if (lastDayOf[key] > m1) lastDayOf[key]++;
+    }
+    if (offlineN >= 1) {
+      var o1 = lastDayOf[5] !== undefined ? lastDayOf[5] : Math.floor(seq.length / 2);
+      insertAfter(o1, offlineDay(1));
+      for (var key2 in lastDayOf) if (lastDayOf[key2] > o1) lastDayOf[key2]++;
+    }
+    if (offlineN >= 2) seq.push(offlineDay(2));
+    if (mockN >= 1) seq.push(mockDay('official', '官方 A 卷（27A）'));
+    for (var s = 0; s < sprintN; s++) {
+      if (s % 2 === 1) {
+        seq.push(mockDay(t3 ? 'tier3' : 'standard', t3 ? '三级冲刺卷' : '标准卷'));
+      } else {
+        seq.push({ kind: 'review', title: '错题清零' + (t3 ? ' + 三级题' : ''), levels: [], tasks: [
+          { text: '错题本：今日到期的复习题全部做完', href: '#wrong' },
+          { text: t3 ? '三级四域（递归/正则/SQLite/可视化）各重写 1 道编程题' : '文件数据分析编程题重写 2 道（编程大题主战场）', href: t3 ? '#level/7/coding' : '#level/5/coding' }] });
+      }
+    }
+    seq.push({ kind: 'rest', title: '考前一天：休息与检查', levels: [], tasks: [
+      { text: '不做新题，只翻错题本和知识点速览', href: '#wrong' },
+      { text: '确认准考证、考场位置；本机 Python 能正常运行', href: '#about' }] });
+
+    var days = seq.slice(0, D).map(function (d, i) {
+      d.date = ymd(t0 + i * DAY_MS);
+      d.index = i + 1;
+      return d;
+    });
+    return { totalDays: D, longPlan: false, days: days };
+  }
+
+  /** 一道题在模拟考中"浏览器判不了"的分值（如 whl 安装截图），不计入得分与满分 */
+  function unjudgedPoints(q) {
+    var u = q && q.unjudged;
+    return u && u.points > 0 ? Number(u.points) : 0;
   }
 
   var PY2CORE = {
@@ -236,7 +402,10 @@
     SRS_LADDER: SRS_LADDER,
     errorLine: errorLine,
     gradeMcq: gradeMcq,
-    judgeTest: judgeTest
+    judgeTest: judgeTest,
+    unjudgedPoints: unjudgedPoints,
+    buildCountdownPlan: buildCountdownPlan,
+    ymd: ymd
   };
 
   if (typeof module !== 'undefined' && module.exports) {

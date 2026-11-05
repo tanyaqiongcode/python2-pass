@@ -825,7 +825,7 @@
    "id": "blk-l6-002",
    "level": 6,
    "title": "turtle 画正方形",
-   "desc": "用 turtle 画一个蓝色正方形（边长 100，每画完一条边右转 90 度），然后抬起画笔移到 (150, 0)，换成红色画笔写上文字 正方形，最后打印验证信息（格式：正方形颜色: blue、落点: 150 0、画笔按下: False）。本站已内置 turtle 画布，可直接运行。",
+   "desc": "用 turtle 画一个蓝色正方形（边长 100，每画完一条边右转 90 度），然后抬起画笔移到 (150, 0)，换成红色画笔写上文字 正方形，最后打印验证信息（格式：正方形颜色: blue、落点: 150 0、画笔按下: False）。本站已内置 turtle 画布，可直接运行。判题同时检查画布：必须画出边长 100、首尾相接的蓝色正方形。",
    "code": "import turtle\nt = turtle.Turtle()\nc1 = ___(1)___\nt.pencolor(c1)\nfor i in range(4):\n    t.forward(100)\n    t.right(90)\nt.penup()\nt.goto(___(2)___, 0)\nt.pencolor('red')\nt.write('正方形')\nprint('正方形颜色:', c1)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.___(3)___())",
    "blanks": [
     {
@@ -855,7 +855,8 @@
    "expected": "正方形颜色: blue\n落点: 150 0\n画笔按下: False",
    "hint": "penup() 抬笔后移动不会再画线；isdown() 返回 True/False",
    "exp": "考查 turtle 基本绘图：pencolor、forward/right 循环画正方形、penup/goto 移动、write 写字与 isdown 状态查询。",
-   "ref": "import turtle\nt = turtle.Turtle()\nc1 = 'blue'\nt.pencolor(c1)\nfor i in range(4):\n    t.forward(100)\n    t.right(90)\nt.penup()\nt.goto(150, 0)\nt.pencolor('red')\nt.write('正方形')\nprint('正方形颜色:', c1)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())"
+   "ref": "import turtle\nt = turtle.Turtle()\nc1 = 'blue'\nt.pencolor(c1)\nfor i in range(4):\n    t.forward(100)\n    t.right(90)\nt.penup()\nt.goto(150, 0)\nt.pencolor('red')\nt.write('正方形')\nprint('正方形颜色:', c1)\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
+   "check": "check_polygon(segs, 4, 100, 'blue')"
   },
   {
    "id": "blk-l7-001",

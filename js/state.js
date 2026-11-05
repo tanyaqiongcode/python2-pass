@@ -38,6 +38,13 @@ const State = {
     this.save();
   },
 
+  /** 倒排计划的起始日（首次打开计划页时固定下来，之后按天推进；"从今天重排"会重置） */
+  planStart() { return this.data.settings.planStart || null; },
+  setPlanStart(ymd) {
+    this.data.settings.planStart = ymd;
+    this.save();
+  },
+
   target() { return this.data.settings.target || 't3p'; },
   setTarget(t) {
     this.data.settings.target = t;

@@ -18,7 +18,7 @@ class _Watchdog(Exception):
 class _Ctx:
     __slots__ = ('inputs', 'i', 'events', 'deadline', 'max_events', 'prompts', 'ops', 'duration')
 
-def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=None, ops=None):
+def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=None, ops=None, check=None, cleanup=None):
     ctx = _Ctx()
     ctx.inputs = stdin_text.split('\\n') if stdin_text != '' else []
     if ctx.inputs and ctx.inputs[-1] == '':
@@ -58,11 +58,18 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
     except Exception:
         pass
 
+    # 运行后检查（与 tools/harness.py 一致）：先清理旧输出文件，采集 turtle 线段与 matplotlib 图形
+    import py2check
+    py2check.cleanup_files(cleanup)
+    _segs = []
+    _mpl_store = []
+    _restore_mpl = py2check.install_mpl_hooks(_mpl_store) if 'matplotlib' in code else (lambda: None)
+
     # turtle 支持：注册 canvas 版 turtle 模块（无 DOM 时录制绘图命令）
     _turtle_mod = None
     try:
         import turtle_shim
-        _turtle_mod = turtle_shim.make_turtle(canvas_id, ctx.ops)
+        _turtle_mod = turtle_shim.make_turtle(canvas_id, ctx.ops, _segs)
         if _turtle_mod is not None:
             env['turtle'] = _turtle_mod
             sys.modules['turtle'] = _turtle_mod
@@ -116,8 +123,24 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
             except Exception:
                 pass
 
+    _check_ok, _check_msg = None, ''
+    if check:
+        if err == '':
+            _mpl_store.extend(py2check.mpl_snapshot())
+            _check_ok, _check_msg = py2check.run_check(check, {'segs': _segs, 'mpl': _mpl_store, 'user': env,
+                                                              'stdin': stdin_text, 'stdout': out.getvalue()})
+        else:
+            _check_ok = False
+    _restore_mpl()
+    if 'matplotlib.pyplot' in sys.modules:
+        try:
+            sys.modules['matplotlib.pyplot'].close('all')
+        except Exception:
+            pass
+
     return {'ok': err == '', 'stdout': out.getvalue(), 'prompts': '\\n'.join(ctx.prompts),
-            'error': err, 'tb': tb, 'canvasOps': ctx.ops, 'durationMs': ctx.duration}
+            'error': err, 'tb': tb, 'canvasOps': ctx.ops, 'durationMs': ctx.duration,
+            'checkOk': _check_ok, 'checkMsg': _check_msg}
 `;
 
 /* ============================================================
@@ -130,8 +153,9 @@ import math, types
 
 def _install(js):
     class _Canvas:
-        def __init__(self, cid, ops):
+        def __init__(self, cid, ops, segs=None):
             self.ops = ops if ops is not None else []
+            self.segs = segs  # 运行后检查用：turtle 坐标系下的线段（与 tools/turtle_stub.py 一致）
             self.cv = None
             self.ctx = None
             host = None
@@ -157,6 +181,8 @@ def _install(js):
             self.ops.append(kw)
 
         def line(self, x1, y1, x2, y2, color, width=2):
+            if self.segs is not None:
+                self.segs.append((x1, y1, x2, y2, color))
             if self.ctx is not None:
                 c = self.ctx
                 c.strokeStyle = color
@@ -203,8 +229,8 @@ def _install(js):
                 self._rec(op='text', x=240 + x, y=180 - y, s=str(s), color=color)
 
     class Turtle:
-        def __init__(self, cid=None, ops=None):
-            self.wrap = _Canvas(cid, ops)
+        def __init__(self, cid=None, ops=None, segs=None):
+            self.wrap = _Canvas(cid, ops, segs)
             self.x, self.y, self._hd = 0.0, 0.0, 0.0
             self.pen_down = True
             self.color_v = '#000000'
@@ -406,7 +432,7 @@ def _install(js):
                 return None
             return _noop
 
-    def make_turtle_module(cid, ops):
+    def make_turtle_module(cid, ops, segs=None):
         mod = types.ModuleType('turtle')
         state = {'t': None}
 
@@ -415,7 +441,7 @@ def _install(js):
 
         class TurtleWithCanvas(_BaseTurtle):
             def __init__(self, c=None, o=None):
-                _BaseTurtle.__init__(self, cid if c is None else c, ops if o is None else o)
+                _BaseTurtle.__init__(self, cid if c is None else c, ops if o is None else o, segs)
 
         def _get():
             if state['t'] is None:
@@ -447,10 +473,22 @@ def _install(js):
 
     return make_turtle_module
 
-def make_turtle(cid, ops=None):
+def make_turtle(cid, ops=None, segs=None):
     import js
     factory = _install(js)
-    return factory(cid, ops)
+    return factory(cid, ops, segs)
+`;
+
+/* ---------- 把 turtle_shim 与 py2check（运行后检查，源码见 tools/py2check.py）装成模块 ---------- */
+const INSTALL_MODULES_PY = `
+import sys, types
+_mod = types.ModuleType('turtle_shim')
+exec(compile(_turtle_src, 'turtle_shim.py', 'exec'), _mod.__dict__)
+sys.modules['turtle_shim'] = _mod
+_mod2 = types.ModuleType('py2check')
+exec(compile(_py2check_src, 'py2check.py', 'exec'), _mod2.__dict__)
+sys.modules['py2check'] = _mod2
+del _turtle_src, _py2check_src
 `;
 
 /* ---------- 浏览器端无法支持的库 → 中文提示 ---------- */
@@ -478,7 +516,7 @@ function detectPackages(code) {
 }
 
 /* ---------- Worker 源码（Blob 构造；内嵌 harness 与 turtle shim） ---------- */
-function buildWorkerSource(cdns, pins) {
+function buildWorkerSource(cdns, pins, checkSrc) {
   return `
 let pyodide = null;
 const CDNS = ${JSON.stringify(cdns)};
@@ -510,18 +548,13 @@ self.onmessage = async (e) => {
     if (!self.pyodide) { postMessage({ type: 'initFail', errors: initErrors }); return; }
     self.pyodide.runPython(${JSON.stringify(HARNESS_PY)});
     self.pyodide.globals.set('_turtle_src', ${JSON.stringify(TURTLE_SHIM_SRC)});
-    self.pyodide.runPython(\`
-import sys, types
-_mod = types.ModuleType('turtle_shim')
-exec(compile(_turtle_src, 'turtle_shim.py', 'exec'), _mod.__dict__)
-sys.modules['turtle_shim'] = _mod
-del _turtle_src
-\`);
+    self.pyodide.globals.set('_py2check_src', ${JSON.stringify(checkSrc)});
+    self.pyodide.runPython(${JSON.stringify(INSTALL_MODULES_PY)});
     postMessage({ type: 'ready', version: self.pyodide.version });
     return;
   }
   if (msg.type === 'run') {
-    const { id, code, stdin, files, timeoutS, maxEvents, mountId } = msg;
+    const { id, code, stdin, files, timeoutS, maxEvents, mountId, check, cleanup } = msg;
     try {
       for (const p of detectPackages(code)) {
         if (p === 'matplotlib') await self.pyodide.loadPackage('matplotlib');
@@ -567,15 +600,18 @@ else:
       py.globals.set('_timeout', timeoutS2);
       py.globals.set('_maxev', maxEvents2);
       py.globals.set('_cid', mountId || null);
+      py.globals.set('_check', check || null);
+      py.globals.set('_cleanup', py.toPy(cleanup || []));
       py.runPython('_ops = []');
-      const raw = py.runPython('_run_user(_code, _stdin, _timeout, _maxev, _cid, _ops)');
+      const raw = py.runPython('_run_user(_code, _stdin, _timeout, _maxev, _cid, _ops, _check, _cleanup)');
       const obj = raw.toJs({ dict_converter: Object.fromEntries });
       raw.destroy();
       const opsProxy = py.globals.get('_ops');
       const ops = opsProxy ? opsProxy.toJs({ dict_converter: Object.fromEntries }) : [];
       if (opsProxy) opsProxy.destroy();
       postMessage({ type: 'result', id, ok: obj.ok, stdout: obj.stdout, prompts: obj.prompts,
-                    error: obj.error, tb: obj.tb, canvasOps: ops });
+                    error: obj.error, tb: obj.tb, canvasOps: ops, durationMs: obj.durationMs,
+                    checkOk: obj.checkOk, checkMsg: obj.checkMsg });
     } catch (e) {
       postMessage({ type: 'result', id, ok: false, stdout: '', prompts: '', error: String(e && e.message || e), tb: '', canvasOps: [] });
     }
@@ -687,7 +723,7 @@ const Engine = {
       let worker;
       let src;
       try {
-        src = buildWorkerSource(window.CONFIG.pyodideCDNs, window.CONFIG.packagePins || {});
+        src = buildWorkerSource(window.CONFIG.pyodideCDNs, window.CONFIG.packagePins || {}, window.PY2CHECK_SRC || '');
         worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'application/javascript' })), { type: 'module' });
       } catch (e) { finish(false); return; }
       const initTimer = setTimeout(() => { finish(false); worker.terminate(); }, 180000);
@@ -720,7 +756,8 @@ const Engine = {
         clearTimeout(p.timer);
         this._pending.delete(m.id);
         p.resolve({ ok: m.ok, stdout: m.stdout, prompts: m.prompts, error: m.error, tb: m.tb,
-          canvasOps: m.canvasOps || [], hasCanvas: (m.canvasOps || []).length > 0 });
+          canvasOps: m.canvasOps || [], hasCanvas: (m.canvasOps || []).length > 0,
+          durationMs: m.durationMs, checkOk: m.checkOk, checkMsg: m.checkMsg || '' });
       }
     }
   },
@@ -740,13 +777,8 @@ const Engine = {
           this.pyodide = py;
           py.runPython(HARNESS_PY);
           py.globals.set('_turtle_src', TURTLE_SHIM_SRC);
-          py.runPython(`
-import sys, types
-_mod = types.ModuleType('turtle_shim')
-exec(compile(_turtle_src, 'turtle_shim.py', 'exec'), _mod.__dict__)
-sys.modules['turtle_shim'] = _mod
-del _turtle_src
-`);
+          py.globals.set('_py2check_src', window.PY2CHECK_SRC || '');
+          py.runPython(INSTALL_MODULES_PY);
           finish(true);
         } catch (e) {
           console.warn('Pyodide CDN 失败，尝试下一个源', base, e);
@@ -805,7 +837,7 @@ del _turtle_src
       }, (timeoutS + 5) * 1000);
       this._pending.set(id, { resolve, timer });
       this.worker.postMessage({ type: 'run', id, code, stdin: opts.stdin || '', files: opts.files || [],
-        timeoutS, maxEvents, mountId });
+        timeoutS, maxEvents, mountId, check: opts.check || null, cleanup: opts.cleanup || [] });
     }).then((res) => {
       if (res.canvasOps && res.canvasOps.length && opts.mount) renderTurtleOps(opts.mount, res.canvasOps);
       return res;
@@ -861,8 +893,10 @@ else:
         py.globals.set('_timeout', timeoutS);
         py.globals.set('_maxev', maxEvents);
         py.globals.set('_cid', mountId);
+        py.globals.set('_check', opts.check || null);
+        py.globals.set('_cleanup', py.toPy(opts.cleanup || []));
         py.runPython('_ops = []');
-        const raw = py.runPython('_run_user(_code, _stdin, _timeout, _maxev, _cid, _ops)');
+        const raw = py.runPython('_run_user(_code, _stdin, _timeout, _maxev, _cid, _ops, _check, _cleanup)');
         const obj = raw.toJs({ dict_converter: Object.fromEntries });
         raw.destroy();
         obj.canvasOps = [];
