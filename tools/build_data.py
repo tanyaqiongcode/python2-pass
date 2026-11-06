@@ -193,6 +193,7 @@ def run_fix(q):
 
 def validate_fix(q, fname):
     n = 0
+    q["local_code"] = local_code(q, q.get("buggy") or "")
     for f in ("id", "level", "title", "buggy", "expected", "ref", "errors"):
         if f not in q:
             n += err(f"{fname}: {q.get('id', '?')} 缺字段 {f}")
@@ -289,6 +290,63 @@ def check_files(q, fname, n):
     return n
 
 
+CODING_CATS = {"data", "calc", "draw", "db", "text"}
+
+
+def make_wheel(module_file, content, dist, version):
+    """把考场"第三方包"模块打成可 pip install 的纯 Python wheel（确定性：固定时间戳与顺序）。
+
+    返回 (whl 文件名, base64 内容)。本机实操包里放的是 whl，学生要先 pip install 再 import。
+    """
+    import base64
+    import hashlib
+    import io
+    import zipfile
+
+    mod = module_file.rsplit("/", 1)[-1]
+    info = f"{dist}-{version}.dist-info"
+    files = [
+        (mod, content.encode("utf-8")),
+        (f"{info}/METADATA", f"Metadata-Version: 2.1\nName: {dist}\nVersion: {version}\n"
+                             f"Summary: 上信考 Python 本机实操模拟包（{mod}）\n".encode("utf-8")),
+        (f"{info}/WHEEL", b"Wheel-Version: 1.0\nGenerator: python2-pass\nRoot-Is-Purelib: true\nTag: py3-none-any\n"),
+        (f"{info}/top_level.txt", (mod[:-3] + "\n").encode("utf-8")),
+    ]
+
+    def h(data):
+        return "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(data).digest()).rstrip(b"=").decode()
+
+    record = "".join(f"{n},{h(b)},{len(b)}\n" for n, b in files) + f"{info}/RECORD,,\n"
+    files.append((f"{info}/RECORD", record.encode("utf-8")))
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for n, b in files:
+            zi = zipfile.ZipInfo(n, date_time=(1980, 1, 1, 0, 0, 0))
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            zi.external_attr = 0o644 << 16
+            z.writestr(zi, b)
+    return f"{dist}-{version}-py3-none-any.whl", base64.b64encode(buf.getvalue()).decode()
+
+
+def local_code(q, code):
+    """本机实操版程序：把素材文件名改写成考场路径 c:/素材/文件名（第三方包模块除外，它要 pip install 后 import）。"""
+    for f in q.get("files", []):
+        if f.get("wheel"):
+            continue
+        n = f["name"]
+        for quote in ("'", '"'):
+            code = code.replace(quote + n + quote, quote + "c:/素材/" + n + quote)
+    return code
+
+
+def attach_wheels(q):
+    """files 中带 wheel 规格的模块：额外生成 whl（供本机实操包使用；网页判题仍用 .py 模块）。"""
+    for f in q.get("files", []):
+        w = f.get("wheel")
+        if w and "whl_b64" not in w:
+            w["whl_name"], w["whl_b64"] = make_wheel(f["name"], f["content"], w["dist"], w["version"])
+
+
 def validate_coding(q, fname):
     n = 0
     for f in ("id", "level", "title", "desc", "tests", "ref"):
@@ -300,6 +358,10 @@ def validate_coding(q, fname):
         n += err(f"{fname}: {q.get('id')} 缺 tests")
     if len(q.get("desc", "")) < 20:
         n += err(f"{fname}: {q.get('id')} desc 太短")
+    if q.get("cat") is not None and q.get("cat") not in CODING_CATS:
+        n += err(f"{fname}: {q.get('id')} cat 只能是 {sorted(CODING_CATS)}")
+    attach_wheels(q)
+    q["local_code"] = local_code(q, q.get("starter") or "")
     return n
 
 
@@ -462,6 +524,14 @@ def main():
     js = (
         "/* 本文件由 tools/build_data.py 自动生成，请勿手改；源数据在 data_src/ */\n"
         "window.BANK = " + json.dumps(bank, ensure_ascii=False, indent=1) + ";\n"
+        "/* 本机实操包：运行时模板 + 与网站同一份的判题 harness（tools/ 原样打包） */\n"
+        "window.PACK_SRC = "
+        + json.dumps({
+            "template": open(os.path.join(ROOT, "tools", "pack_template.py"), encoding="utf-8").read(),
+            "libs": {n: open(os.path.join(ROOT, "tools", n), encoding="utf-8").read()
+                     for n in ("harness.py", "py2check.py", "turtle_stub.py")},
+        }, ensure_ascii=False)
+        + ";\n"
         "/* 运行后检查源码（tools/py2check.py 原样打包；浏览器判题装成 py2check 模块） */\n"
         "window.PY2CHECK_SRC = "
         + json.dumps(open(os.path.join(ROOT, "tools", "py2check.py"), encoding="utf-8").read(), ensure_ascii=False)

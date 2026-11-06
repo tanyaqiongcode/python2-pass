@@ -54,6 +54,7 @@ const App = {
       if (parts[0] === 'plan') return this.viewPlan(app);
       if (parts[0] === 'sprint') return this.viewSprint(app);
       if (parts[0] === 'oop') return this.viewOop(app, parts[1] || 'mcq');
+      if (parts[0] === 'local') return this.viewLocal(app, parts.slice(1).join('/'));
       if (parts[0] === 'path') return this.viewPath(app);
       if (parts[0] === 'diagnostic') return this.viewDiagnostic(app);
       if (parts[0] === 'bank') return this.viewBank(app);
@@ -203,6 +204,7 @@ const App = {
         h('a', { class: 'btn', href: '#level/1/lesson' }, '从第 1 关开始'),
         h('a', { class: 'btn btn-ghost', href: '#bank' }, '按题型刷题'),
         h('a', { class: 'btn btn-ghost', href: '#oop' }, '🧱 OOP 专项'),
+        h('a', { class: 'btn btn-ghost', href: '#local' }, '💻 本机实操'),
         h('a', { class: 'btn btn-ghost', href: '#mock' }, '全真模拟考'),
         h('a', { class: 'btn btn-ghost', href: '#wrong' }, '错题本'),
         h('a', { class: 'btn btn-ghost', href: '#resources' }, '资源库'),
@@ -686,6 +688,88 @@ const App = {
     card.append(h('div', { style: 'display:flex;gap:10px;margin-top:10px;flex-wrap:wrap' }, runBtn, resetBtn, showRefBtn));
     card.append(outBox);
     return card;
+  },
+
+  /* ============================================================
+   * 本机实操（下载 .py 实操包 → 本机建考场目录 → IDLE 作答 → check 自动判分）
+   * ============================================================ */
+  viewLocal(app, arg) {
+    app.innerHTML = '';
+    const B = window.BANK;
+    const today = PY2CORE.ymd(Date.now());
+    const seed = Number(today.replace(/-/g, '')) % 9973;
+    let ids = null, title = '', slug = '';
+    if (arg && arg.startsWith('ids=')) {
+      ids = arg.slice(4).split(',').filter(Boolean);
+      title = '本机实操包'; slug = today + '_' + ids.length + '题';
+    } else if (arg === 'paper' || (arg || '').startsWith('paper-')) {
+      ids = localPaperIds(arg.startsWith('paper-') ? Number(arg.slice(6)) % 9973 : seed);
+      title = '本机模拟卷（调试改错 3 + 编程 5，105 分）'; slug = '模拟卷_' + today;
+    } else if (arg === 'official') {
+      ids = (B.official.fix_ids || []).concat(B.official.coding_ids || []);
+      title = '官方 27A 卷 本机版（调试改错 3 + 编程 5）'; slug = '官方27A';
+    } else if (arg === 'env') {
+      ids = []; title = '考前环境检查'; slug = '环境检查';
+    }
+
+    app.append(h('h1', { class: 'page-title' }, '💻 本机实操'),
+      h('p', { class: 'page-sub' }, '考场是在 Windows 电脑上用 IDLE / PyCharm 写程序：素材在 c:/素材/，程序存 c:/ks/，改错题改过的行末加 ####，第三方包要先 pip install。这里的实操包让你在自己电脑上按同样的方式练。'),
+      h('div', { class: 'card' },
+        h('h2', null, '三步用法'),
+        h('ol', { style: 'margin:6px 0 0;padding-left:22px;line-height:1.9' },
+          h('li', null, '下载实操包（一个 .py 文件），在命令行 / Anaconda Prompt 进入它所在文件夹，运行 ', h('code', null, 'python 实操包_xxx.py'),
+            '：旁边会建好 ks/、素材/ 和 题目.txt。Windows 上运行 ', h('code', null, 'python 实操包_xxx.py --c'), ' 可直接建成考场目录 C:\\ks 和 C:\\素材。'),
+          h('li', null, '用 IDLE 打开 ks 里的程序作答（素材写全路径 c:/素材/文件名；第三方包题先执行 题目.txt 里的 pip install 命令）。'),
+          h('li', null, '做完运行 ', h('code', null, 'python 实操包_xxx.py check'), '（用了 --c 的加上 --c）：按网站同样的规则自动判分，改错题另查 #### 标记和是否增删语句。')),
+        h('p', { class: 'muted small', style: 'margin:8px 0 0' }, '实操包需要本机 Python 3.8 及以上（Anaconda3 自带 matplotlib、sqlite3）。已经写好的程序再次运行 setup 不会被覆盖。')));
+
+    if (ids) {
+      const qs = ids.map(packFind).filter(Boolean);
+      const card = h('div', { class: 'card', style: 'border-color:#bfe3cd;background:linear-gradient(180deg,#f2fbf5,#fff)' },
+        h('h2', null, '📦 ' + title));
+      if (qs.length) {
+        card.append(h('ol', { style: 'margin:4px 0 10px;padding-left:22px' }, qs.map(([kind, q]) =>
+          h('li', null, (kind === 'fix' ? '调试改错 · ' : (PY2CORE.FIVE_CATS.find(c => c.cat === q.cat) || { name: '编程' }).name + ' · ') + (q.title || q.id),
+            (q.files || []).some(f => f.wheel) ? h('span', { class: 'badge', style: 'margin-left:6px' }, '需 pip install') : null))));
+      } else {
+        card.append(h('p', null, '不含题目：运行 ', h('code', null, 'python 实操包_环境检查.py env'), ' 检查本机 Python 版本、matplotlib、sqlite3、pip 是否可用；再运行一次不带参数的命令，确认能建出 ks/ 和 素材/ 目录。'));
+      }
+      card.append(h('button', { class: 'btn btn-green', onclick: () => downloadPack(ids, title, slug) }, '⬇ 下载实操包'));
+      if (arg.startsWith('paper')) card.append(' ', h('a', { class: 'btn btn-ghost', href: '#local/paper', onclick: (e) => { e.preventDefault(); location.hash = '#local/paper-' + Date.now(); } }, '换一套'));
+      app.append(card);
+    }
+
+    // 卷型快捷
+    app.append(h('div', { class: 'card' },
+      h('h2', null, '整卷与专项'),
+      h('div', { class: 'res-list' },
+        h('a', { class: 'res-item', href: '#local/paper' }, h('span', { class: 'res-ico' }, '📝'),
+          h('span', null, h('b', null, '本机模拟卷'), h('div', { class: 'res-desc' }, '调试改错 3 + 编程 5（数据分析 17 / 运算 18 / 绘图 15 / 数据库 12 / 文本 13），每天换一套'))),
+        h('a', { class: 'res-item', href: '#local/official' }, h('span', { class: 'res-ico' }, '🏛'),
+          h('span', null, h('b', null, '官方 27A 卷 本机版'), h('div', { class: 'res-desc' }, '含 lossratio-1.1.0 whl 安装、classroom.db、huaqiang.html 等全部素材'))),
+        h('a', { class: 'res-item', href: '#local/env' }, h('span', { class: 'res-ico' }, '🔧'),
+          h('span', null, h('b', null, '考前环境检查'), h('div', { class: 'res-desc' }, '检查本机 Python 是否满足考场需要'))))));
+
+    // 按类别挑题
+    const pickBox = h('div', { class: 'card' }, h('h2', null, '自选题目打包'),
+      h('p', { class: 'muted small', style: 'margin:0 0 8px' }, '勾选想在本机练的题，打成一个实操包下载。'));
+    const chosen = new Set();
+    const groups = PY2CORE.FIVE_CATS.map(c => [c.name, B.coding.filter(q => q.cat === c.cat)])
+      .concat([['调试改错', B.fixes], ['OOP 编程小题', (B.oop || {}).coding || []]]);
+    for (const [name, arr] of groups) {
+      if (!arr.length) continue;
+      const det = h('details', { style: 'margin:6px 0' }, h('summary', null, `${name}（${arr.length}）`));
+      arr.slice().sort((a, b) => a.level - b.level || a.id.localeCompare(b.id)).forEach(q => {
+        const cb = h('input', { type: 'checkbox', onchange: () => { cb.checked ? chosen.add(q.id) : chosen.delete(q.id); } });
+        det.append(h('label', { style: 'display:block;margin:3px 0 3px 12px;cursor:pointer' }, cb, ` 第${q.level}关 · ${q.title || q.id}`));
+      });
+      pickBox.append(det);
+    }
+    pickBox.append(h('button', { class: 'btn', onclick: () => {
+      if (!chosen.size) { alert('先勾选题目'); return; }
+      downloadPack([...chosen], '自选实操包', today + '_自选' + chosen.size + '题');
+    } }, '⬇ 下载所选'));
+    app.append(pickBox);
   },
 
   /* ============================================================
@@ -1371,8 +1455,110 @@ function countdownPlan() {
     exam: new Date(State.examDate()).getTime(),
     target: State.target(),
     startLevel: (State.data.diagnosis && State.data.diagnosis.startLevel) || 1,
-    counts, levelNames
+    counts, levelNames,
+    localPool: localPool()
   });
+}
+
+/* ============================================================
+ * 本机实操包：在网页里组好题目，下载成一个 .py；本机运行后建好 ks/ 素材/，做完 check 自动判分。
+ * 运行时模板与判题 harness 都来自 tools/（window.PACK_SRC），与 tools/test_packs.py 的组包方式一致。
+ * ============================================================ */
+const PACK_CAT_SCORE = { data: 17, calc: 18, draw: 15, db: 12, text: 13 };
+
+function localPool() {
+  const B = window.BANK;
+  const byDiff = (a, b) => (a.difficulty || 2) - (b.difficulty || 2) || a.id.localeCompare(b.id);
+  const notOfficial = q => !/^p27-/.test(q.id);
+  const byLevel = {};
+  for (const m of LEVEL_META) {
+    byLevel[m.no] = {
+      fix: B.fixes.filter(q => q.level === m.no && notOfficial(q)).sort(byDiff).map(q => q.id),
+      coding: B.coding.filter(q => q.level === m.no && notOfficial(q)).sort(byDiff).map(q => q.id)
+    };
+  }
+  const byCat = {};
+  for (const c of PY2CORE.FIVE_CATS) byCat[c.cat] = B.coding.filter(q => q.cat === c.cat && notOfficial(q)).sort(byDiff).map(q => q.id);
+  return { byLevel, byCat };
+}
+
+function packFind(id) {
+  const B = window.BANK;
+  const f = B.fixes.find(q => q.id === id);
+  if (f) return ['fix', f];
+  const c = B.coding.concat((B.oop || {}).coding || []).find(q => q.id === id);
+  return c ? ['coding', c] : null;
+}
+
+/* 与 tools/test_packs.py frag() 一致 */
+function packFragment(kind, q, idx) {
+  const mats = [], wheels = [], wmods = {};
+  for (const f of q.files || []) {
+    if (f.wheel) {
+      mats.push({ path: f.wheel.whl_name, content: f.wheel.whl_b64, b64: true });
+      wheels.push(f.wheel.whl_name);
+      wmods[f.wheel.whl_name] = f.name.replace(/\.py$/, '');
+    } else {
+      mats.push({ path: f.name, content: f.content, b64: !!f.b64 });
+    }
+  }
+  const isFix = kind === 'fix';
+  return {
+    kind, id: q.id, title: q.title || q.id, desc: q.desc || '',
+    points: isFix ? 10 : (PACK_CAT_SCORE[q.cat] || 15),
+    file: isFix ? `程序调试题${idx}.py` : `4_${idx}.py`,
+    code: q.local_code || (isFix ? q.buggy : q.starter) || '',
+    tests: isFix ? [{ stdin: q.stdin || '', expected: q.expected || '', check: q.check || null, cleanup: q.cleanup || null }] : q.tests,
+    materials: mats, wheels, wheels_modules: wmods
+  };
+}
+
+function b64utf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
+function buildPack(ids, title, folder) {
+  const qs = [];
+  let nf = 0, nc = 0;
+  for (const id of ids) {
+    const hit = packFind(id);
+    if (!hit) continue;
+    const [kind, q] = hit;
+    qs.push(packFragment(kind, q, kind === 'fix' ? ++nf : ++nc));
+  }
+  const pack = { title, folder, questions: qs };
+  const src = window.PACK_SRC.template
+    .replace('__PACK_B64__', b64utf8(JSON.stringify(pack)))
+    .replace('__LIBS_B64__', b64utf8(JSON.stringify(window.PACK_SRC.libs)));
+  return { src, pack };
+}
+
+function downloadPack(ids, title, slug) {
+  const { src, pack } = buildPack(ids, title, '实操_' + slug);
+  const blob = new Blob([src], { type: 'text/x-python;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `实操包_${slug}.py`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  return pack;
+}
+
+/* 本机模拟卷：调试改错 3（非官方卷）+ 编程 5（官方五类各 1） */
+function localPaperIds(seed) {
+  const B = window.BANK;
+  const fixes = B.fixes.filter(q => !/^p27-/.test(q.id));
+  const pickFix = [];
+  for (let i = 0; pickFix.length < 3 && i < 50; i++) {
+    const q = fixes[(seed * 11 + i * 17) % fixes.length];
+    if (!pickFix.includes(q)) pickFix.push(q);
+  }
+  return pickFix.map(q => q.id).concat(PY2CORE.pickFiveCats(B.coding, seed).map(q => q.id));
 }
 
 /* 状态驱动的"下一步"：诊断 → 速览 → 单选 → 代码（难度递进）→ 下一关 → 模拟考 */
@@ -1552,7 +1738,7 @@ const Mock = {
         mcq: this._pick(mt3, 6, seed).concat(this._pick(mo, cfg.mcq.count - 6, seed + 11)),
         blank: this._pick(bt3, 2, seed + 1).concat(this._pick(bo, 1, seed + 12)),
         fix: this._pick(ft3, 2, seed + 2).concat(this._pick(fo, 1, seed + 13)),
-        coding: this._pick(ct3, 3, seed + 3).concat(this._pick(co, 2, seed + 14))
+        coding: PY2CORE.pickFiveCats(B.coding, seed + 3)   // 编程题按官方五类各 1 道
       };
     }
     // 标准：按关卡比例均衡
@@ -1574,7 +1760,7 @@ const Mock = {
       mcq: pickL(B.mcq, cfg.mcq.count, seed),
       blank: pickL(B.blanks, cfg.blank.count, seed + 1),
       fix: pickL(B.fixes, cfg.fix.count, seed + 2),
-      coding: pickL(B.coding, cfg.coding.count, seed + 3)
+      coding: PY2CORE.pickFiveCats(B.coding, seed + 3)     // 编程题按官方五类各 1 道（二三级同卷）
     };
   },
 
@@ -1726,7 +1912,8 @@ const Mock = {
       ta.value = this.answers.coding[q.id] !== undefined ? this.answers.coding[q.id] : (q.starter || '# ' + (q.title || '') + '\n');
       ta.addEventListener('input', () => { this.answers.coding[q.id] = ta.value; this.persist(); });
       app.append(h('div', { class: 'qcard' },
-        h('div', { class: 'qno' }, `${i + 1}. ${q.title || ''}　`, h('span', { class: 'badge' }, (q.score || window.CONFIG.mockStructure.coding.perScore) + '分')),
+        h('div', { class: 'qno' }, `${i + 1}. ${q.title || ''}　`, h('span', { class: 'badge' }, ((this.variant === 'official' ? q.score : PY2CORE.catScore(q.cat)) || window.CONFIG.mockStructure.coding.perScore) + '分'),
+          q.cat && this.variant !== 'official' ? h('span', { class: 'muted small' }, ' ' + (PY2CORE.FIVE_CATS.find(c => c.cat === q.cat) || {}).name) : null),
         h('div', { class: 'qtext', html: miniMdInline(q.desc || '') }),
         ta,
         q.tests && q.tests.some(t2 => t2.stdin) ? [h('div', { class: 'io-label' }, '测试输入样例：'), h('pre', { class: 'output' }, q.tests.filter(t2 => t2.stdin).map(t2 => t2.stdin).join('---\n'))] : null));
@@ -1818,7 +2005,8 @@ const Mock = {
 
     // 编程（按测试点比例，官方卷按题分值）
     for (const q of this.qs.coding) {
-      const fullRaw = official ? (q.score || 15) : s.coding.perScore;
+      // 分值同官方卷：官方卷用题目自带分值，随机卷按类别（数据分析 17 / 运算 18 / 绘图 15 / 数据库 12 / 文本 13）
+      const fullRaw = official ? (q.score || 15) : (PY2CORE.catScore(q.cat) || s.coding.perScore);
       // 浏览器判不了的部分（如 whl 安装截图）既不给分也不计入满分，等第按可判分折算
       const unj = Math.min(PY2CORE.unjudgedPoints(q), fullRaw);
       const full = fullRaw - unj;

@@ -263,3 +263,36 @@ test('judgeOutputAnswer：读程序写结果逐行严格比对', () => {
   assert.equal(C.judgeOutputAnswer('结果:24', '24').ok, false, '不剔除提示行（与编程题不同）');
   assert.equal(C.judgeOutputAnswer('3 1', '3  1').ok, false, '行内空格要一致');
 });
+
+test('buildCountdownPlan：每天都有本机实操', () => {
+  const pool = { byLevel: {}, byCat: { data: ['d1', 'd2'], calc: ['c1'], draw: ['g1', 'g2'], db: ['b1', 'b2'], text: ['t1', 't2'] } };
+  for (let L = 1; L <= 7; L++) pool.byLevel[L] = { fix: ['f' + L + 'a', 'f' + L + 'b'], coding: ['k' + L + 'a', 'k' + L + 'b', 'k' + L + 'c'] };
+  for (const [n, tgt] of [[22, 't3p'], [22, 't2p'], [10, 't3p'], [3, 't2p'], [1, 't3p']]) {
+    const p = C.buildCountdownPlan({ today: new Date(2026, 10, 6).getTime(), exam: new Date(2026, 10, 6 + n, 9).getTime(),
+      target: tgt, startLevel: 1, counts: PLAN_COUNTS, localPool: pool });
+    p.days.forEach(d => {
+      assert.ok(d.local, `${n}天 第${d.index}天(${d.kind}) 缺本机实操`);
+      assert.ok(d.tasks.some(t => t.local && t.href.startsWith('#local/')), '任务列表里有本机实操链接');
+    });
+    const study = p.days.filter(d => d.kind === 'study');
+    study.forEach(d => assert.ok(d.local.ids.some(id => id.startsWith('f')) && d.local.ids.some(id => id.startsWith('k')), '学习日 = 改错 + 编程'));
+    if (study.length >= 2 && study[0].levels[0] === study[1].levels[0]) {
+      assert.notDeepEqual(Array.from(study[0].local.ids), Array.from(study[1].local.ids), '同一关的两天题目不同');
+    }
+    p.days.filter(d => d.kind === 'mock').forEach(d => assert.equal(d.local.kind, 'paper'));
+    p.days.filter(d => d.kind === 'rest').forEach(d => assert.equal(d.local.kind, 'env'));
+  }
+});
+
+test('pickFiveCats：按官方五类各 1 道、官方原题不参与、顺序与分值同官方卷', () => {
+  const coding = [];
+  for (const cat of ['data', 'calc', 'draw', 'db', 'text']) for (let i = 0; i < 3; i++) coding.push({ id: `x-${cat}-${i}`, cat });
+  coding.push({ id: 'p27-c1', cat: 'data' }, { id: 'none-1' });
+  for (const seed of [0, 1, 7, 999]) {
+    const got = C.pickFiveCats(coding, seed);
+    assert.deepEqual(Array.from(got, q => q.cat), ['data', 'calc', 'draw', 'db', 'text']);
+    assert.ok(!got.some(q => q.id.startsWith('p27-')));
+  }
+  assert.notDeepEqual(Array.from(C.pickFiveCats(coding, 1), q => q.id), Array.from(C.pickFiveCats(coding, 2), q => q.id), '换 seed 换题');
+  assert.equal(['data', 'calc', 'draw', 'db', 'text'].reduce((a, c) => a + C.catScore(c), 0), 75);
+});

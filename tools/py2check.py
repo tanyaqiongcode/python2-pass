@@ -162,6 +162,54 @@ def install_mpl_hooks(store):
     return restore
 
 
+# ---------------- 考场路径 ----------------
+# 考场上素材在 c:/素材/、程序与结果存 c:/ks/。判题时把这两种前缀映射到当前判题目录，
+# 学生在网页和本机都可以按考场写法 open('c:/素材/data.csv')、sqlite3.connect('c:/素材/x.db')。
+import re as _re
+_EXAM_PREFIX = _re.compile(r'^\s*[cC]:[\\/]+(?:素材|[kK][sS])[\\/]+')
+
+
+def map_exam_path(p):
+    if isinstance(p, str):
+        m = _EXAM_PREFIX.match(p)
+        if m:
+            return p[m.end():].replace('\\', '/')
+    return p
+
+
+def install_exam_paths():
+    """临时替换 open / os.path.exists / sqlite3.connect，返回还原函数。"""
+    import builtins
+    orig_open = builtins.open
+    orig_exists = os.path.exists
+
+    def _open(file, *a, **k):
+        return orig_open(map_exam_path(file), *a, **k)
+
+    def _exists(p):
+        return orig_exists(map_exam_path(p))
+
+    builtins.open = _open
+    os.path.exists = _exists
+    restores = [lambda: setattr(builtins, 'open', orig_open), lambda: setattr(os.path, 'exists', orig_exists)]
+    try:
+        import sqlite3
+        orig_connect = sqlite3.connect
+
+        def _connect(db, *a, **k):
+            return orig_connect(map_exam_path(db), *a, **k)
+
+        sqlite3.connect = _connect
+        restores.append(lambda: setattr(sqlite3, 'connect', orig_connect))
+    except Exception:
+        pass
+
+    def restore():
+        for r in reversed(restores):
+            r()
+    return restore
+
+
 def cleanup_files(names):
     for n in names or []:
         try:
@@ -317,9 +365,10 @@ def _as_lines(segs, mpl):
     return out
 
 
-def check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1)):
-    """函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 向 y 轴的 line_color 色水平线。
+def check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1), to='y'):
+    """函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 的 line_color 色连线。
 
+    to='y'：数据点向 y 轴画水平线（官方 27A 编程 3）；to='x'：数据点向 x 轴画竖线。
     turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。
     """
     lines = _as_lines(segs, mpl)
@@ -330,27 +379,41 @@ def check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_c
     best = None
     for k in scales:
         hits, xs_cov = 0, []
+        tol = 0.05 * k + 0.5
         for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):
-            if not is_color(c, line_color) or abs(b1 - b2) > 0.05 * k + 0.5:
+            if not is_color(c, line_color):
                 continue
-            if abs(a1) <= 0.05 * k + 0.5:
-                ex, ey = a2, b2
-            elif abs(a2) <= 0.05 * k + 0.5:
-                ex, ey = a1, b1
+            if to == 'y':
+                if abs(b1 - b2) > tol:
+                    continue
+                if abs(a1) <= tol:
+                    px, py = a2, b2
+                elif abs(a2) <= tol:
+                    px, py = a1, b1
+                else:
+                    continue
             else:
-                continue
-            x = ex / k
-            if x0 - step <= x <= x1 + step and abs(ey / k - f(x)) <= 0.05:
+                if abs(a1 - a2) > tol:
+                    continue
+                if abs(b1) <= tol:
+                    px, py = a2, b2
+                elif abs(b2) <= tol:
+                    px, py = a1, b1
+                else:
+                    continue
+            x = px / k
+            if x0 - step <= x <= x1 + step and abs(py / k - f(x)) <= 0.05:
                 hits += 1
                 xs_cov.append(x)
         if best is None or hits > best[0]:
             best = (hits, k, xs_cov)
     hits, k, xs_cov = best
     if hits < 0.9 * expect_n:
-        fail('{}色水平线与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 y 轴）'
-             .format(_CN.get(line_color, line_color), hits, expect_n, scales[0]))
+        kind_cn = '水平线' if to == 'y' else '竖线'
+        fail('{}色{}与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 {} 轴）'
+             .format(_CN.get(line_color, line_color), kind_cn, hits, expect_n, scales[0], to))
     if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:
-        fail('水平线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'
+        fail('连线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'
              .format(x0, x1, min(xs_cov), max(xs_cov)))
     h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)
     for item in mpl:
@@ -380,6 +443,30 @@ def check_mpl_line(mpl, xs, ys, marker=None):
         _short(xs), _short(ys), _short(got['x']), _short(got['y'])))
 
 
+def check_mpl_curve(mpl, f, x0, x1, color=None, min_points=50, tol=0.02):
+    """matplotlib 函数曲线：存在一条折线，点数足够、x 覆盖 [x0, x1]、各点都满足 y ≈ f(x)。"""
+    lines = [m for m in mpl if m['kind'] == 'line' and len(m['x']) >= 2]
+    if not lines:
+        fail('没有检测到 matplotlib 曲线（是否调用了 plt.plot？）')
+    why = ''
+    for ln in lines:
+        if color and not is_color(ln['color'], color):
+            why = why or '曲线颜色应为{}'.format(_CN.get(color, color))
+            continue
+        if len(ln['x']) < min_points:
+            why = why or '曲线只有 {} 个点，太少了（步长取小一些，至少 {} 个点）'.format(len(ln['x']), min_points)
+            continue
+        if min(ln['x']) > x0 + 0.05 or max(ln['x']) < x1 - 0.05:
+            why = why or 'x 范围不对：应覆盖 {} ~ {}，实际 {:.2f} ~ {:.2f}'.format(x0, x1, min(ln['x']), max(ln['x']))
+            continue
+        bad = [x for x, y in zip(ln['x'], ln['y']) if abs(y - f(x)) > tol * max(1.0, abs(f(x)))]
+        if bad:
+            why = why or '曲线上有 {} 个点不满足函数式（例如 x={:.2f}），检查函数写法'.format(len(bad), bad[0])
+            continue
+        return
+    fail(why or '没有找到符合要求的曲线')
+
+
 def _short(v):
     v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]
     return str(v if len(v) <= 8 else v[:8] + ['…'])
@@ -393,7 +480,7 @@ def run_check(src, ns):
     env = {name: globals()[name] for name in (
         'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',
         'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows',
-        'check_class')}
+        'check_class', 'check_mpl_curve')}
     env['math'] = math
     env.update(ns)
     try:

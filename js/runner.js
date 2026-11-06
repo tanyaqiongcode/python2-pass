@@ -61,6 +61,7 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
     # 运行后检查（与 tools/harness.py 一致）：先清理旧输出文件，采集 turtle 线段与 matplotlib 图形
     import py2check
     py2check.cleanup_files(cleanup)
+    _restore_paths = py2check.install_exam_paths()
     _segs = []
     _mpl_store = []
     _restore_mpl = py2check.install_mpl_hooks(_mpl_store) if 'matplotlib' in code else (lambda: None)
@@ -132,6 +133,7 @@ def _run_user(code, stdin_text, timeout_s=8.0, max_events=2000000, canvas_id=Non
         else:
             _check_ok = False
     _restore_mpl()
+    _restore_paths()
     if 'matplotlib.pyplot' in sys.modules:
         try:
             sys.modules['matplotlib.pyplot'].close('all')

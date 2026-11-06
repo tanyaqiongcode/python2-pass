@@ -84,6 +84,7 @@ def run_user(
     import py2check
 
     py2check.cleanup_files(cleanup)
+    restore_paths = py2check.install_exam_paths()
     segs = []
     mpl_store = []
     restore_mpl = py2check.install_mpl_hooks(mpl_store) if "matplotlib" in code else (lambda: None)
@@ -153,6 +154,7 @@ def run_user(
         else:
             check_ok = False
     restore_mpl()
+    restore_paths()
     if "matplotlib.pyplot" in sys.modules:
         try:
             sys.modules["matplotlib.pyplot"].close("all")

@@ -23,6 +23,8 @@ jobs:
         run: python3 tools/test_checks.py
       - name: Validate & rebuild question bank
         run: python3 tools/build_data.py
+      - name: Local practice pack end-to-end test (setup / pip install whl / check)
+        run: python3 tools/test_packs.py
       - name: Check JS syntax
         run: |
           for f in js/*.js; do node --check "$f"; done
