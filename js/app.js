@@ -950,11 +950,20 @@ const App = {
       if (!codeText.includes('print') || codeText.includes('…') || codeText.length > 1500) return;
       const runArea = h('div');
       const btn = h('button', { class: 'btn btn-ghost btn-sm', style: 'margin:4px 0' }, '▶ 运行这段代码');
+      // 代码里有 input()：给一个输入框，每行对应一次 input()（否则会报"输入不足"）
+      const sample = PY2CORE.sampleStdin(codeText);
+      const stdinBox = sample == null ? null : h('textarea', {
+        class: 'code-editor lesson-stdin', spellcheck: 'false', 'aria-label': '运行时的输入数据',
+        rows: String(Math.min(6, sample.split('\n').length)), style: 'min-height:0;margin:4px 0'
+      });
+      if (stdinBox) stdinBox.value = sample;
       btn.addEventListener('click', async () => {
         btn.disabled = true; btn.textContent = '⏳ 运行中…';
         runArea.innerHTML = '';
         const canvasBox = h('div', { class: 'canvas-box' });
-        const r = await Engine.run(codeText, { mount: canvasBox });
+        const stdin = stdinBox ? stdinBox.value.replace(/\r\n/g, '\n') : '';
+        const files = (window.BANK.lessonFiles || {})[level];
+        const r = await Engine.run(codeText, { mount: canvasBox, files, stdin: stdin && !stdin.endsWith('\n') ? stdin + '\n' : stdin });
         runArea.append(canvasBox);
         const out = h('pre', { class: 'output' });
         out.textContent = r.stdout || '（无输出）';
@@ -966,7 +975,11 @@ const App = {
         }
         btn.disabled = false; btn.textContent = '▶ 再运行一次';
       });
-      pre.after(btn, runArea);
+      if (stdinBox) {
+        pre.after(h('div', { class: 'muted', style: 'font-size:13px;margin-top:6px' }, '⌨ 输入数据（每行对应一次 input()，可以改了再运行）：'), stdinBox, btn, runArea);
+      } else {
+        pre.after(btn, runArea);
+      }
     });
     box.append(wrap);
     box.append(h('div', { style: 'margin:6px 0 20px' },
