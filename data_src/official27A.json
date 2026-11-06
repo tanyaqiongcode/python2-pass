@@ -391,7 +391,8 @@
     "文件",
     "数据分析"
    ],
-   "score": 17
+   "score": 17,
+   "cat": "data"
   },
   {
    "id": "p27-c2",
@@ -401,7 +402,11 @@
    "files": [
     {
      "name": "LossRatio.py",
-     "content": "\"\"\"LossRatio —— 模型损失率计算（本站内置等价实现）。\n正式考试中该包由考场提供 whl 安装：import LossRatio 后\n调用 LossRatio.type_A(num) / LossRatio.type_B(num)，num 为 0~9 整数。\n\"\"\"\n\n\ndef type_A(num):\n    \"\"\"A 模型损失率。\"\"\"\n    return ((num * 37) % 100) / 100.0\n\n\ndef type_B(num):\n    \"\"\"B 模型损失率。\"\"\"\n    return ((num * 53) % 97) / 100.0\n"
+     "content": "\"\"\"LossRatio —— 模型损失率计算（本站内置等价实现）。\n正式考试中该包由考场提供 whl 安装：import LossRatio 后\n调用 LossRatio.type_A(num) / LossRatio.type_B(num)，num 为 0~9 整数。\n\"\"\"\n\n\ndef type_A(num):\n    \"\"\"A 模型损失率。\"\"\"\n    return ((num * 37) % 100) / 100.0\n\n\ndef type_B(num):\n    \"\"\"B 模型损失率。\"\"\"\n    return ((num * 53) % 97) / 100.0\n",
+     "wheel": {
+      "dist": "lossratio",
+      "version": "1.1.0"
+     }
     }
    ],
    "starter": "import LossRatio\n\ndef poly(n):\n    # 计算 s = Σ -(x^3-2x-5)/(3x^2-2)，x_i：偶数取 i，奇数取 2i\n    pass\n\n",
@@ -427,7 +432,8 @@
    "unjudged": {
     "points": 3,
     "note": "第(1)小题安装 whl 并截图 setup.jpg 需在本机完成（官方未公布该步分值，本站按 3 分估计）"
-   }
+   },
+   "cat": "calc"
   },
   {
    "id": "p27-c3",
@@ -450,7 +456,8 @@
     "图形绘制"
    ],
    "score": 15,
-   "expectCanvas": true
+   "expectCanvas": true,
+   "cat": "draw"
   },
   {
    "id": "p27-c4",
@@ -489,7 +496,8 @@
     "SQLite",
     "数据库"
    ],
-   "score": 12
+   "score": 12,
+   "cat": "db"
   },
   {
    "id": "p27-c5",
@@ -521,7 +529,8 @@
     "文件",
     "数据分析"
    ],
-   "score": 13
+   "score": 13,
+   "cat": "text"
   }
  ]
 }

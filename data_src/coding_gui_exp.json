@@ -31,7 +31,8 @@
         "openpyxl",
         "Excel",
         "循环"
-      ]
+      ],
+      "cat": "data"
     },
     {
       "id": "code-l6-006",
@@ -63,7 +64,8 @@
         "openpyxl",
         "Excel",
         "最值"
-      ]
+      ],
+      "cat": "data"
     },
     {
       "id": "code-l7-013",
@@ -96,7 +98,8 @@
         "matplotlib",
         "可视化",
         "统计"
-      ]
+      ],
+      "cat": "draw"
     }
   ]
 }

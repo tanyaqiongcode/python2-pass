@@ -4427,7 +4427,8 @@ window.BANK = {
     }
    ],
    "ref": "f = float(input())\nc = (f - 32) * 5 / 9\nprint('摄氏温度为{:.1f}度'.format(c))",
-   "exp": "考查 input 的类型转换、整除 // 与除法 / 的区别、格式化占位符 {:.1f}。三处都是一级考试高频错误点。"
+   "exp": "考查 input 的类型转换、整除 // 与除法 / 的区别、格式化占位符 {:.1f}。三处都是一级考试高频错误点。",
+   "local_code": "f = input()\nc = (f - 32) * 5 // 9\nprint('摄氏温度为{:.2f}度'.format(c))"
   },
   {
    "id": "fix-l5-003",
@@ -4458,7 +4459,8 @@ window.BANK = {
     }
    ],
    "ref": "f = open('words.txt', 'r', encoding='utf-8')\nlines = f.readlines()\nf.close()\nprint('共', len(lines), '行')\nmx = lines[0].strip()\nfor line in lines:\n    if len(line.strip()) > len(mx):\n        mx = line.strip()\nprint(mx, end='')",
-   "exp": "考查文件打开模式（w 清空且不可读）、readlines 的下标范围（len(lines) 越界）、逐行读取后 strip() 去换行再比较。三处错误层层递进，是 L5 文件题的典型组合。"
+   "exp": "考查文件打开模式（w 清空且不可读）、readlines 的下标范围（len(lines) 越界）、逐行读取后 strip() 去换行再比较。三处错误层层递进，是 L5 文件题的典型组合。",
+   "local_code": "f = open('c:/素材/words.txt', 'w', encoding='utf-8')\nlines = f.readlines()\nf.close()\nprint('共', len(lines), '行')\nmx = lines[len(lines)]\nfor line in lines:\n    if len(line) > len(mx):\n        mx = line\nprint(mx, end='')"
   },
   {
    "id": "fix-l3-007",
@@ -4483,7 +4485,8 @@ window.BANK = {
     }
    ],
    "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    for j in range(n - 1 - i):\n        if nums[j] > nums[j + 1]:\n            t = nums[j]\n            nums[j] = nums[j + 1]\n            nums[j + 1] = t\nprint(' '.join(str(v) for v in nums))",
-   "exp": "考查冒泡排序三要素：趟数（range(n-1)）、比较方向（升序用 >）与借助临时变量交换时的赋值顺序。"
+   "exp": "考查冒泡排序三要素：趟数（range(n-1)）、比较方向（升序用 >）与借助临时变量交换时的赋值顺序。",
+   "local_code": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 2):\n    for j in range(n - 1 - i):\n        if nums[j] < nums[j + 1]:\n            t = nums[j]\n            nums[j + 1] = t\n            nums[j] = nums[j + 1]\nprint(' '.join(str(v) for v in nums))"
   },
   {
    "id": "fix-l2-009",
@@ -4508,7 +4511,8 @@ window.BANK = {
     }
    ],
    "ref": "for k in range(3):\n    try:\n        a = int(input())\n        b = int(input())\n        print(a / b)\n    except ZeroDivisionError as e:\n        print('错误:', e)\n    except ValueError:\n        print('请输入整数！')",
-   "exp": "考查 try-except 多分支：/ 与 // 的区别、as e 接收异常对象并在分支中输出、异常类型与提示语的对应关系。"
+   "exp": "考查 try-except 多分支：/ 与 // 的区别、as e 接收异常对象并在分支中输出、异常类型与提示语的对应关系。",
+   "local_code": "for k in range(3):\n    try:\n        a = int(input())\n        b = int(input())\n        print(a // b)\n    except ZeroDivisionError:\n        print('错误:', e)\n    except ValueError:\n        print('除数不能为零！')"
   },
   {
    "id": "fix-l3-008",
@@ -4533,7 +4537,8 @@ window.BANK = {
     }
    ],
    "ref": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    k = i\n    for j in range(i + 1, n):\n        if nums[j] < nums[k]:\n            k = j\n    t = nums[i]\n    nums[i] = nums[k]\n    nums[k] = t\nprint(' '.join(str(v) for v in nums))",
-   "exp": "考查选择排序三要素：内层起点（i+1）、找最小值的比较方向（<）与借助临时变量的交换。"
+   "exp": "考查选择排序三要素：内层起点（i+1）、找最小值的比较方向（<）与借助临时变量的交换。",
+   "local_code": "nums = [int(v) for v in input().split()]\nn = len(nums)\nfor i in range(n - 1):\n    k = i\n    for j in range(i + 2, n):\n        if nums[j] > nums[k]:\n            k = j\n    t = nums[i]\n    nums[i] = nums[k]\n    nums[k] = nums[i]\nprint(' '.join(str(v) for v in nums))"
   },
   {
    "id": "fix-l2-002",
@@ -4558,7 +4563,8 @@ window.BANK = {
     }
    ],
    "ref": "while True:\n    s = int(input())\n    if s == -999:\n        break\n    if s >= 85:\n        print('优秀')\n    elif s >= 60:\n        print('及格')\n    elif s >= 0:\n        print('不及格')\n    else:\n        print('输入错误')",
-   "exp": "考查 if-elif 多分支条件的边界值（>= 与 > 的区别）。"
+   "exp": "考查 if-elif 多分支条件的边界值（>= 与 > 的区别）。",
+   "local_code": "while True:\n    s = int(input())\n    if s == -999:\n        break\n    if s > 85:\n        print('优秀')\n    elif s >= 60:\n        print('及格')\n    elif s > 0:\n        print('不及格')\n    else:\n        print('输入错误')"
   },
   {
    "id": "fix-l2-003",
@@ -4583,7 +4589,8 @@ window.BANK = {
     }
    ],
    "ref": "n = int(input())\ntotal = 0\nfor i in range(2, n + 1, 2):\n    print(i, end=' ')\n    total += i\nprint()\nprint('1~%d的偶数和:' % n, total)",
-   "exp": "考查 range(start, stop, step) 边界、print 的 end 参数与 += 累加写法。"
+   "exp": "考查 range(start, stop, step) 边界、print 的 end 参数与 += 累加写法。",
+   "local_code": "n = int(input())\ntotal = 0\nfor i in range(2, n, 2):\n    print(i)\n    total =+ i\nprint()\nprint('1~%d的偶数和:' % n, total)"
   },
   {
    "id": "fix-l2-004",
@@ -4608,7 +4615,8 @@ window.BANK = {
     }
    ],
    "ref": "i = 1\ns = 0\nwhile i <= 10:\n    s = s + i\n    i = i + 1\nprint('1加到10的和:', s)",
-   "exp": "考查 while 循环三要素：初值、循环条件与循环变量的更新（忘更新即死循环）。"
+   "exp": "考查 while 循环三要素：初值、循环条件与循环变量的更新（忘更新即死循环）。",
+   "local_code": "i = 1\ns = 1\nwhile i < 10:\n    s = s + i\n    j = i + 1\nprint('1加到10的和:', s)"
   },
   {
    "id": "fix-l2-005",
@@ -4633,7 +4641,8 @@ window.BANK = {
     }
    ],
    "ref": "n = int(input())\ns = 0\ncnt = 0\nfor i in range(1, n + 1):\n    if i % 3 == 0:\n        cnt = cnt + 1\n        s = s + i\nprint('个数:', cnt)\nprint('和:', s)",
-   "exp": "考查 range 边界、计数与累加的区别以及缩进决定语句归属的规则。"
+   "exp": "考查 range 边界、计数与累加的区别以及缩进决定语句归属的规则。",
+   "local_code": "n = int(input())\ns = 0\ncnt = 0\nfor i in range(1, n):\n    if i % 3 == 0:\n        cnt = cnt + i\ns = s + i\nprint('个数:', cnt)\nprint('和:', s)"
   },
   {
    "id": "fix-l2-006",
@@ -4658,7 +4667,8 @@ window.BANK = {
     }
    ],
    "ref": "cnt = 0\nfor i in range(1, 21):\n    if i % 2 == 0:\n        continue\n    if i > 15:\n        break\n    print(i, end=' ')\n    cnt += 1\nprint()\nprint('个数:', cnt)",
-   "exp": "考查 break（结束整个循环）与 continue（跳过本次循环）的区别。"
+   "exp": "考查 break（结束整个循环）与 continue（跳过本次循环）的区别。",
+   "local_code": "cnt = 1\nfor i in range(1, 21):\n    if i % 2 == 0:\n        break\n    if i > 15:\n        continue\n    print(i, end=' ')\n    cnt += 1\nprint()\nprint('个数:', cnt)"
   },
   {
    "id": "fix-l3-001",
@@ -4683,7 +4693,8 @@ window.BANK = {
     }
    ],
    "ref": "s = input()\nprint('前3个字符:', s[:3])\nprint('后2个字符:', s[-2:])\nprint('反转:', s[::-1])",
-   "exp": "考查切片语法 [start:stop:step]：省略起点、负索引与负步长。"
+   "exp": "考查切片语法 [start:stop:step]：省略起点、负索引与负步长。",
+   "local_code": "s = input()\nprint('前3个字符:', s[1:3])\nprint('后2个字符:', s[2:])\nprint('反转:', s[::1])"
   },
   {
    "id": "fix-l3-002",
@@ -4708,7 +4719,8 @@ window.BANK = {
     }
    ],
    "ref": "nums = [5, 2, 8, 9, 7]\nnums.sort()\nnums.remove(2)\nnums.append(10)\nprint(nums)",
-   "exp": "考查列表 sort/remove/append 均为原地操作、返回值是 None，不能再赋回变量。"
+   "exp": "考查列表 sort/remove/append 均为原地操作、返回值是 None，不能再赋回变量。",
+   "local_code": "nums = [5, 2, 8, 9, 7]\nnums = nums.sort()\nnums = nums.remove(2)\nnums = nums.append(10)\nprint(nums)"
   },
   {
    "id": "fix-l3-003",
@@ -4733,7 +4745,8 @@ window.BANK = {
     }
    ],
    "ref": "nums = [3, 5, 3, 7, 5, 3]\nd = {}\nfor x in nums:\n    d[x] = d.get(x, 0) + 1\nprint('3出现了', d[3], '次')\nprint('5出现了', d[5], '次')\nprint('所有次数:', list(d.values()))",
-   "exp": "考查字典创建、键类型必须与存入时一致（整数键）、values() 需转列表输出。"
+   "exp": "考查字典创建、键类型必须与存入时一致（整数键）、values() 需转列表输出。",
+   "local_code": "nums = [3, 5, 3, 7, 5, 3]\nd = []\nfor x in nums:\n    d[x] = d.get(x, 0) + 1\nprint('3出现了', d[3], '次')\nprint('5出现了', d['5'], '次')\nprint('所有次数:', d.values())"
   },
   {
    "id": "fix-l3-004",
@@ -4758,7 +4771,8 @@ window.BANK = {
     }
    ],
    "ref": "def tag_page(title, tags=[]):\n    tags = tags + [title]\n    return tags\n\np1 = tag_page('基础')\np2 = tag_page('提高')\nprint(p1)\nprint(p2)\nprint(p1[-1])\nprint(len(p2))",
-   "exp": "考查可变对象作默认参数的陷阱：默认列表在多次调用间共享，应避免原地修改（或改用 tags=[] 配合生成新列表），以及返回值要接收。"
+   "exp": "考查可变对象作默认参数的陷阱：默认列表在多次调用间共享，应避免原地修改（或改用 tags=[] 配合生成新列表），以及返回值要接收。",
+   "local_code": "def tag_page(title, tags=['Python']):\n    tags.append(title)\n    return tags\n\np1 = tag_page('基础')\ntag_page('提高')\nprint(p1)\nprint(p2)\nprint(p1[-1])\nprint(len(p2))"
   },
   {
    "id": "fix-l4-001",
@@ -4783,7 +4797,8 @@ window.BANK = {
     }
    ],
    "ref": "total = 0\ndef consume(money, t):\n    t = t + money\n    return t\n\ntotal = consume(100, total)\ntotal = consume(200, total)\ntotal = consume(300, total)\nprint('合计:', total)",
-   "exp": "考查局部变量与全局变量的作用域、参数传递与函数返回值的接收。"
+   "exp": "考查局部变量与全局变量的作用域、参数传递与函数返回值的接收。",
+   "local_code": "total = 0\ndef consume(money, t):\n    t = t + money\n    return t\n\ntotal = consume(100, total)\ntotal = consume(200)\nconsume(300, total)\nprint('合计:', t)"
   },
   {
    "id": "fix-l4-002",
@@ -4808,7 +4823,8 @@ window.BANK = {
     }
    ],
    "ref": "def power(x, y):\n    r = 1\n    for i in range(y):\n        r = r * x\n    return r\n\na = power(2, 10)\nb = power(3, 3)\nprint(a + b)",
-   "exp": "考查函数 return 与 print 的区别：没有 return 的函数返回 None。"
+   "exp": "考查函数 return 与 print 的区别：没有 return 的函数返回 None。",
+   "local_code": "def power(x, y):\n    r = 0\n    for i in range(y):\n        r = r * x\n    print(r)\n\npower(2, 10)\nb = power(3, 3)\nprint(a + b)"
   },
   {
    "id": "fix-l4-003",
@@ -4833,7 +4849,8 @@ window.BANK = {
     }
    ],
    "ref": "def fib(n):\n    if n == 1 or n == 2:\n        return 1\n    return fib(n - 1) + fib(n - 2)\n\nprint(fib(10))",
-   "exp": "考查递归三要素：基例必须完整（n=1 与 n=2）、递推式正确、调用实参正确。"
+   "exp": "考查递归三要素：基例必须完整（n=1 与 n=2）、递推式正确、调用实参正确。",
+   "local_code": "def fib(n):\n    if n == 1:\n        return 1\n    return fib(n - 1) + fib(n - 1)\n\nprint(fib(9))"
   },
   {
    "id": "fix-l5-001",
@@ -4864,7 +4881,8 @@ window.BANK = {
     }
    ],
    "ref": "f = open('log.txt', 'a', encoding='utf-8')\nf.write('2026-09-25 登录成功\\n')\nf.close()\ng = open('log.txt', 'r', encoding='utf-8')\nprint(g.read(), end='')\ng.close()",
-   "exp": "考查文件打开模式：r 读、w 写（清空）、a 追加，以及 write 不会自动换行。"
+   "exp": "考查文件打开模式：r 读、w 写（清空）、a 追加，以及 write 不会自动换行。",
+   "local_code": "f = open('c:/素材/log.txt', 'w', encoding='utf-8')\nf.write('2026-09-25 登录成功')\nf.close()\ng = open('c:/素材/log.txt', 'w', encoding='utf-8')\nprint(g.read(), end='')\ng.close()"
   },
   {
    "id": "fix-l5-002",
@@ -4895,7 +4913,8 @@ window.BANK = {
     }
    ],
    "ref": "f = open('nums.txt', 'r', encoding='utf-8')\ntotal = 0\nmx = 0\ncnt = 0\nfor line in f:\n    total = total + int(line)\n    if int(line) > mx:\n        mx = int(line)\n    cnt = cnt + 1\nf.close()\nprint('共', cnt, '个数')\nprint('总和:', total)\nprint('最大值:', mx)",
-   "exp": "考查 == 与 = 的区别，以及文件逐行读到的字符串必须转换类型后才能运算比较。"
+   "exp": "考查 == 与 = 的区别，以及文件逐行读到的字符串必须转换类型后才能运算比较。",
+   "local_code": "f = open('c:/素材/nums.txt', 'r', encoding='utf-8')\ntotal = 0\nmx = 0\ncnt == 0\nfor line in f:\n    total = total + line\n    if line > mx:\n        mx = line\n    cnt = cnt + 1\nf.close()\nprint('共', cnt, '个数')\nprint('总和:', total)\nprint('最大值:', mx)"
   },
   {
    "id": "fix-l6-001",
@@ -4921,7 +4940,8 @@ window.BANK = {
    ],
    "ref": "import turtle\nt = turtle.Turtle()\nt.pencolor('red')\nfor i in range(4):\n    t.forward(100)\n    t.left(90)\nt.penup()\nprint('画笔颜色:', t.pencolor())\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())",
    "exp": "考查 turtle 画笔颜色、正方形转角 90 度与 penup/pendown 画笔状态。",
-   "check": "check_polygon(segs, 4, 100, 'red')"
+   "check": "check_polygon(segs, 4, 100, 'red')",
+   "local_code": "import turtle\nt = turtle.Turtle()\nt.pencolor('blue')\nfor i in range(4):\n    t.forward(100)\n    t.left(45)\nt.pendown()\nprint('画笔颜色:', t.pencolor())\nprint('落点:', round(t.xcor()), round(t.ycor()))\nprint('画笔按下:', t.isdown())"
   },
   {
    "id": "fix-l7-002",
@@ -4947,7 +4967,8 @@ window.BANK = {
    ],
    "ref": "import sqlite3\n\nconn = sqlite3.connect('stu.db')\ncur = conn.cursor()\ncur.execute('DROP TABLE IF EXISTS stu')\ncur.execute('CREATE TABLE stu(name TEXT, score INTEGER)')\ncur.execute('INSERT INTO stu VALUES(?, ?)', ('张三', 85))\ncur.execute('INSERT INTO stu VALUES(?, ?)', ('李四', 72))\ncur.execute('INSERT INTO stu VALUES(?, ?)', ('王强', 90))\nconn.commit()\nconn.close()\n\nconn = sqlite3.connect('stu.db')\ncur = conn.cursor()\nn = int(input())\ncur.execute('SELECT name, score FROM stu WHERE score >= ? ORDER BY score', (n,))\nrows = cur.fetchall()\nfor row in rows:\n    print(row[0], row[1])\nconn.close()",
    "hint": "commit 要加括号调用；占位符参数用 (n,)；取全部记录用 fetchall()",
-   "exp": "考查 SQLite 事务提交（未提交即关闭会被回滚）、占位符参数必须以元组传入、fetchone 与 fetchall 的区别。"
+   "exp": "考查 SQLite 事务提交（未提交即关闭会被回滚）、占位符参数必须以元组传入、fetchone 与 fetchall 的区别。",
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect('stu.db')\ncur = conn.cursor()\ncur.execute('DROP TABLE IF EXISTS stu')\ncur.execute('CREATE TABLE stu(name TEXT, score INTEGER)')\ncur.execute('INSERT INTO stu VALUES(?, ?)', ('张三', 85))\ncur.execute('INSERT INTO stu VALUES(?, ?)', ('李四', 72))\ncur.execute('INSERT INTO stu VALUES(?, ?)', ('王强', 90))\nconn.commit\nconn.close()\n\nconn = sqlite3.connect('stu.db')\ncur = conn.cursor()\nn = int(input())\ncur.execute('SELECT name, score FROM stu WHERE score >= ? ORDER BY score', n)\nrows = cur.fetchone()\nfor row in rows:\n    print(row[0], row[1])\nconn.close()"
   },
   {
    "id": "fix-l7-003",
@@ -4973,7 +4994,8 @@ window.BANK = {
    ],
    "ref": "import re\n\ns = input()\nm = re.search(r'\\d+\\.\\d+', s)\nprint('第一个小数:', m.group())\nnums = re.findall(r'\\d+\\.\\d+', s)\nfor x in nums:\n    print(x)\nprint('共', len(nums), '个小数')",
    "hint": "取第一个匹配用 search；findall 才返回全部匹配；模式中的点号必须转义成 \\.",
-   "exp": "考查 re.search 与 re.findall 的区别、匹配对象与列表用法的不同、元字符 . 未转义造成的误匹配。"
+   "exp": "考查 re.search 与 re.findall 的区别、匹配对象与列表用法的不同、元字符 . 未转义造成的误匹配。",
+   "local_code": "import re\n\ns = input()\nm = re.findall(r'\\d+\\.\\d+', s)\nprint('第一个小数:', m.group())\nnums = re.findall(r'\\d+.\\d+', s)\nfor x in nums:\n    print(x)\nprint('共', len(m), '个小数')"
   },
   {
    "id": "fix-l7-004",
@@ -4999,7 +5021,8 @@ window.BANK = {
    ],
    "ref": "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n\n    def grade(self):\n        if self.score >= 90:\n            return '优秀'\n        elif self.score >= 60:\n            return '及格'\n        else:\n            return '不及格'\n\ns = Student('王五', 73)\nprint(s.name, s.score, s.grade())",
    "hint": "构造方法名是 __init__；实例方法必须有 self；实参顺序要与形参一致",
-   "exp": "考查构造方法 __init__ 的拼写、实例方法 self 参数、实例化时实参与形参的对应关系。"
+   "exp": "考查构造方法 __init__ 的拼写、实例方法 self 参数、实例化时实参与形参的对应关系。",
+   "local_code": "class Student:\n    def __init(self, name, score):\n        self.name = name\n        self.score = score\n\n    def grade():\n        if self.score >= 90:\n            return '优秀'\n        elif self.score >= 60:\n            return '及格'\n        else:\n            return '不及格'\n\ns = Student(73, '王五')\nprint(s.name, s.score, s.grade())"
   },
   {
    "id": "fix-l7-005",
@@ -5025,7 +5048,8 @@ window.BANK = {
    ],
    "ref": "def fact(n):\n    if n == 1:\n        return 1\n    return n * fact(n - 1)\n\nn = int(input())\nprint(fact(n))",
    "hint": "基例 n == 1 时返回 1；递归调用必须用 n - 1 向基例收敛",
-   "exp": "考查递归三要素：基例条件、基例返回值、递归调用参数必须向基例收敛（否则无限递归）。"
+   "exp": "考查递归三要素：基例条件、基例返回值、递归调用参数必须向基例收敛（否则无限递归）。",
+   "local_code": "def fact(n):\n    if n >= 1:\n        return 0\n    return n * fact(n)\n\nn = int(input())\nprint(fact(n))"
   },
   {
    "id": "fix-l7-006",
@@ -5057,7 +5081,8 @@ window.BANK = {
    ],
    "ref": "import json\n\nf = open('city.json', 'r', encoding='utf-8')\ndata = json.load(f)\nf.close()\ntotal = 0\nfor d in data:\n    total = total + d['pop']\nfw = open('out.json', 'w', encoding='utf-8')\nfw.write(json.dumps({'total': total}, ensure_ascii=False))\nfw.close()\nfr = open('out.json', 'r', encoding='utf-8')\nprint('统计结果:', fr.read())\nfr.close()",
    "hint": "读 JSON 用 json.load；遍历列表直接 for d in data；写文件用 'w' 模式",
-   "exp": "考查 json.load 与 json.dumps 的方向、列表与字典遍历方式的区别、open 写模式的正确使用。"
+   "exp": "考查 json.load 与 json.dumps 的方向、列表与字典遍历方式的区别、open 写模式的正确使用。",
+   "local_code": "import json\n\nf = open('c:/素材/city.json', 'r', encoding='utf-8')\ndata = json.dumps(f)\nf.close()\ntotal = 0\nfor d in data.keys():\n    total = total + d['pop']\nfw = open('out.json', 'r', encoding='utf-8')\nfw.write(json.dumps({'total': total}, ensure_ascii=False))\nfw.close()\nfr = open('out.json', 'r', encoding='utf-8')\nprint('统计结果:', fr.read())\nfr.close()"
   },
   {
    "id": "fix-l2-001",
@@ -5082,7 +5107,8 @@ window.BANK = {
     }
    ],
    "ref": "line = input()\nn = int(line)\nif n <= 9:\n    for m in range(1, n + 1):\n        for i in range(1, m + 1):\n            print(i, end='')\n        print()\nelse:\n    print('输入的行数不能超过9！')",
-   "exp": "考查 if 选择结构、range 范围、嵌套循环与 print 的 end 参数。"
+   "exp": "考查 if 选择结构、range 范围、嵌套循环与 print 的 end 参数。",
+   "local_code": "line = input()\nn = int(line)\nif n > 9:\n    for m in range(1, n + 1):\n        for i in range(1, m + 1):\n            print(i, end='')\n        print()\nelse:\n    print('输入的行数不能超过9！')"
   },
   {
    "id": "p27-f1",
@@ -5107,7 +5133,8 @@ window.BANK = {
     }
    ],
    "ref": "angle = input()\nwhile angle != 'q':\n    a = float(angle)\n    if abs(a) <= 5:\n        reward = 2.0\n    elif abs(a) <= 15:\n        reward = 1.0 - 0.1 * (abs(a) - 5)\n    else:\n        reward = -1.0\n    print('角度:{}°；奖励:{:.2f}'.format(a, reward))\n    angle = input()",
-   "exp": "考查 if-elif 多分支的边界条件与 format 保留小数。"
+   "exp": "考查 if-elif 多分支的边界条件与 format 保留小数。",
+   "local_code": "angle = input()\nwhile angle != 'q':\n    a = float(angle)\n    if abs(a) > 5:\n        reward = 2.0\n    elif abs(a) < 15:\n        reward = 1.0 - 0.1 * (abs(a) - 5)\n    else:\n        reward = -1.0\n    print('角度:{}°；奖励:{}'.format(a, reward))\n    angle = input()"
   },
   {
    "id": "p27-f2",
@@ -5132,7 +5159,8 @@ window.BANK = {
     }
    ],
    "ref": "import random\nrandom.seed(7)\nn = input()\nwhile n != 'x' and n != 'X':\n    num = int(n)\n    if num < 3 or num > 9:\n        print('请重新输入')\n    else:\n        pos = random.randint(0, num * num - 1)\n        other = random.randint(0, 9)\n        if other == num:\n            other = (num + 1) % 10\n        for k in range(num * num):\n            if k == pos:\n                ch = str(other)\n            else:\n                ch = str(num)\n            print(ch, end='')\n            if k % num == num - 1:\n                print()\n    n = input()",
-   "exp": "考查 while 循环退出条件、多分支范围判断、嵌套循环按行输出与随机数固定种子。"
+   "exp": "考查 while 循环退出条件、多分支范围判断、嵌套循环按行输出与随机数固定种子。",
+   "local_code": "import random\nrandom.seed(7)\nn = input()\nwhile n != 'x' or n != 'X':\n    num = int(n)\n    if num < 3 and num > 9:\n        print('请重新输入')\n    else:\n        pos = random.randint(0, num * num - 1)\n        other = random.randint(0, 9)\n        if other == num:\n            other = (num + 1) % 10\n        for k in range(num * num):\n            if k == pos:\n                ch = str(other)\n            else:\n                ch = str(num)\n            print(ch, end='')\n            if k % num == 0:\n                print()\n    n = input()"
   },
   {
    "id": "p27-f3",
@@ -5157,7 +5185,8 @@ window.BANK = {
     }
    ],
    "ref": "bagua = {'乾': '111', '坎': '010', '艮': '100', '震': '001',\n         '巽': '110', '离': '101', '坤': '000', '兑': '011'}\ns = input('请输入卦名字符串:')\nout = ''\nfor ch in s:\n    out = out + bagua[ch]\nprint(s, '-->', out)",
-   "exp": "考查字典建表与按键取值、字符串按序拼接、遍历对象的选择。"
+   "exp": "考查字典建表与按键取值、字符串按序拼接、遍历对象的选择。",
+   "local_code": "bagua = {'乾': '111', '坎': '001', '艮': '100', '震': '001',\n         '巽': '110', '离': '101', '坤': '000', '兑': '011'}\ns = input('请输入卦名字符串:')\nout = ''\nfor ch in bagua:\n    out = bagua[ch] + out\nprint(s, '-->', out)"
   }
  ],
  "coding": [
@@ -5188,7 +5217,8 @@ window.BANK = {
     "列表",
     "循环",
     "查找"
-   ]
+   ],
+   "local_code": "# 读入一行整数与目标值，顺序查找输出下标或 -1\n"
   },
   {
    "id": "code-l2-007",
@@ -5217,7 +5247,8 @@ window.BANK = {
     "循环",
     "while",
     "经典算法"
-   ]
+   ],
+   "local_code": "# 按角谷猜想规则变换，输出每次变化与总步数\n"
   },
   {
    "id": "code-l2-008",
@@ -5246,7 +5277,8 @@ window.BANK = {
     "循环",
     "经典算法",
     "累加"
-   ]
+   ],
+   "local_code": "# 枚举 2~n，求每个数的真因子之和，判断是否为完全数\n"
   },
   {
    "id": "code-l3-006",
@@ -5275,7 +5307,8 @@ window.BANK = {
     "排序",
     "列表",
     "双重循环"
-   ]
+   ],
+   "local_code": "nums = [int(v) for v in input().split()]\nn = len(nums)\n# 请用冒泡排序把 nums 升序排列（不得使用 sort() 或 sorted()）\n"
   },
   {
    "id": "code-l3-007",
@@ -5304,7 +5337,8 @@ window.BANK = {
     "排序",
     "列表",
     "双重循环"
-   ]
+   ],
+   "local_code": "scores = [int(v) for v in input().split()]\nn = len(scores)\n# 请用选择排序把 scores 降序排列（不得使用 sort() 或 sorted()）\n"
   },
   {
    "id": "code-l4-007",
@@ -5333,7 +5367,8 @@ window.BANK = {
     "查找",
     "循环",
     "算法"
-   ]
+   ],
+   "local_code": "nums = [int(v) for v in input().split()]\nx = int(input())\n# 请用 while 循环实现二分查找，输出下标或 -1\n"
   },
   {
    "id": "code-l6-005",
@@ -5365,7 +5400,9 @@ window.BANK = {
     "openpyxl",
     "Excel",
     "循环"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "from openpyxl import load_workbook\n\nwb = load_workbook('c:/素材/scores.xlsx')\nws = wb['stu']\n"
   },
   {
    "id": "code-l6-006",
@@ -5397,7 +5434,9 @@ window.BANK = {
     "openpyxl",
     "Excel",
     "最值"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "from openpyxl import load_workbook\n\nwb = load_workbook('c:/素材/scores.xlsx')\nws = wb['stu']\n"
   },
   {
    "id": "code-l7-013",
@@ -5430,7 +5469,9 @@ window.BANK = {
     "matplotlib",
     "可视化",
     "统计"
-   ]
+   ],
+   "cat": "draw",
+   "local_code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nmonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]\ntemps = [5, 8, 14, 20, 26, 31, 33, 32, 27, 20, 12, 6]\n"
   },
   {
    "id": "code-l1-001",
@@ -5459,7 +5500,8 @@ window.BANK = {
     "输入输出",
     "变量",
     "格式化"
-   ]
+   ],
+   "local_code": "# 读入两个整数，交换后输出，再输出平均值\n"
   },
   {
    "id": "code-l1-002",
@@ -5488,7 +5530,8 @@ window.BANK = {
     "类型转换",
     "运算符",
     "格式化"
-   ]
+   ],
+   "local_code": "# 读入华氏温度，换算后保留 1 位小数输出\n"
   },
   {
    "id": "code-l1-003",
@@ -5517,7 +5560,8 @@ window.BANK = {
     "math",
     "if 分支",
     "格式化"
-   ]
+   ],
+   "local_code": "import math\n\n# 读入三边，判断能否构成三角形并计算面积\n"
   },
   {
    "id": "code-l1-004",
@@ -5546,7 +5590,8 @@ window.BANK = {
     "字符串",
     "格式化",
     "循环"
-   ]
+   ],
+   "local_code": "# 读 n 个\"姓名 年龄\"，按指定宽度格式化输出\n"
   },
   {
    "id": "code-l2-001",
@@ -5575,7 +5620,8 @@ window.BANK = {
     "循环",
     "素数",
     "计数"
-   ]
+   ],
+   "local_code": "# 输出 [m, n] 内的全部素数并统计个数\n"
   },
   {
    "id": "code-l2-002",
@@ -5604,7 +5650,8 @@ window.BANK = {
     "嵌套循环",
     "字符串",
     "乘法表"
-   ]
+   ],
+   "local_code": "# 输出九九乘法表的前 n 行\n"
   },
   {
    "id": "code-l2-003",
@@ -5633,7 +5680,8 @@ window.BANK = {
     "运算符",
     "if 分支",
     "水仙花数"
-   ]
+   ],
+   "local_code": "# 分离 n 的百位、十位、个位，求立方和并判断\n"
   },
   {
    "id": "code-l2-004",
@@ -5662,7 +5710,8 @@ window.BANK = {
     "random",
     "while 循环",
     "分支"
-   ]
+   ],
+   "local_code": "import random\nrandom.seed(10)\ntarget = random.randint(1, 100)\n# 请补全猜数字过程：反复读入猜测，直到猜中\n"
   },
   {
    "id": "code-l2-005",
@@ -5691,7 +5740,8 @@ window.BANK = {
     "循环",
     "字符串",
     "图形打印"
-   ]
+   ],
+   "local_code": "# 读入奇数 n，打印 n 行星号菱形\n"
   },
   {
    "id": "code-l3-001",
@@ -5720,7 +5770,8 @@ window.BANK = {
     "字符串",
     "切片",
     "回文"
-   ]
+   ],
+   "local_code": "# 用切片求反串并判断是否回文\n"
   },
   {
    "id": "code-l3-002",
@@ -5749,7 +5800,8 @@ window.BANK = {
     "列表",
     "循环",
     "split"
-   ]
+   ],
+   "local_code": "# 读入一行整数，分离奇偶到两个列表\n"
   },
   {
    "id": "code-l3-003",
@@ -5778,7 +5830,8 @@ window.BANK = {
     "字典",
     "计数",
     "字符串"
-   ]
+   ],
+   "local_code": "# 用字典统计每个字符出现的次数\n"
   },
   {
    "id": "code-l3-004",
@@ -5807,7 +5860,8 @@ window.BANK = {
     "列表",
     "字典",
     "if-elif"
-   ]
+   ],
+   "local_code": "# 读入成绩列表，分段统计到字典并输出\n"
   },
   {
    "id": "code-l3-005",
@@ -5836,7 +5890,8 @@ window.BANK = {
     "集合",
     "排序",
     "列表"
-   ]
+   ],
+   "local_code": "# 用集合去重，再排序输出\n"
   },
   {
    "id": "code-l4-001",
@@ -5865,7 +5920,8 @@ window.BANK = {
     "函数",
     "while 循环",
     "辗转相除"
-   ]
+   ],
+   "local_code": "def gcd(a, b):\n    # 用辗转相除法求最大公约数\n    pass\n\nm = int(input())\nn = int(input())\n# 请调用 gcd 并按要求输出\n"
   },
   {
    "id": "code-l4-002",
@@ -5894,7 +5950,8 @@ window.BANK = {
     "函数",
     "可变参数",
     "解包"
-   ]
+   ],
+   "local_code": "def my_sum(*args):\n    pass\n\nnums = list(map(int, input().split()))\n# 请用 *nums 解包调用 my_sum 并输出结果\n"
   },
   {
    "id": "code-l4-003",
@@ -5923,7 +5980,8 @@ window.BANK = {
     "map",
     "filter",
     "lambda"
-   ]
+   ],
+   "local_code": "# 用 filter 筛选长度>=4 的单词，再用 map 转大写\n"
   },
   {
    "id": "code-l4-004",
@@ -5952,7 +6010,8 @@ window.BANK = {
     "递归",
     "函数",
     "阶乘"
-   ]
+   ],
+   "local_code": "def fact(n):\n    pass\n\ndef fib(n):\n    pass\n\nn = int(input())\nprint(fact(n))\nprint(fib(n))\n"
   },
   {
    "id": "code-l5-002",
@@ -5987,7 +6046,9 @@ window.BANK = {
     "文件",
     "CSV",
     "统计"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.csv，统计输入科目的平均分与最高分学生\n"
   },
   {
    "id": "code-l5-003",
@@ -6018,7 +6079,9 @@ window.BANK = {
     "文件",
     "词频统计",
     "字典"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.txt，统计每个单词出现次数，输出前 3 名\n"
   },
   {
    "id": "code-l5-004",
@@ -6053,7 +6116,9 @@ window.BANK = {
     "文件",
     "CSV",
     "最值"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.csv，统计输入月份的销量最高品牌与总销量\n"
   },
   {
    "id": "code-l5-005",
@@ -6088,7 +6153,9 @@ window.BANK = {
     "文件",
     "字符串",
     "去重"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.log，统计输入状态码的出现次数与涉及的 IP\n"
   },
   {
    "id": "code-l5-006",
@@ -6123,7 +6190,9 @@ window.BANK = {
     "文件",
     "字典",
     "排序"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 合并 goods1.csv 与 goods2.csv，按价格降序输出全部商品\n"
   },
   {
    "id": "code-l5-007",
@@ -6154,7 +6223,9 @@ window.BANK = {
     "文件",
     "字符串",
     "统计"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.txt，分类统计大写/小写/数字/其他字符\n"
   },
   {
    "id": "code-l5-008",
@@ -6185,7 +6256,9 @@ window.BANK = {
     "文件",
     "CSV",
     "分段统计"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.csv，分段统计人数并输出不及格名单\n"
   },
   {
    "id": "code-l5-009",
@@ -6224,7 +6297,9 @@ window.BANK = {
     "文件",
     "字符串",
     "加密"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "# 读入 data.txt 逐行加密，打印并写入 out.txt\n"
   },
   {
    "id": "code-l6-001",
@@ -6253,7 +6328,8 @@ window.BANK = {
     "random",
     "string",
     "循环"
-   ]
+   ],
+   "local_code": "import random\nimport string\n\n# 读入种子和长度 n，先 random.seed(种子)，再用 random.choice 从固定字符池依次取 n 个字符\n"
   },
   {
    "id": "code-l6-002",
@@ -6282,7 +6358,9 @@ window.BANK = {
     "循环",
     "格式化",
     "数学近似"
-   ]
+   ],
+   "cat": "calc",
+   "local_code": "# 读入 n，循环累加莱布尼茨级数前 n 项，输出 4*s（保留 6 位小数）\n"
   },
   {
    "id": "code-l6-003",
@@ -6311,7 +6389,8 @@ window.BANK = {
     "calendar",
     "闰年",
     "列表"
-   ]
+   ],
+   "local_code": "import calendar\n\n# 读入年、月，用 calendar.isleap 判断闰年，用手写天数表输出该月天数\n"
   },
   {
    "id": "code-l6-004",
@@ -6343,7 +6422,9 @@ window.BANK = {
     "turtle",
     "循环",
     "图形"
-   ]
+   ],
+   "cat": "draw",
+   "local_code": "import turtle\n\nn = int(input())\nd = int(input())\nt = turtle.Turtle()\n# 请补全：设红色画笔，循环画 n 条边（每条边后右转 360/n 度），最后打印三行验证信息\n"
   },
   {
    "id": "code-l7-001",
@@ -6368,7 +6449,9 @@ window.BANK = {
     "re",
     "正则",
     "字符串"
-   ]
+   ],
+   "cat": "text",
+   "local_code": "import re\n\ntext = \"请联系张先生，电话 13812345678；备用邮箱 zhang_wei@example.com，也可拨打 15901234567 或 150。李女士的电话是 18765432109，邮箱 li_miss@163.com 不必回复。应急电话 010-62785000 为座机。\"\n# 请补全：用 re 找出 text 中所有手机号并逐行输出\n"
   },
   {
    "id": "code-l7-002",
@@ -6393,7 +6476,9 @@ window.BANK = {
     "json",
     "字典",
     "统计"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "import json\n\ndata_str = '[{\"name\": \"张伟\", \"score\": 85}, {\"name\": \"李娜\", \"score\": 92}, {\"name\": \"王强\", \"score\": 78}, {\"name\": \"刘洋\", \"score\": 90}, {\"name\": \"陈静\", \"score\": 88}]'\n# 请补全：解析 JSON，输出平均分（2 位小数）与最高分学生姓名\n"
   },
   {
    "id": "code-l7-003",
@@ -6418,7 +6503,9 @@ window.BANK = {
     "json",
     "CSV",
     "循环"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "import json\n\ndata_str = '[{\"name\": \"apple\", \"price\": 5}, {\"name\": \"milk\", \"price\": 12}, {\"name\": \"bread\", \"price\": 8}, {\"name\": \"egg\", \"price\": 15}, {\"name\": \"coffee\", \"price\": 30}]'\n# 请补全：解析 JSON，按 CSV 格式输出（首行 name,price）\n"
   },
   {
    "id": "code-l7-004",
@@ -6454,7 +6541,9 @@ window.BANK = {
     "SQLite",
     "SQL 查询",
     "聚合统计"
-   ]
+   ],
+   "cat": "db",
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect('c:/素材/sales.db')\ncur = conn.cursor()\n# 1. 输入商品名，用参数化查询取回该商品所有记录的 qty、price\n# 2. 有记录：输出总销售额（保留2位）与最大单笔数量\n# 3. 无记录：输出 无该商品记录\n"
   },
   {
    "id": "code-l7-005",
@@ -6484,7 +6573,9 @@ window.BANK = {
     "SQLite",
     "建表插入",
     "排序查询"
-   ]
+   ],
+   "cat": "db",
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect(':memory:')\ncur = conn.cursor()\n# 1. 建表 student(name TEXT, score INTEGER)\n# 2. 循环 3 次读入“姓名 分数”并 INSERT（用 ? 占位）\n# 3. conn.commit() 后按 score 降序 SELECT，逐行输出\n"
   },
   {
    "id": "code-l7-006",
@@ -6519,7 +6610,9 @@ window.BANK = {
     "re",
     "正则分组",
     "文件"
-   ]
+   ],
+   "cat": "text",
+   "local_code": "import re\n\nlevel = input()\n# 逐行读取 app.log，用 re.match 拆出 日期、时间、级别、消息\n# 统计该级别条数，并记录最后一条的“日期 时间”\n"
   },
   {
    "id": "code-l7-007",
@@ -6549,7 +6642,9 @@ window.BANK = {
     "re",
     "正则分组",
     "排序"
-   ]
+   ],
+   "cat": "text",
+   "local_code": "import re\n\ntext = input()\n# 用 re.findall 配合分组 (数字)(单位) 提取全部片段\n# 按数字值从小到大排序后逐行输出原始片段\n"
   },
   {
    "id": "code-l7-008",
@@ -6579,7 +6674,8 @@ window.BANK = {
     "面向对象",
     "类与实例",
     "方法"
-   ]
+   ],
+   "local_code": "class BankAccount:\n    def __init__(self, owner, balance):\n        pass\n\n    def deposit(self, amount):\n        pass\n\n    def withdraw(self, amount):\n        pass\n\nbalance = int(input())\nacc = BankAccount('小明', balance)\nacc.deposit(200)\nacc.withdraw(450)\nacc.withdraw(300)\n"
   },
   {
    "id": "code-l7-009",
@@ -6609,7 +6705,8 @@ window.BANK = {
     "面向对象",
     "继承",
     "多态"
-   ]
+   ],
+   "local_code": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return '...'\n\nclass Dog(Animal):\n    pass\n\nclass Cat(Animal):\n    pass\n\nn = int(input())\nanimals = []\nfor i in range(n):\n    t, name = input().split()\n    if t == 'dog':\n        animals.append(Dog(name))\n    else:\n        animals.append(Cat(name))\nfor a in animals:\n    print('{}的叫声是{}'.format(a.name, a.speak()))\n"
   },
   {
    "id": "code-l7-010",
@@ -6651,7 +6748,9 @@ window.BANK = {
     "matplotlib",
     "数据可视化",
     "求最值"
-   ]
+   ],
+   "cat": "draw",
+   "local_code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nn = int(input())\nys = list(map(int, input().split()))\n# 1. 构造月份列表 xs = 1..n，plt.plot(xs, ys, 'o-') 后 plt.savefig('sales.png')\n# 2. 逐行输出每月销售额，最后输出最高销售额的月份\n"
   },
   {
    "id": "code-l7-011",
@@ -6686,7 +6785,9 @@ window.BANK = {
     "json",
     "过滤",
     "排序统计"
-   ]
+   ],
+   "cat": "data",
+   "local_code": "import json\n\nitems = json.load(open('c:/素材/data.json', encoding='utf-8'))\nk = int(input())\nn = int(input())\n# 1. 列表解析筛选 sales >= k 的商品\n# 2. 按 sales 降序排序，输出前 n 个“名称 销量”\n# 3. 输出全部符合条件商品的平均价格（保留2位）\n"
   },
   {
    "id": "code-l7-012",
@@ -6721,7 +6822,9 @@ window.BANK = {
     "re",
     "字典",
     "文件"
-   ]
+   ],
+   "cat": "text",
+   "local_code": "import re\n\nt = float(input())\nhtml = open('c:/素材/books.html', encoding='utf-8').read()\n# 1. 用 re.findall 提取 (书名, 价格) 列表\n# 2. 按文件顺序输出价格 >= t 的“书名 价格”\n# 3. 输出全部书的平均价格与最贵的书\n"
   },
   {
    "id": "code-l4-005",
@@ -6751,7 +6854,8 @@ window.BANK = {
     "递归",
     "全排列",
     "切片"
-   ]
+   ],
+   "local_code": "def perm(chars, prefix):\n    # 递归生成并输出全排列\n    pass\n\ns = sorted(input())\nperm(s, '')\n"
   },
   {
    "id": "code-l4-006",
@@ -6781,10 +6885,428 @@ window.BANK = {
     "递归",
     "整数分解",
     "默认参数"
-   ]
+   ],
+   "local_code": "def digit_sum(n):\n    # 递归返回 n 的各位数字之和\n    pass\n\ndef rev(n, acc=0):\n    # 递归返回 n 的逆序数\n    pass\n\nn = int(input())\nprint(digit_sum(n))\nprint(rev(n))\n"
+  },
+  {
+   "id": "code-t3-001",
+   "cat": "draw",
+   "level": 7,
+   "difficulty": 2,
+   "title": "图形绘制：y=3sin(x)+sin(2x) 向 y 轴的水平线",
+   "desc": "用 turtle 绘制：先用**黑色**实线画过原点的横轴和纵轴（长度自定，各不少于 300 像素）；再在 −π~π 范围内以步长 0.05 取 x，计算 y = 3sin(x) + sin(2x)，从 y 轴上的点 (0, 30y) 到数据点 (30x, 30y) 画一条**蓝色**水平线（横、纵坐标都放大 30 倍）。正式考试可用 tkinter、matplotlib 或 turtle；本站判题检查实际画出的坐标轴和水平线，不需要 print。",
+   "starter": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 黑色坐标轴\n# 2. x 从 -math.pi 到 math.pi、步长 0.05：t.goto(0, 30*y) 抬笔到 y 轴，再落笔 t.goto(30*x, 30*y)\n",
+   "ref": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\nt.pencolor('black')\nt.penup(); t.goto(-180, 0); t.pendown(); t.goto(180, 0)\nt.penup(); t.goto(0, 160); t.pendown(); t.goto(0, -160)\nt.pencolor('blue')\nx = -math.pi\nwhile x <= math.pi:\n    y = 3 * math.sin(x) + math.sin(2 * x)\n    t.penup()\n    t.goto(0, 30 * y)\n    t.pendown()\n    t.goto(30 * x, 30 * y)\n    x += 0.05\nt.hideturtle()\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expectCanvas": true,
+     "check": "check_function_hlines(segs, mpl, lambda x: 3 * math.sin(x) + math.sin(2 * x), -math.pi, math.pi, 0.05, axis_color='black', line_color='blue')"
+    }
+   ],
+   "hint": "颜色换成 black / blue；循环用 while x <= math.pi，最后 x += 0.05。",
+   "exp": "考查 turtle 坐标定位、抬笔落笔与函数数据点的放大绘制（与官方 27A 编程 3 同类）。",
+   "tags": [
+    "图形绘制"
+   ],
+   "local_code": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 黑色坐标轴\n# 2. x 从 -math.pi 到 math.pi、步长 0.05：t.goto(0, 30*y) 抬笔到 y 轴，再落笔 t.goto(30*x, 30*y)\n"
+  },
+  {
+   "id": "code-t3-002",
+   "cat": "draw",
+   "level": 7,
+   "difficulty": 2,
+   "title": "图形绘制：y=0.5x²−2 向 x 轴的竖线",
+   "desc": "用 turtle 绘制：先用**绿色**实线画过原点的横轴和纵轴（各不少于 300 像素）；在 −3~3 范围内以步长 0.1 取 x，计算 y = 0.5x² − 2，从 x 轴上的点 (40x, 0) 到数据点 (40x, 40y) 画一条**红色**竖线（横、纵坐标都放大 40 倍）。判题检查实际画出的图形，不需要 print。",
+   "starter": "import turtle\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴\n# 2. x 从 -3 到 3、步长 0.1：t.goto(40*x, 0) 抬笔到 x 轴，再落笔 t.goto(40*x, 40*y)\n",
+   "ref": "import turtle\n\nt = turtle.Turtle()\nt.speed(0)\nt.pencolor('green')\nt.penup(); t.goto(-170, 0); t.pendown(); t.goto(170, 0)\nt.penup(); t.goto(0, 170); t.pendown(); t.goto(0, -170)\nt.pencolor('red')\ni = -30\nwhile i <= 30:\n    x = i / 10\n    y = 0.5 * x * x - 2\n    t.penup()\n    t.goto(40 * x, 0)\n    t.pendown()\n    t.goto(40 * x, 40 * y)\n    i += 1\nt.hideturtle()\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expectCanvas": true,
+     "check": "check_function_hlines(segs, mpl, lambda x: 0.5 * x * x - 2, -3, 3, 0.1, scales=(40, 1), to='x')"
+    }
+   ],
+   "hint": "用整数 i 从 -30 到 30 再 x = i/10，可以避免小数累加误差导致少画最后一条线。",
+   "exp": "考查函数图像的另一种画法（向 x 轴作竖线）与浮点步长的处理。",
+   "tags": [
+    "图形绘制"
+   ],
+   "local_code": "import turtle\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴\n# 2. x 从 -3 到 3、步长 0.1：t.goto(40*x, 0) 抬笔到 x 轴，再落笔 t.goto(40*x, 40*y)\n"
+  },
+  {
+   "id": "code-t3-003",
+   "cat": "draw",
+   "level": 7,
+   "difficulty": 2,
+   "title": "图形绘制：matplotlib 画衰减余弦曲线",
+   "desc": "用 matplotlib 在 0~10 范围内以步长 0.01 取 x，画出函数 y = e^(−x/3)·cos(2x) 的**红色**曲线，加上标题和网格，并用 `plt.savefig('curve.png')` 保存图片。判题检查曲线上的点是否都满足函数式、点数与 x 范围是否足够，以及 curve.png 是否真的保存了。",
+   "starter": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport math\n\n# 1. 生成 xs（0~10，步长 0.01）和 ys\n# 2. plt.plot(xs, ys, color='red')，加标题、网格\n# 3. plt.savefig('curve.png')\n",
+   "ref": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport math\n\nxs = [i / 100 for i in range(0, 1001)]\nys = [math.exp(-x / 3) * math.cos(2 * x) for x in xs]\nplt.plot(xs, ys, color='red')\nplt.title('y = e^(-x/3) * cos(2x)')\nplt.grid(True)\nplt.savefig('curve.png')\n",
+   "tests": [
+    {
+     "stdin": "",
+     "cleanup": [
+      "curve.png"
+     ],
+     "check": "check_mpl_curve(mpl, lambda x: math.exp(-x / 3) * math.cos(2 * x), 0, 10, color='red')\ncheck_png('curve.png')"
+    }
+   ],
+   "hint": "列表推导式生成 xs、ys；math.exp(-x/3) 是 e 的 −x/3 次方。",
+   "exp": "考查 matplotlib 折线绘制函数曲线、图形保存。",
+   "tags": [
+    "图形绘制"
+   ],
+   "local_code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport math\n\n# 1. 生成 xs（0~10，步长 0.01）和 ys\n# 2. plt.plot(xs, ys, color='red')，加标题、网格\n# 3. plt.savefig('curve.png')\n"
+  },
+  {
+   "id": "code-t3-004",
+   "cat": "text",
+   "level": 7,
+   "difficulty": 3,
+   "title": "文本分析：正则提取新闻标题写 GBK CSV",
+   "desc": "news.html（UTF-8）是学校新闻页，新闻条目形如 `<a class=\"news\" href=\"/news/2026/1101.html\"> 标题 </a>`（标题前后可能有空格），页面里还有导航、广告等其它链接。用正则只提取 class 为 news 的条目：标题去掉首尾空格，链接前面补上 `https://www.example.edu.cn`。把结果写入 news.csv（**GBK 编码**，首行 `标题,链接`），屏幕上输出 `共N条新闻`。",
+   "files": [
+    {
+     "name": "news.html",
+     "content": "<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"><title>校园新闻</title></head>\n<body>\n<div class=\"nav\"><a href=\"/index.html\">首页</a> <a href=\"/about.html\">关于我们</a></div>\n<ul class=\"list\">\n  <li><a class=\"news\" href=\"/news/2026/1101.html\"> 我校学子获全国大学生数学建模竞赛一等奖 </a><span>2026-11-01</span></li>\n  <li><a class=\"news\" href=\"/news/2026/1103.html\">图书馆延长期末开放时间</a><span>2026-11-03</span></li>\n  <li><a class=\"ad\" href=\"https://ads.example.com/x\">【广告】考研冲刺班</a></li>\n  <li><a class=\"news\" href=\"/news/2026/1105.html\">信息技术水平考试考前须知</a><span>2026-11-05</span></li>\n  <li><a class=\"news\" href=\"/news/2026/1108.html\"> 秋季运动会圆满落幕 </a><span>2026-11-08</span></li>\n</ul>\n<div class=\"foot\"><a href=\"/contact.html\">联系我们</a></div>\n</body></html>\n"
+    }
+   ],
+   "starter": "import re\n\nhtml = open('news.html', encoding='utf-8').read()\n# 1. re.findall 只匹配 class=\"news\" 的 <a> 标签，取出链接和标题\n# 2. 写 news.csv（encoding='gbk'），首行 标题,链接\n# 3. print('共N条新闻')\n",
+   "ref": "import re\n\nhtml = open('news.html', encoding='utf-8').read()\nitems = re.findall(r'<a class=\"news\" href=\"([^\"]+)\">(.*?)</a>', html)\nf = open('news.csv', 'w', encoding='gbk')\nf.write('标题,链接\\n')\nfor url, title in items:\n    f.write(title.strip() + ',https://www.example.edu.cn' + url + '\\n')\nf.close()\nprint('共{}条新闻'.format(len(items)))\n",
+   "tests": [
+    {
+     "stdin": "",
+     "cleanup": [
+      "news.csv"
+     ],
+     "check": "check_lines('news.csv', [\"标题,链接\", \"我校学子获全国大学生数学建模竞赛一等奖,https://www.example.edu.cn/news/2026/1101.html\", \"图书馆延长期末开放时间,https://www.example.edu.cn/news/2026/1103.html\", \"信息技术水平考试考前须知,https://www.example.edu.cn/news/2026/1105.html\", \"秋季运动会圆满落幕,https://www.example.edu.cn/news/2026/1108.html\"], encoding='gbk')",
+     "expected": "共4条新闻"
+    }
+   ],
+   "hint": "非贪婪 (.*?) 取标题；写文件 open('news.csv', 'w', encoding='gbk')。",
+   "exp": "考查正则分组提取、字符串处理与指定编码写文件（与官方 27A 编程 5 同类）。",
+   "tags": [
+    "正则",
+    "文件"
+   ],
+   "local_code": "import re\n\nhtml = open('c:/素材/news.html', encoding='utf-8').read()\n# 1. re.findall 只匹配 class=\"news\" 的 <a> 标签，取出链接和标题\n# 2. 写 news.csv（encoding='gbk'），首行 标题,链接\n# 3. print('共N条新闻')\n"
+  },
+  {
+   "id": "code-t3-005",
+   "cat": "text",
+   "level": 7,
+   "difficulty": 2,
+   "title": "文本分析：提取邮箱并去重写文件",
+   "desc": "contacts.txt（UTF-8）是一段通知文字，里面夹杂着若干邮箱。用正则提取所有邮箱（形如 `用户名@域名`，用户名可含字母、数字、点、下划线和减号，域名至少含一个点），全部转成小写后按首次出现的顺序去重。把结果每行一个写入 emails.txt（UTF-8），屏幕上输出 `提取到N个邮箱`。",
+   "files": [
+    {
+     "name": "contacts.txt",
+     "content": "各位同学：报名请发邮件到 Signup@Example.edu.cn，咨询可联系张老师 zhang.wei@example.edu.cn\n或李老师（li_na2026@mail.example.com）。重复提醒：报名邮箱 signup@example.edu.cn 。\n无效写法如 abc@ 或 @example.com 不算邮箱；teacher-wang@school.cn 也可以联系。\n"
+    }
+   ],
+   "starter": "import re\n\ntext = open('contacts.txt', encoding='utf-8').read()\n# 1. re.findall 提取邮箱\n# 2. 转小写、按出现顺序去重\n# 3. 写 emails.txt，输出数量\n",
+   "ref": "import re\n\ntext = open('contacts.txt', encoding='utf-8').read()\nfound = re.findall(r'[A-Za-z0-9._-]+@[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)+', text)\nresult = []\nfor e in found:\n    e = e.lower()\n    if e not in result:\n        result.append(e)\nf = open('emails.txt', 'w', encoding='utf-8')\nfor e in result:\n    f.write(e + '\\n')\nf.close()\nprint('提取到{}个邮箱'.format(len(result)))\n",
+   "tests": [
+    {
+     "stdin": "",
+     "cleanup": [
+      "emails.txt"
+     ],
+     "check": "check_lines('emails.txt', [\"signup@example.edu.cn\", \"zhang.wei@example.edu.cn\", \"li_na2026@mail.example.com\", \"teacher-wang@school.cn\"], encoding='utf-8')",
+     "expected": "提取到4个邮箱"
+    }
+   ],
+   "hint": "域名部分用 (?:\\.[A-Za-z0-9-]+)+ 保证至少一个点；去重用列表 + not in 保持顺序。",
+   "exp": "考查正则字符集、非捕获分组与去重。",
+   "tags": [
+    "正则",
+    "文件"
+   ],
+   "local_code": "import re\n\ntext = open('c:/素材/contacts.txt', encoding='utf-8').read()\n# 1. re.findall 提取邮箱\n# 2. 转小写、按出现顺序去重\n# 3. 写 emails.txt，输出数量\n"
+  },
+  {
+   "id": "code-t3-006",
+   "cat": "text",
+   "level": 7,
+   "difficulty": 3,
+   "title": "文本分析：日志中 404 访问的 IP 统计",
+   "desc": "access.log（UTF-8）每行是一条网站访问记录，开头是 IP，引号后面是状态码，例如 `10.0.0.5 - - [06/Nov/2026:09:00:03] \"GET /missing.png HTTP/1.1\" 404 0`。用正则找出状态码为 404 的记录，统计每个 IP 出现的次数，按次数从多到少（次数相同按首次出现先后）写入 report.csv（**GBK 编码**，首行 `IP,次数`），屏幕上输出次数最多的 `IP 次数`。注意：路径里出现 404 字样但状态码不是 404 的不算。",
+   "files": [
+    {
+     "name": "access.log",
+     "content": "192.168.1.10 - - [06/Nov/2026:09:00:01] \"GET /index.html HTTP/1.1\" 200 1024\n10.0.0.5 - - [06/Nov/2026:09:00:03] \"GET /missing.png HTTP/1.1\" 404 0\n192.168.1.10 - - [06/Nov/2026:09:01:12] \"GET /old.html HTTP/1.1\" 404 0\n172.16.3.8 - - [06/Nov/2026:09:02:30] \"POST /login HTTP/1.1\" 302 0\n10.0.0.5 - - [06/Nov/2026:09:03:44] \"GET /a/b.css HTTP/1.1\" 404 0\n10.0.0.5 - - [06/Nov/2026:09:04:10] \"GET /favicon.ico HTTP/1.1\" 404 0\n172.16.3.8 - - [06/Nov/2026:09:05:00] \"GET /nope HTTP/1.1\" 404 0\n192.168.1.10 - - [06/Nov/2026:09:06:21] \"GET /404test HTTP/1.1\" 200 512\n"
+    }
+   ],
+   "starter": "import re\n\nlines = open('access.log', encoding='utf-8').read().split('\\n')\n# 1. 对每行用正则取出 IP 和状态码\n# 2. 状态码为 404 的按 IP 计数\n# 3. 排序后写 report.csv（GBK），输出最多的 IP 和次数\n",
+   "ref": "import re\n\ncount = {}\nfor line in open('access.log', encoding='utf-8'):\n    m = re.match(r'(\\d+\\.\\d+\\.\\d+\\.\\d+) .*\" (\\d{3}) ', line)\n    if m and m.group(2) == '404':\n        ip = m.group(1)\n        count[ip] = count.get(ip, 0) + 1\nrows = sorted(count.items(), key=lambda x: x[1], reverse=True)\nf = open('report.csv', 'w', encoding='gbk')\nf.write('IP,次数\\n')\nfor ip, n in rows:\n    f.write(ip + ',' + str(n) + '\\n')\nf.close()\nprint(rows[0][0], rows[0][1])\n",
+   "tests": [
+    {
+     "stdin": "",
+     "cleanup": [
+      "report.csv"
+     ],
+     "check": "check_lines('report.csv', [\"IP,次数\", \"10.0.0.5,3\", \"192.168.1.10,1\", \"172.16.3.8,1\"], encoding='gbk')",
+     "expected": "10.0.0.5 3"
+    }
+   ],
+   "hint": "状态码在右引号后面：\" (\\d{3}) ；re.match 从行首匹配 IP。",
+   "exp": "考查正则分组、字典计数、稳定排序与 GBK 写文件。",
+   "tags": [
+    "正则",
+    "文件"
+   ],
+   "local_code": "import re\n\nlines = open('c:/素材/access.log', encoding='utf-8').read().split('\\n')\n# 1. 对每行用正则取出 IP 和状态码\n# 2. 状态码为 404 的按 IP 计数\n# 3. 排序后写 report.csv（GBK），输出最多的 IP 和次数\n"
+  },
+  {
+   "id": "code-t3-007",
+   "cat": "db",
+   "level": 7,
+   "difficulty": 2,
+   "title": "数据库应用：按作者查书并借阅",
+   "desc": "library.db（SQLite）中有表 books：id、title（书名）、author（作者）、stock（库存）。第一行输入作者名，按 id 顺序输出该作者的每本书 `书名 库存`（没有则输出 `没有该作者的书`）。第二行输入要借的书名：不存在输出 `无此书`；库存为 0 输出 `库存不足`；否则库存减 1 并**提交**，输出 `借阅成功，剩余N本`。判题会在程序结束后重新打开数据库，检查库存是否真的改了。",
+   "files": [
+    {
+     "name": "library.db",
+     "content": "U1FMaXRlIGZvcm1hdCAzABAAAQEAQCAgAAAABgAAAAIAAAAAAAAAAAAAAAEAAAAEAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAC6N+A0AAAABD5UAD5UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABpAQcXFxcBgTF0YWJsZWJvb2tzYm9va3MCQ1JFQVRFIFRBQkxFIGJvb2tzKGlkIElOVEVHRVIgUFJJTUFSWSBLRVksIHRpdGxlIFRFWFQsIGF1dGhvciBURVhULCBzdG9jayBJTlRFR0VSKQ0AAAAFD4cAD+wPzQ+3D5oPhwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEFBQAZGQnkurrnlJ/ot6/pgaUbBAUAKxkB5bmz5Yeh55qE5LiW55WM6Lev6YGlAxQDBQAZHwnlm7Tln47pkrHplLrkuaYdAgUAMRkI6K645LiJ6KeC5Y2W6KGA6K6w5L2Z5Y2OEgEFABkZAea0u+edgOS9meWNjgI=",
+     "b64": true
+    }
+   ],
+   "starter": "import sqlite3\n\nconn = sqlite3.connect('library.db')\ncur = conn.cursor()\nauthor = input()\ntitle = input()\n# 1. 查询该作者的书\n# 2. 借书：查库存 → UPDATE → conn.commit()\nconn.close()\n",
+   "ref": "import sqlite3\n\nconn = sqlite3.connect('library.db')\ncur = conn.cursor()\nauthor = input()\ncur.execute('SELECT title, stock FROM books WHERE author=? ORDER BY id', (author,))\nrows = cur.fetchall()\nif rows:\n    for t, s in rows:\n        print(t, s)\nelse:\n    print('没有该作者的书')\ntitle = input()\ncur.execute('SELECT stock FROM books WHERE title=?', (title,))\nrow = cur.fetchone()\nif row is None:\n    print('无此书')\nelif row[0] == 0:\n    print('库存不足')\nelse:\n    cur.execute('UPDATE books SET stock=stock-1 WHERE title=?', (title,))\n    conn.commit()\n    print('借阅成功，剩余{}本'.format(row[0] - 1))\nconn.close()\n",
+   "tests": [
+    {
+     "stdin": "余华\n活着\n",
+     "check": "check_db_rows('library.db', \"SELECT stock FROM books WHERE title='活着'\", [(1,)], hint='借阅成功后要 UPDATE 库存并 conn.commit()')",
+     "expected": "活着 2\n许三观卖血记 0\n借阅成功，剩余1本"
+    },
+    {
+     "stdin": "余华\n许三观卖血记\n",
+     "check": "check_db_rows('library.db', 'SELECT SUM(stock) FROM books', [(7,)], hint='库存不足时不应修改数据库')",
+     "expected": "活着 2\n许三观卖血记 0\n库存不足"
+    },
+    {
+     "stdin": "莫言\n围城\n",
+     "check": "check_db_rows('library.db', \"SELECT stock FROM books WHERE title='围城'\", [(0,)], hint='借阅成功后要 UPDATE 库存并 conn.commit()')",
+     "expected": "没有该作者的书\n借阅成功，剩余0本"
+    }
+   ],
+   "hint": "UPDATE books SET stock=stock-1 WHERE title=? 之后一定要 conn.commit()。",
+   "exp": "考查参数化查询、fetchall/fetchone、UPDATE 与事务提交。",
+   "tags": [
+    "SQLite",
+    "数据库"
+   ],
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect('c:/素材/library.db')\ncur = conn.cursor()\nauthor = input()\ntitle = input()\n# 1. 查询该作者的书\n# 2. 借书：查库存 → UPDATE → conn.commit()\nconn.close()\n"
+  },
+  {
+   "id": "code-t3-008",
+   "cat": "db",
+   "level": 7,
+   "difficulty": 3,
+   "title": "数据库应用：CSV 成绩导入并按班统计",
+   "desc": "scores.csv（UTF-8，有标题行：姓名,班级,成绩）是一批成绩；score.db（SQLite）中已建好空表 score(name, cls, score)。把 CSV 中的每条记录插入 score 表并**提交**，然后用 SQL 按班级分组求平均分，按班级名升序输出 `班级 平均分`（保留 1 位小数），最后输出 `共导入N条`。",
+   "files": [
+    {
+     "name": "scores.csv",
+     "content": "姓名,班级,成绩\n王一,2班,78\n李二,1班,92\n张三,2班,85\n赵四,1班,67\n钱五,3班,88\n孙六,2班,90\n"
+    },
+    {
+     "name": "score.db",
+     "content": "U1FMaXRlIGZvcm1hdCAzABAAAQEAQCAgAAAAAQAAAAIAAAAAAAAAAAAAAAEAAAAEAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAC6N+A0AAAABD7IAD7IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwBBhcXFwF5dGFibGVzY29yZXNjb3JlAkNSRUFURSBUQUJMRSBzY29yZShuYW1lIFRFWFQsIGNscyBURVhULCBzY29yZSBJTlRFR0VSKQ0AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+     "b64": true
+    }
+   ],
+   "starter": "import sqlite3\n\nconn = sqlite3.connect('score.db')\ncur = conn.cursor()\n# 1. 读 scores.csv（跳过标题行），逐条 INSERT\n# 2. conn.commit()\n# 3. SELECT cls, AVG(score) ... GROUP BY cls ORDER BY cls\nconn.close()\n",
+   "ref": "import sqlite3\n\nconn = sqlite3.connect('score.db')\ncur = conn.cursor()\nn = 0\nf = open('scores.csv', encoding='utf-8')\nf.readline()\nfor line in f:\n    line = line.strip()\n    if not line:\n        continue\n    name, cls, score = line.split(',')\n    cur.execute('INSERT INTO score VALUES (?, ?, ?)', (name, cls, int(score)))\n    n += 1\nf.close()\nconn.commit()\ncur.execute('SELECT cls, AVG(score) FROM score GROUP BY cls ORDER BY cls')\nfor cls, avg in cur.fetchall():\n    print(cls, '{:.1f}'.format(avg))\nprint('共导入{}条'.format(n))\nconn.close()\n",
+   "tests": [
+    {
+     "stdin": "",
+     "check": "check_db_rows('score.db', 'SELECT COUNT(*), SUM(score) FROM score', [(6, 500)], hint='6 条记录都要 INSERT 并 conn.commit()，成绩存成整数')",
+     "expected": "1班 79.5\n2班 84.3\n3班 88.0\n共导入6条"
+    }
+   ],
+   "hint": "GROUP BY cls 分组、AVG(score) 求平均；插入完记得 commit。",
+   "exp": "考查文件读取、批量 INSERT、事务提交与 GROUP BY 聚合查询。",
+   "tags": [
+    "SQLite",
+    "数据库"
+   ],
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect('c:/素材/score.db')\ncur = conn.cursor()\n# 1. 读 scores.csv（跳过标题行），逐条 INSERT\n# 2. conn.commit()\n# 3. SELECT cls, AVG(score) ... GROUP BY cls ORDER BY cls\nconn.close()\n"
+  },
+  {
+   "id": "code-t3-009",
+   "cat": "db",
+   "level": 7,
+   "difficulty": 2,
+   "title": "数据库应用：删除过期会员",
+   "desc": "members.db（SQLite）中有表 member：id、name、expire（到期日，格式 YYYY-MM-DD）。输入一个日期（同样格式），删除到期日**早于**该日期的会员并**提交**，输出 `删除N人，剩余M人`，再按 id 顺序输出剩余会员的 `姓名 到期日`。（YYYY-MM-DD 格式的字符串可以直接比较大小。）",
+   "files": [
+    {
+     "name": "members.db",
+     "content": "U1FMaXRlIGZvcm1hdCAzABAAAQEAQCAgAAAABgAAAAIAAAAAAAAAAAAAAAEAAAAEAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAC6N+A0AAAABD6IAD6IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXAEHFxkZAYETdGFibGVtZW1iZXJtZW1iZXICQ1JFQVRFIFRBQkxFIG1lbWJlcihpZCBJTlRFR0VSIFBSSU1BUlkgS0VZLCBuYW1lIFRFWFQsIGV4cGlyZSBURVhUKQ0AAAAFD6EAD+0P2g/HD7QPoQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQUEABMh5oiKMjAyNi0xMS0wNREEBAATIeS4gTIwMjctMDYtMzARAwQAEyHkuJkyMDI1LTEyLTMxEQIEABMh5LmZMjAyNi0xMS0zMBEBBAATIeeUsjIwMjYtMDMtMzE=",
+     "b64": true
+    }
+   ],
+   "starter": "import sqlite3\n\nconn = sqlite3.connect('members.db')\ncur = conn.cursor()\nday = input()\n# 1. DELETE FROM member WHERE expire < ?\n# 2. cur.rowcount 是删除的行数；conn.commit()\n# 3. 输出剩余会员\nconn.close()\n",
+   "ref": "import sqlite3\n\nconn = sqlite3.connect('members.db')\ncur = conn.cursor()\nday = input()\ncur.execute('DELETE FROM member WHERE expire < ?', (day,))\nremoved = cur.rowcount\nconn.commit()\ncur.execute('SELECT name, expire FROM member ORDER BY id')\nrows = cur.fetchall()\nprint('删除{}人，剩余{}人'.format(removed, len(rows)))\nfor name, exp in rows:\n    print(name, exp)\nconn.close()\n",
+   "tests": [
+    {
+     "stdin": "2026-11-06\n",
+     "check": "check_db_rows('members.db', 'SELECT name FROM member ORDER BY id', [('乙',), ('丁',)], hint='DELETE 之后要 conn.commit()')",
+     "expected": "删除3人，剩余2人\n乙 2026-11-30\n丁 2027-06-30"
+    },
+    {
+     "stdin": "2026-01-01\n",
+     "check": "check_db_rows('members.db', 'SELECT COUNT(*) FROM member', [(4,)], hint='只删除到期日早于输入日期的会员')",
+     "expected": "删除1人，剩余4人\n甲 2026-03-31\n乙 2026-11-30\n丁 2027-06-30\n戊 2026-11-05"
+    },
+    {
+     "stdin": "2020-01-01\n",
+     "check": "check_db_rows('members.db', 'SELECT COUNT(*) FROM member', [(5,)], hint='没有过期会员时不应删除')",
+     "expected": "删除0人，剩余5人\n甲 2026-03-31\n乙 2026-11-30\n丙 2025-12-31\n丁 2027-06-30\n戊 2026-11-05"
+    }
+   ],
+   "hint": "DELETE 后 cur.rowcount 就是删除的条数。",
+   "exp": "考查 DELETE 条件删除、rowcount、事务提交与查询输出。",
+   "tags": [
+    "SQLite",
+    "数据库"
+   ],
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect('c:/素材/members.db')\ncur = conn.cursor()\nday = input()\n# 1. DELETE FROM member WHERE expire < ?\n# 2. cur.rowcount 是删除的行数；conn.commit()\n# 3. 输出剩余会员\nconn.close()\n"
+  },
+  {
+   "id": "code-t3-010",
+   "cat": "calc",
+   "level": 6,
+   "difficulty": 2,
+   "title": "第三方包运算：单利与复利（Growth 包）",
+   "desc": "考场提供第三方包 `growth-1.0.0-py3-none-any.whl`，需要先 `pip install` 安装（本站判题环境已内置同名模块 Growth）。`import Growth` 后可用 `Growth.simple(p, r, n)`、`Growth.compound(p, r, n)` 计算本金 p、年利率 r、n 年后的单利和复利本息和。输入一行：本金 p、年利率 r（如 0.05）、年数 n、差额 d（空格分隔）。逐年输出 `第k年 单利X 复利Y`（保留 2 位小数，k=1..n），最后输出复利比单利多出超过 d 元的第一年 `第m年起差额超过d元`；n 年内都没超过则输出 `n年内差额未超过d元`（d 按输入原样输出）。",
+   "files": [
+    {
+     "name": "Growth.py",
+     "content": "\"\"\"Growth：本金增长计算（模拟考场提供的第三方包）。\"\"\"\n\n\ndef simple(p, r, n):\n    \"\"\"单利：本金 p，年利率 r（如 0.03），n 年后的本息和\"\"\"\n    return p * (1 + r * n)\n\n\ndef compound(p, r, n):\n    \"\"\"复利：本金 p，年利率 r，n 年后的本息和\"\"\"\n    return p * (1 + r) ** n\n",
+     "wheel": {
+      "dist": "growth",
+      "version": "1.0.0",
+      "whl_name": "growth-1.0.0-py3-none-any.whl",
+      "whl_b64": "UEsDBBQAAAAIAAAAIQBge9yW2gAAAEMBAAAJAAAAR3Jvd3RoLnB5U1JSci/KLy/JeL9n1rM5a162T3y6aN7LqftfrFv4fN3093s6nq1Y+Kx7/ouG5qdzdj3rn/Bk3+zns1qer1nzZEfns2k7n/a0vt/T+bihSUlJiYuLKyU1TaE4M7cgJ1WjQEehSEchT9OKSwEIgNJPe6c+7VgJt0ah4P2enqc7twDFnve1KxQBrXq6rEnBQM/AGGgiUC5PASQ7oQ9oHVDHs8b1Tyf1gGwBGVeUWlJalKdQoKCloGGooK1QBGTkaUIdkJyfW5BfmpeCxQlLevE7gTRLNRW0gNZyAQBQSwMEFAAAAAgAAAAhABs3y0JsAAAAcQAAAB8AAABncm93dGgtMS4wLjAuZGlzdC1pbmZvL01FVEFEQVRB800tSUxJLEnUDUstKs7Mz7NSMNIz5PJLzE21Ukgvyi8vyeCCyxjqGegZcAWX5uYmFlVaKTzZ0fVk/8IXDc0KAZUlGfl5Cs/mrHk2Z9fTdfOeTe59tmLhs+75T3ta3+/pcAebo1dQ+X5PJxcAUEsDBBQAAAAIAAAAIQDFq0QuUwAAAFMAAAAcAAAAZ3Jvd3RoLTEuMC4wLmRpc3QtaW5mby9XSEVFTAvPSE3N0Q1LLSrOzM+zUjDUM+ByT81LLUosyS+yUiioLMnIzzPSLUgsLuYKys8v0fUs1g0oLUrNyUyyUigpKk3lCklMB6kz1s3Lz0vVTcyr5AIAUEsDBBQAAAAIAAAAIQDHiKmpCQAAAAcAAAAkAAAAZ3Jvd3RoLTEuMC4wLmRpc3QtaW5mby90b3BfbGV2ZWwudHh0cy/KLy/J4AIAUEsDBBQAAAAIAAAAIQAqTaXB8QAAAGUBAAAdAAAAZ3Jvd3RoLTEuMC4wLmRpc3QtaW5mby9SRUNPUkR1zM1ugjAAAOC7z1JcCxk/hx0QihDsMAYk5UJQC3SghdIw8eldlng03/3bSvGr2vWwgKmt9E/zywjs07Xc1nZGyB2NwWbm0e4RUq9yvt0H8RfeU2dpRjhQYOjGqvkPNLSGfy58Uhq/1eKD4NT13dR9tY3WOHqEs03r45ifWDme8246J8hMpPihDN4VQQFkVkIBQm/bPMR49zqHme7S4lI/oH6yqFVPeSQ7h3gZ02R93HNbT+3RpAFsCbDflkoMZc9m1q/VXb1qyWDcLAU3VW7Ox1EolImCWaFcLntM5ynUr2FQxvJWdcB6Nx+wlxx8AFZPUEsBAhQDFAAAAAgAAAAhAGB73JbaAAAAQwEAAAkAAAAAAAAAAAAAAKQBAAAAAEdyb3d0aC5weVBLAQIUAxQAAAAIAAAAIQAbN8tCbAAAAHEAAAAfAAAAAAAAAAAAAACkAQEBAABncm93dGgtMS4wLjAuZGlzdC1pbmZvL01FVEFEQVRBUEsBAhQDFAAAAAgAAAAhAMWrRC5TAAAAUwAAABwAAAAAAAAAAAAAAKQBqgEAAGdyb3d0aC0xLjAuMC5kaXN0LWluZm8vV0hFRUxQSwECFAMUAAAACAAAACEAx4ipqQkAAAAHAAAAJAAAAAAAAAAAAAAApAE3AgAAZ3Jvd3RoLTEuMC4wLmRpc3QtaW5mby90b3BfbGV2ZWwudHh0UEsBAhQDFAAAAAgAAAAhACpNpcHxAAAAZQEAAB0AAAAAAAAAAAAAAKQBggIAAGdyb3d0aC0xLjAuMC5kaXN0LWluZm8vUkVDT1JEUEsFBgAAAAAFAAUAawEAAK4DAAAAAA=="
+     }
+    }
+   ],
+   "starter": "import Growth\n\np, r, n, d = input().split()\n# 转换类型后逐年计算\n",
+   "ref": "import Growth\n\np, r, n, d = input().split()\np, r, n, dv = float(p), float(r), int(n), float(d)\nfirst = 0\nfor k in range(1, n + 1):\n    a = Growth.simple(p, r, k)\n    b = Growth.compound(p, r, k)\n    print('第{}年 单利{:.2f} 复利{:.2f}'.format(k, a, b))\n    if first == 0 and b - a > dv:\n        first = k\nif first:\n    print('第{}年起差额超过{}元'.format(first, d))\nelse:\n    print('{}年内差额未超过{}元'.format(n, d))\n",
+   "tests": [
+    {
+     "stdin": "10000 0.05 5 100\n",
+     "expected": "第1年 单利10500.00 复利10500.00\n第2年 单利11000.00 复利11025.00\n第3年 单利11500.00 复利11576.25\n第4年 单利12000.00 复利12155.06\n第5年 单利12500.00 复利12762.82\n第4年起差额超过100元"
+    },
+    {
+     "stdin": "1000 0.03 3 50\n",
+     "expected": "第1年 单利1030.00 复利1030.00\n第2年 单利1060.00 复利1060.90\n第3年 单利1090.00 复利1092.73\n3年内差额未超过50元"
+    },
+    {
+     "stdin": "5000 0.1 4 200\n",
+     "expected": "第1年 单利5500.00 复利5500.00\n第2年 单利6000.00 复利6050.00\n第3年 单利6500.00 复利6655.00\n第4年 单利7000.00 复利7320.50\n第4年起差额超过200元"
+    }
+   ],
+   "hint": "d 保留输入的字符串用于输出，比较时用 float(d)。",
+   "exp": "考查第三方包的导入与函数调用、循环与格式化输出（与官方 27A 编程 2 同类）。",
+   "tags": [
+    "第三方包",
+    "运算"
+   ],
+   "local_code": "import Growth\n\np, r, n, d = input().split()\n# 转换类型后逐年计算\n"
+  },
+  {
+   "id": "code-t3-011",
+   "cat": "calc",
+   "level": 6,
+   "difficulty": 2,
+   "title": "第三方包运算：三角形周长与面积（Geo2D 包）",
+   "desc": "考场提供第三方包 `geo2d-1.0.0-py3-none-any.whl`（本站已内置同名模块 Geo2D）：`Geo2D.dist(x1, y1, x2, y2)` 求两点距离，`Geo2D.heron(a, b, c)` 用海伦公式求面积。输入三行，每行一个点的坐标 `x y`。若面积小于 1e-9（三点共线）输出 `不能构成三角形`；否则输出两行 `周长:X`、`面积:Y`（保留 2 位小数）。",
+   "files": [
+    {
+     "name": "Geo2D.py",
+     "content": "\"\"\"Geo2D：平面几何小工具（模拟考场提供的第三方包）。\"\"\"\nimport math\n\n\ndef dist(x1, y1, x2, y2):\n    \"\"\"两点间距离\"\"\"\n    return math.hypot(x2 - x1, y2 - y1)\n\n\ndef heron(a, b, c):\n    \"\"\"海伦公式求三角形面积（三边 a、b、c）\"\"\"\n    s = (a + b + c) / 2\n    v = s * (s - a) * (s - b) * (s - c)\n    return math.sqrt(v) if v > 0 else 0.0\n",
+     "wheel": {
+      "dist": "geo2d",
+      "version": "1.0.0",
+      "whl_name": "geo2d-1.0.0-py3-none-any.whl",
+      "whl_b64": "UEsDBBQAAAAIAAAAIQBq2IQnLwEAAHcBAAAIAAAAR2VvMkQucHllj8FOwkAURff9ipdZtYoIXZroysTvaMuQNhGKnUpghyhRokmNiZqgRCEKLpqoUVOqhZ+h08KKX/C1EV04yc283Jk5cy8hZIea8vYi6HD/bd7t8+P7cHzJXxzuPfKWtwhOoqdedHo3axzy28/IOQ8nN3HnKHbdcNSOrnx+1loE7WmjSQgRjFLFtGwoKbYuCEKBFqFgMFus5TNQR9Vk3GVpQwBceD8cPcRNf379PvO68eArISQnFrX3rXJKyer1iokAGdYgpSRDPS/90HVqmWVRyYCaAe2PG314YTDgLZcHTvTaxKCz4QUf97FePHzGSokz8UGZNg5UlIYNlp8z2ARRgVVQUZoE6yCnfhV9BisgMkygSMtJ/Z006V94tmfZYlUCo4jPtyAHdJdRyGVzwjdQSwMEFAAAAAgAAAAhAGs6sPtsAAAAbwAAAB4AAABnZW8yZC0xLjAuMC5kaXN0LWluZm8vTUVUQURBVEHzTS1JTEksSdQNSy0qzszPs1Iw0jPk8kvMTbVSSE/NN0rhgksY6hnoGXAFl+bmJhZVWik82dH1ZP/CFw3NCgGVJRn5eQrP5qx5NmfX03Xznk3ufbZi4bPu+U97Wt/v6XAHGuOiV1D5fk8nFwBQSwMEFAAAAAgAAAAhAMWrRC5TAAAAUwAAABsAAABnZW8yZC0xLjAuMC5kaXN0LWluZm8vV0hFRUwLz0hNzdENSy0qzszPs1Iw1DPgck/NSy1KLMkvslIoqCzJyM8z0i1ILC7mCsrPL9H1LNYNKC1KzclMslIoKSpN5QpJTAepM9bNy89L1U3Mq+QCAFBLAwQUAAAACAAAACEA/tYnwggAAAAGAAAAIwAAAGdlbzJkLTEuMC4wLmRpc3QtaW5mby90b3BfbGV2ZWwudHh0c0/NN3LhAgBQSwMEFAAAAAgAAAAhAFUbGyz0AAAAYAEAABwAAABnZW8yZC0xLjAuMC5kaXN0LWluZm8vUkVDT1JEdczLcoIwAEDRvd8SLAES6KILNAGMxAdgLWwYHEFoLY8kw1S/vm5YMnd9j192Bln2DyDrwkD4o9j5v2EamzinCOMxZmQ/Bms2ZOK7v/nEeqqBpG7e1pEEpo0Wt9d/1eBSf3VtpNKatureOE1c4ibupCpbtkHliy1CHLbFDrUhLGTeHldB5LG6fpwu1d5inkEsACGcUc8BpeFE9mMaJtm1eurGxU7tSp434uedr0+lJqrPQ+MYiTPg1NNrDhxzRlRdn9/Lsbwv1Z+aZA61WH5llG53j4Irhw2a+VSCNawQmyPkB4ZsR9MzvLoBPANHdL2PCACLf1BLAQIUAxQAAAAIAAAAIQBq2IQnLwEAAHcBAAAIAAAAAAAAAAAAAACkAQAAAABHZW8yRC5weVBLAQIUAxQAAAAIAAAAIQBrOrD7bAAAAG8AAAAeAAAAAAAAAAAAAACkAVUBAABnZW8yZC0xLjAuMC5kaXN0LWluZm8vTUVUQURBVEFQSwECFAMUAAAACAAAACEAxatELlMAAABTAAAAGwAAAAAAAAAAAAAApAH9AQAAZ2VvMmQtMS4wLjAuZGlzdC1pbmZvL1dIRUVMUEsBAhQDFAAAAAgAAAAhAP7WJ8IIAAAABgAAACMAAAAAAAAAAAAAAKQBiQIAAGdlbzJkLTEuMC4wLmRpc3QtaW5mby90b3BfbGV2ZWwudHh0UEsBAhQDFAAAAAgAAAAhAFUbGyz0AAAAYAEAABwAAAAAAAAAAAAAAKQB0gIAAGdlbzJkLTEuMC4wLmRpc3QtaW5mby9SRUNPUkRQSwUGAAAAAAUABQBmAQAAAAQAAAAA"
+     }
+    }
+   ],
+   "starter": "import Geo2D\n\npts = []\nfor i in range(3):\n    x, y = map(float, input().split())\n    pts.append((x, y))\n",
+   "ref": "import Geo2D\n\npts = []\nfor i in range(3):\n    x, y = map(float, input().split())\n    pts.append((x, y))\na = Geo2D.dist(pts[0][0], pts[0][1], pts[1][0], pts[1][1])\nb = Geo2D.dist(pts[1][0], pts[1][1], pts[2][0], pts[2][1])\nc = Geo2D.dist(pts[2][0], pts[2][1], pts[0][0], pts[0][1])\ns = Geo2D.heron(a, b, c)\nif s < 1e-9:\n    print('不能构成三角形')\nelse:\n    print('周长:{:.2f}'.format(a + b + c))\n    print('面积:{:.2f}'.format(s))\n",
+   "tests": [
+    {
+     "stdin": "0 0\n3 0\n0 4\n",
+     "expected": "周长:12.00\n面积:6.00"
+    },
+    {
+     "stdin": "1 1\n2 2\n3 3\n",
+     "expected": "不能构成三角形"
+    },
+    {
+     "stdin": "-1 0\n1 0\n0 2.5\n",
+     "expected": "周长:7.39\n面积:2.50"
+    }
+   ],
+   "hint": "三条边分别是三对点的距离；共线时海伦公式结果为 0。",
+   "exp": "考查第三方包函数调用、列表与元组取值、条件判断。",
+   "tags": [
+    "第三方包",
+    "运算"
+   ],
+   "local_code": "import Geo2D\n\npts = []\nfor i in range(3):\n    x, y = map(float, input().split())\n    pts.append((x, y))\n"
+  },
+  {
+   "id": "code-t3-012",
+   "cat": "calc",
+   "level": 6,
+   "difficulty": 3,
+   "title": "第三方包运算：素数阶乘倒数和（MathPlus 包）",
+   "desc": "考场提供第三方包 `mathplus-1.0.0-py3-none-any.whl`（本站已内置同名模块 MathPlus）：`MathPlus.fact(n)` 求阶乘，`MathPlus.is_prime(n)` 判断素数。输入正整数 n（n ≤ 30），计算 s = Σ 1/k!（k 取 1~n 中的所有素数），输出两行：`素数个数:N`、`s=X`（X 保留 6 位小数）。",
+   "files": [
+    {
+     "name": "MathPlus.py",
+     "content": "\"\"\"MathPlus：数论小工具（模拟考场提供的第三方包）。\"\"\"\n\n\ndef fact(n):\n    \"\"\"n 的阶乘\"\"\"\n    r = 1\n    for i in range(2, n + 1):\n        r *= i\n    return r\n\n\ndef is_prime(n):\n    \"\"\"n 是否为素数\"\"\"\n    if n < 2:\n        return False\n    i = 2\n    while i * i <= n:\n        if n % i == 0:\n            return False\n        i += 1\n    return True\n",
+     "wheel": {
+      "dist": "mathplus",
+      "version": "1.0.0",
+      "whl_name": "mathplus-1.0.0-py3-none-any.whl",
+      "whl_b64": "UEsDBBQAAAAIAAAAIQAZPBX7AAEAAHUBAAALAAAATWF0aFBsdXMucHlTUlLyTSzJCMgpLX6/Z9azqRterNv1dEP/0+1Ln7Zuf7+n49mKhc+6579oaH46Z9ez/glP9s1+Pqvl+Zo1T3Z0Ppu282lP6/s9nY8bmpSUlLi4uFJS0xTSEpNLNPI0rbgUgAAonKcA1PByxrYnO2eAFIFEixRsFQzBrLT8IoVMhcw8haLEvPRUDSMdhTwFbQVDqG6IWi1bhUyIttSS0iKgUqhFmcXxBUWZuamolj2bsf7phGVPdux6vmUB0DcwKzPTgCbbKBghGQwxzS0xpzgVogToKiMwqzwjMycVyNcCYhtbhTyEJrAxqiCltgoGCGGs5kHM1IZ5FSofUlSaygUAUEsDBBQAAAAIAAAAIQD2BHIncQAAAHUAAAAhAAAAbWF0aHBsdXMtMS4wLjAuZGlzdC1pbmZvL01FVEFEQVRB800tSUxJLEnUDUstKs7Mz7NSMNIz5PJLzE21UshNLMkoyCkt5oLLGeoZ6BlwBZfm5iYWVVopPNnR9WT/whcNzQoBlSUZ+XkKz+aseTZn19N1855N7n22YuGz7vlPe1rf7+nwBZoUADRJr6Dy/Z5OLgBQSwMEFAAAAAgAAAAhAMWrRC5TAAAAUwAAAB4AAABtYXRocGx1cy0xLjAuMC5kaXN0LWluZm8vV0hFRUwLz0hNzdENSy0qzszPs1Iw1DPgck/NSy1KLMkvslIoqCzJyM8z0i1ILC7mCsrPL9H1LNYNKC1KzclMslIoKSpN5QpJTAepM9bNy89L1U3Mq+QCAFBLAwQUAAAACAAAACEANMcL1gsAAAAJAAAAJgAAAG1hdGhwbHVzLTEuMC4wLmRpc3QtaW5mby90b3BfbGV2ZWwudHh0800syQjIKS3mAgBQSwMEFAAAAAgAAAAhAOvrFxb5AAAAbwEAAB8AAABtYXRocGx1cy0xLjAuMC5kaXN0LWluZm8vUkVDT1JEfc7JkkNAAIDhe56lGU3GcshBEGFClGWQS6oNyhodemJ5+nFxzNR//+q3ECmc5neg8QyGArGf/MEMpK/GxJK+dNWkmygzuMo2DTQnYjRp1NR5HnKan2ulx4ATuF27EnglKEgza2k5EKp85N2HpfmyKvvyBsutX2alovbHenla3aO4I56HSLFNO4XSCSae0OxnnRn3GoBQeA+HZ027bCp+xRf/luYLwyZCLORDaPS1ZClBRvX5t1OKrC8++fjEFBYQ/7klHb432StraDKRDW9HPojSWydkEqkTV4ZXH4v2OXfHMg7b2ToqEJOYj9TCANJ729WUq6sCsPsDUEsBAhQDFAAAAAgAAAAhABk8FfsAAQAAdQEAAAsAAAAAAAAAAAAAAKQBAAAAAE1hdGhQbHVzLnB5UEsBAhQDFAAAAAgAAAAhAPYEcidxAAAAdQAAACEAAAAAAAAAAAAAAKQBKQEAAG1hdGhwbHVzLTEuMC4wLmRpc3QtaW5mby9NRVRBREFUQVBLAQIUAxQAAAAIAAAAIQDFq0QuUwAAAFMAAAAeAAAAAAAAAAAAAACkAdkBAABtYXRocGx1cy0xLjAuMC5kaXN0LWluZm8vV0hFRUxQSwECFAMUAAAACAAAACEANMcL1gsAAAAJAAAAJgAAAAAAAAAAAAAApAFoAgAAbWF0aHBsdXMtMS4wLjAuZGlzdC1pbmZvL3RvcF9sZXZlbC50eHRQSwECFAMUAAAACAAAACEA6+sXFvkAAABvAQAAHwAAAAAAAAAAAAAApAG3AgAAbWF0aHBsdXMtMS4wLjAuZGlzdC1pbmZvL1JFQ09SRFBLBQYAAAAABQAFAHUBAADtAwAAAAA="
+     }
+    }
+   ],
+   "starter": "import MathPlus\n\nn = int(input())\n",
+   "ref": "import MathPlus\n\nn = int(input())\ncnt = 0\ns = 0\nfor k in range(1, n + 1):\n    if MathPlus.is_prime(k):\n        cnt += 1\n        s += 1 / MathPlus.fact(k)\nprint('素数个数:{}'.format(cnt))\nprint('s={:.6f}'.format(s))\n",
+   "tests": [
+    {
+     "stdin": "10\n",
+     "expected": "素数个数:4\ns=0.675198"
+    },
+    {
+     "stdin": "1\n",
+     "expected": "素数个数:0\ns=0.000000"
+    },
+    {
+     "stdin": "30\n",
+     "expected": "素数个数:10\ns=0.675198"
+    }
+   ],
+   "hint": "1 不是素数；累加 1 / MathPlus.fact(k)。",
+   "exp": "考查第三方包调用、循环累加与格式化。",
+   "tags": [
+    "第三方包",
+    "运算"
+   ],
+   "local_code": "import MathPlus\n\nn = int(input())\n"
   },
   {
    "id": "code-l5-010",
+   "cat": "data",
    "level": 5,
    "title": "学生成绩平均分统计",
    "desc": "站内已提供文件 students.csv（UTF-8 编码），首行为表头：姓名,语文,数学,英语，其后 8 行是学生数据（成绩均为整数）。要求：①定义函数 average(scores)，参数为成绩列表，返回平均分（浮点数）；②读入文件，按行输出每个学生的姓名和三科平均分（保留 2 位小数，姓名与平均分之间用一个空格分隔，如：王芳 88.33）；③最后输出一行全班三科总平均分（所有同学所有科目成绩的平均分，保留 2 位小数），格式如：全班三科总平均:81.58。",
@@ -6813,7 +7335,8 @@ window.BANK = {
     "函数",
     "CSV",
     "统计"
-   ]
+   ],
+   "local_code": "def average(scores):\n    # 返回成绩列表 scores 的平均分\n    pass\n"
   },
   {
    "id": "code-l2-009",
@@ -6842,10 +7365,12 @@ window.BANK = {
     "分支",
     "浮点数",
     "格式化"
-   ]
+   ],
+   "local_code": ""
   },
   {
    "id": "code-l5-001",
+   "cat": "data",
    "level": 5,
    "title": "书籍评论数统计",
    "desc": "当前目录下有 data.csv，存放某网站出售的书籍数据（首行为标题行，UTF-8 编码），列依次为：书名,作者,出版年,价格,出版社,评论数。程序输入一个评论数阈值（整数），列出评论数不小于该阈值的书籍信息：每行输出\"书名 评论数\"（用空格分隔，按文件原顺序），最后输出一行\"共N本\"（N 为符合条件的书籍数量）。",
@@ -6873,7 +7398,8 @@ window.BANK = {
     "文件",
     "字符串",
     "循环"
-   ]
+   ],
+   "local_code": "# 读入 data.csv，统计评论数达到阈值的书籍\n"
   },
   {
    "id": "p27-c1",
@@ -6900,7 +7426,9 @@ window.BANK = {
     "文件",
     "数据分析"
    ],
-   "score": 17
+   "score": 17,
+   "cat": "data",
+   "local_code": "# 读取 平均气温.txt，跳过标题行，逐行统计 ≥20℃ 的月数\n"
   },
   {
    "id": "p27-c2",
@@ -6910,7 +7438,13 @@ window.BANK = {
    "files": [
     {
      "name": "LossRatio.py",
-     "content": "\"\"\"LossRatio —— 模型损失率计算（本站内置等价实现）。\n正式考试中该包由考场提供 whl 安装：import LossRatio 后\n调用 LossRatio.type_A(num) / LossRatio.type_B(num)，num 为 0~9 整数。\n\"\"\"\n\n\ndef type_A(num):\n    \"\"\"A 模型损失率。\"\"\"\n    return ((num * 37) % 100) / 100.0\n\n\ndef type_B(num):\n    \"\"\"B 模型损失率。\"\"\"\n    return ((num * 53) % 97) / 100.0\n"
+     "content": "\"\"\"LossRatio —— 模型损失率计算（本站内置等价实现）。\n正式考试中该包由考场提供 whl 安装：import LossRatio 后\n调用 LossRatio.type_A(num) / LossRatio.type_B(num)，num 为 0~9 整数。\n\"\"\"\n\n\ndef type_A(num):\n    \"\"\"A 模型损失率。\"\"\"\n    return ((num * 37) % 100) / 100.0\n\n\ndef type_B(num):\n    \"\"\"B 模型损失率。\"\"\"\n    return ((num * 53) % 97) / 100.0\n",
+     "wheel": {
+      "dist": "lossratio",
+      "version": "1.1.0",
+      "whl_name": "lossratio-1.1.0-py3-none-any.whl",
+      "whl_b64": "UEsDBBQAAAAIAAAAIQDKYubTDwEAAJIBAAAMAAAATG9zc1JhdGlvLnB5U1JS8skvLg5KLMnMV3jUMAWIFJ6tWPh0Xvez3vlPl2x83tf+Yt3C5+umv9/T8WzOmuerZz5ta32+d93ztZ1Pdm9/um7e874N7/d0Pm5o4nq2dvHTPf0vGppfrJ/6ZMfaF+uXPu1pfT5lI1Dk6Zxdz/onPNk3W6E8I0fh6brOF4tb3++ZlZlbkF9UooBwwNMJfVwvNjQ/n7ICIahXUlmQGu+okVeaq6mgjy7uBBZ/v6cHSCk82bFLwaDOUuHZ1C3Ppm4AuUlJSYmLiyslNU0ByRQrLgUgAEo5onsVqAWkAyRdlFpSWpSnoAHSoaClYGyuqaCqYGhgAHIDkNIzQDbXCdVcJ+LNNTUGmWtpjjAWAFBLAwQUAAAACAAAACEAsCB6MXIAAAB3AAAAIgAAAGxvc3NyYXRpby0xLjEuMC5kaXN0LWluZm8vTUVUQURBVEHzTS1JTEksSdQNSy0qzszPs1Iw0jPk8kvMTbVSyMkvLi5KLMnM54JLGuoZ6hlwBZfm5iYWVVopPNnR9WT/whcNzQoBlSUZ+XkKz+aseTZn19N1855N7n22YuGz7vlPe1rf7+nwARoVBDJKr6Dy/Z5OLgBQSwMEFAAAAAgAAAAhAMWrRC5TAAAAUwAAAB8AAABsb3NzcmF0aW8tMS4xLjAuZGlzdC1pbmZvL1dIRUVMC89ITc3RDUstKs7Mz7NSMNQz4HJPzUstSizJL7JSKKgsycjPM9ItSCwu5grKzy/R9SzWDSgtSs3JTLJSKCkqTeUKSUwHqTPWzcvPS9VNzKvkAgBQSwMEFAAAAAgAAAAhAPszdl8MAAAACgAAACcAAABsb3NzcmF0aW8tMS4xLjAuZGlzdC1pbmZvL3RvcF9sZXZlbC50eHTzyS8uDkosycznAgBQSwMEFAAAAAgAAAAhAIv9mf36AAAAdQEAACAAAABsb3NzcmF0aW8tMS4xLjAuZGlzdC1pbmZvL1JFQ09SRH3MMXaCMAAA0N2zJJSAgAwdeBBBG6RQQqALDyV5gFoQUi2evu3g6j/AJ/00JZVse2WYwdRUmmG+cmZgFhNznxcWQkTakW5m+FAmjX67Xw6Qi0qzOhcf1gVYqtri9HeM/wdEClJUpW4nCdsv0b+EOHU8J3Ues+/DfQyDq30ccXIOaG4zPYU05HEja9P4PnsGR9FH5tMbQMh+MrMAY/Joh2tB0s9a3FVtbxWWmNhmPNqhSzkcRfberrR0dTGLtdqEYKU/WWU/lCd+5SdF/sjHftlFx3nnbxzCIlWQPmco2ZZLmc20e/O2Q1c6Oi+hn1UUIPXJnmA3SjwAFr9QSwECFAMUAAAACAAAACEAymLm0w8BAACSAQAADAAAAAAAAAAAAAAApAEAAAAATG9zc1JhdGlvLnB5UEsBAhQDFAAAAAgAAAAhALAgejFyAAAAdwAAACIAAAAAAAAAAAAAAKQBOQEAAGxvc3NyYXRpby0xLjEuMC5kaXN0LWluZm8vTUVUQURBVEFQSwECFAMUAAAACAAAACEAxatELlMAAABTAAAAHwAAAAAAAAAAAAAApAHrAQAAbG9zc3JhdGlvLTEuMS4wLmRpc3QtaW5mby9XSEVFTFBLAQIUAxQAAAAIAAAAIQD7M3ZfDAAAAAoAAAAnAAAAAAAAAAAAAACkAXsCAABsb3NzcmF0aW8tMS4xLjAuZGlzdC1pbmZvL3RvcF9sZXZlbC50eHRQSwECFAMUAAAACAAAACEAi/2Z/foAAAB1AQAAIAAAAAAAAAAAAAAApAHMAgAAbG9zc3JhdGlvLTEuMS4wLmRpc3QtaW5mby9SRUNPUkRQSwUGAAAAAAUABQB6AQAABAQAAAAA"
+     }
     }
    ],
    "starter": "import LossRatio\n\ndef poly(n):\n    # 计算 s = Σ -(x^3-2x-5)/(3x^2-2)，x_i：偶数取 i，奇数取 2i\n    pass\n\n",
@@ -6936,7 +7470,9 @@ window.BANK = {
    "unjudged": {
     "points": 3,
     "note": "第(1)小题安装 whl 并截图 setup.jpg 需在本机完成（官方未公布该步分值，本站按 3 分估计）"
-   }
+   },
+   "cat": "calc",
+   "local_code": "import LossRatio\n\ndef poly(n):\n    # 计算 s = Σ -(x^3-2x-5)/(3x^2-2)，x_i：偶数取 i，奇数取 2i\n    pass\n\n"
   },
   {
    "id": "p27-c3",
@@ -6959,7 +7495,9 @@ window.BANK = {
     "图形绘制"
    ],
    "score": 15,
-   "expectCanvas": true
+   "expectCanvas": true,
+   "cat": "draw",
+   "local_code": "import turtle, math\n\nt = turtle.Turtle()\nt.speed(0)\n# 1. 绿色坐标轴（横轴 -190~190，纵轴 190~-190）\n# 2. 红色水平线：x 从 -math.pi 到 math.pi、步长 0.02；y = 4cos(x) - cos(6x)\n#    每个点 t.goto(0, 30*y) 抬笔到 y 轴，再落笔 t.goto(30*x, 30*y)\n"
   },
   {
    "id": "p27-c4",
@@ -6998,7 +7536,9 @@ window.BANK = {
     "SQLite",
     "数据库"
    ],
-   "score": 12
+   "score": 12,
+   "cat": "db",
+   "local_code": "import sqlite3\n\nconn = sqlite3.connect('c:/素材/classroom.db')\ncur = conn.cursor()\nn = input()\nwhile n != '0':\n    pass\n    n = input()\nconn.close()\n"
   },
   {
    "id": "p27-c5",
@@ -7030,7 +7570,9 @@ window.BANK = {
     "文件",
     "数据分析"
    ],
-   "score": 13
+   "score": 13,
+   "cat": "text",
+   "local_code": "import re\n\nhtml = open('c:/素材/huaqiang.html', encoding='utf-8').read()\n# 正则提取 title=\" ... \" 与其后 <a href=\" ... \"\n"
   }
  ],
  "parsons": [
@@ -8009,7 +8551,8 @@ window.BANK = {
     "difficulty": 1,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Rectangle:\n    # 1. __init__(self, w, h)：保存宽和高\n    # 2. area(self)：返回面积\n    # 3. perimeter(self)：返回周长\n    pass\n\nw, h = map(int, input().split())\n# 创建 Rectangle 对象，按格式输出面积和周长\n"
    },
    {
     "id": "code-oop-002",
@@ -8041,7 +8584,8 @@ window.BANK = {
     "difficulty": 1,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "import math\n\nclass Circle:\n    # __init__ 保存半径；area() 返回面积；circumference() 返回周长\n    pass\n\nr = float(input())\n"
    },
    {
     "id": "code-oop-003",
@@ -8073,7 +8617,8 @@ window.BANK = {
     "difficulty": 2,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Counter:\n    # __init__：计数值设为 0\n    # add(self, n) / reset(self) / get(self)\n    pass\n\nm = int(input())\nc = Counter()\nfor i in range(m):\n    cmd = input().split()\n    # 按命令调用对应方法，然后输出 c.get()\n"
    },
    {
     "id": "code-oop-004",
@@ -8105,7 +8650,8 @@ window.BANK = {
     "difficulty": 2,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Student:\n    # __init__(self, name, scores)\n    # total(self) / average(self) / is_pass(self)\n    pass\n\nname = input()\nscores = list(map(int, input().split()))\n"
    },
    {
     "id": "code-oop-005",
@@ -8137,7 +8683,8 @@ window.BANK = {
     "difficulty": 2,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Book:\n    # __init__(self, title, stock)\n    # borrow(self)：成功返回 True，库存不足返回 False\n    # give_back(self)\n    pass\n\ntitle, stock = input().split()\nops = input()\n"
    },
    {
     "id": "code-oop-006",
@@ -8169,7 +8716,8 @@ window.BANK = {
     "difficulty": 2,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Cart:\n    # __init__：self.items = []\n    # add(self, name, price, qty) / count(self) / total(self)\n    pass\n\nn = int(input())\ncart = Cart()\n"
    },
    {
     "id": "code-oop-007",
@@ -8201,7 +8749,8 @@ window.BANK = {
     "difficulty": 1,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Thermometer:\n    # __init__ / record(self, t) / highest(self) / lowest(self) / average(self)\n    pass\n\ntemps = list(map(int, input().split()))\n"
    },
    {
     "id": "code-oop-008",
@@ -8233,7 +8782,8 @@ window.BANK = {
     "difficulty": 3,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Clock:\n    # __init__(self, h, m, s)\n    # tick(self, n)：前进 n 秒，注意进位\n    # show(self)：返回 'HH:MM:SS'\n    pass\n\nh, m, s = map(int, input().split())\nn = int(input())\n"
    },
    {
     "id": "code-oop-009",
@@ -8265,7 +8815,8 @@ window.BANK = {
     "difficulty": 2,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "import math\n\nclass Fraction:\n    # __init__(self, a, b)\n    # simplify(self)：用 math.gcd 约分\n    # show(self)\n    pass\n\na, b = map(int, input().split())\n"
    },
    {
     "id": "code-oop-010",
@@ -8297,7 +8848,8 @@ window.BANK = {
     "difficulty": 3,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Vote:\n    # __init__：self.count = {}\n    # vote(self, name) / result(self) / winner(self)\n    pass\n\nnames = input().split()\n"
    },
    {
     "id": "code-oop-011",
@@ -8329,7 +8881,8 @@ window.BANK = {
     "difficulty": 2,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Password:\n    # __init__(self, pwd)\n    # score(self)：返回 0~4\n    # level(self)：返回 '弱' / '中' / '强'\n    pass\n\nn = int(input())\n"
    },
    {
     "id": "code-oop-012",
@@ -8361,7 +8914,8 @@ window.BANK = {
     "difficulty": 3,
     "tags": [
      "面向对象"
-    ]
+    ],
+    "local_code": "class Course:\n    # __init__ / add(self, name, score) / average(self) / top(self, k)\n    pass\n\nn = int(input())\n"
    },
    {
     "id": "code-oop-013",
@@ -8394,7 +8948,8 @@ window.BANK = {
     "tags": [
      "面向对象",
      "继承"
-    ]
+    ],
+    "local_code": "class Animal:\n    # __init__(self, name) / speak(self) 返回 '...'\n    pass\n\n# class Dog(Animal): 重写 speak\n# class Cat(Animal): 重写 speak\n\nn = int(input())\n"
    },
    {
     "id": "code-oop-014",
@@ -8427,7 +8982,8 @@ window.BANK = {
     "tags": [
      "面向对象",
      "继承"
-    ]
+    ],
+    "local_code": "class Employee:\n    # __init__(self, name, base) / salary(self)\n    pass\n\n# class Manager(Employee):\n#     __init__(self, name, base, bonus)：先 super().__init__(name, base)\n#     salary(self)：返回 base + bonus\n\nn = int(input())\n"
    },
    {
     "id": "code-oop-015",
@@ -8460,7 +9016,8 @@ window.BANK = {
     "tags": [
      "面向对象",
      "继承"
-    ]
+    ],
+    "local_code": "class Shape:\n    def area(self):\n        return 0\n\n# class Rect(Shape): ...\n# class Circle(Shape): ...\n\nn = int(input())\nshapes = []\n"
    }
   ]
  },
@@ -8697,5 +9254,7 @@ window.BANK = {
   ]
  }
 };
+/* 本机实操包：运行时模板 + 与网站同一份的判题 harness（tools/ 原样打包） */
+window.PACK_SRC = {"template": "# -*- coding: utf-8 -*-\n\"\"\"上信考 Python 本机实操包（由 Py2 通关网站生成）。\n\n用法（在命令行 / Anaconda Prompt 里，进入本文件所在文件夹）：\n    python 本文件名.py           在本文件旁边建好 ks/ 和 素材/ 文件夹，放好题目与素材\n    python 本文件名.py --c       Windows：直接建成考场目录 C:\\\\ks 和 C:\\\\素材（已有的同名程序不会被覆盖）\n    python 本文件名.py check     做完后自动判分（加 --c 表示检查 C:\\\\ks）\n    python 本文件名.py env       检查本机 Python 环境（版本、matplotlib、sqlite3、pip）\n\n做题时请像考场一样：用 IDLE / PyCharm 打开 ks 里的程序，素材写全路径 c:/素材/文件名，\n改错题只改不增删语句、改过的行末加 ####，第三方包要先 pip install 素材里的 .whl。\n本文件需要 Python 3.8 及以上。\n\"\"\"\nimport base64\nimport json\nimport os\nimport shutil\nimport sys\nimport tempfile\nimport time\n\nPACK = json.loads(base64.b64decode(\"__PACK_B64__\").decode(\"utf-8\"))\nLIBS = json.loads(base64.b64decode(\"__LIBS_B64__\").decode(\"utf-8\"))\n\nHERE = os.path.dirname(os.path.abspath(__file__))\n\n\ndef root_dir(argv):\n    if \"--c\" in argv:\n        return \"C:\\\\\"\n    return os.path.join(HERE, PACK[\"folder\"])\n\n\ndef write_file(path, data, binary=False, overwrite=True):\n    if os.path.exists(path) and not overwrite:\n        return False\n    d = os.path.dirname(path)\n    if d and not os.path.isdir(d):\n        os.makedirs(d)\n    if binary:\n        with open(path, \"wb\") as f:\n            f.write(data)\n    else:\n        with open(path, \"w\", encoding=\"utf-8\", newline=\"\\n\") as f:\n            f.write(data)\n    return True\n\n\ndef material_bytes(m):\n    if m.get(\"b64\"):\n        return base64.b64decode(m[\"content\"])\n    return m[\"content\"].encode(\"utf-8\")\n\n\ndef layout():\n    \"\"\"把各题素材合并到 素材/ 下：同名同内容共用；同名不同内容放到 素材/题N/ 并改写该题程序里的路径。\n\n    返回 (materials: [{path, data}], questions: 每题加上 code（已改写）与 mat_paths)。\n    \"\"\"\n    placed = {}\n    mats = []\n    qs = []\n    for i, q in enumerate(PACK[\"questions\"], 1):\n        q = dict(q)\n        code = q[\"code\"]\n        paths = []\n        for m in q.get(\"materials\", []):\n            data = material_bytes(m)\n            path = m[\"path\"]\n            if path in placed and placed[path] != data:\n                alt = \"题{}/{}\".format(i, path)\n                code = code.replace(\"c:/素材/\" + path, \"c:/素材/\" + alt)\n                path = alt\n            if path not in placed:\n                placed[path] = data\n                mats.append({\"path\": path, \"data\": data})\n            paths.append(path)\n        q[\"code\"] = code\n        q[\"mat_paths\"] = paths\n        qs.append(q)\n    return mats, qs\n\n\ndef setup(argv):\n    root = root_dir(argv)\n    ks = os.path.join(root, \"ks\")\n    sc = os.path.join(root, \"素材\")\n    for p in (ks, sc):\n        if not os.path.isdir(p):\n            os.makedirs(p)\n    mats, qs = layout()\n    for m in mats:\n        write_file(os.path.join(sc, m[\"path\"]), m[\"data\"], binary=True)\n    kept = []\n    for q in qs:\n        if not write_file(os.path.join(ks, q[\"file\"]), q[\"code\"], overwrite=False):\n            kept.append(q[\"file\"])\n    lines = [PACK[\"title\"], \"=\" * 40, \"\"]\n    for i, q in enumerate(qs, 1):\n        lines.append(\"【{}】{}（{} 分）  程序：c:/ks/{}\".format(i, q[\"title\"], q[\"points\"], q[\"file\"]))\n        lines.append(q[\"desc\"])\n        if q.get(\"mat_paths\"):\n            lines.append(\"素材：\" + \"、\".join(\"c:/素材/\" + p for p in q[\"mat_paths\"]))\n        if q.get(\"wheels\"):\n            lines.append(\"先安装第三方包：pip install \" + \" \".join('\"c:/素材/{}\"'.format(w) for w in q[\"wheels\"]))\n        lines.append(\"\")\n    lines += [\"做完后运行：python {} check{}\".format(os.path.basename(__file__), \" --c\" if \"--c\" in argv else \"\"), \"\"]\n    write_file(os.path.join(root, \"题目.txt\"), \"\\n\".join(lines))\n    print(\"✓ 已建好练习目录：\")\n    print(\"   程序：\" + ks)\n    print(\"   素材：\" + sc)\n    print(\"   题目：\" + os.path.join(root, \"题目.txt\"))\n    if kept:\n        print(\"   （保留了你已有的程序，没有覆盖：\" + \"、\".join(kept) + \"）\")\n    if \"--c\" not in argv:\n        print(\"提示：考场路径是 c:/素材/文件名。本练习里写 c:/素材/ 或相对路径都能通过自检；\")\n        print(\"      Windows 上可以用 --c 直接建成 C:\\\\ks 和 C:\\\\素材，和考场完全一样。\")\n    if any(q.get(\"wheels\") for q in qs):\n        print(\"第三方包题：先在命令行运行 题目.txt 里写的 pip install 命令（考场还要求截图保存）。\")\n\n\ndef load_libs():\n    d = tempfile.mkdtemp(prefix=\"py2pass_\")\n    for name, src in LIBS.items():\n        write_file(os.path.join(d, name), src)\n    sys.path.insert(0, d)\n    return d\n\n\ndef marking_problems(student, original):\n    \"\"\"改错题考场规则：不增删语句；改过的行末尾加 ####。返回问题列表。\"\"\"\n    def lines(s):\n        out = s.replace(\"\\r\\n\", \"\\n\").split(\"\\n\")\n        while out and not out[-1].strip():\n            out.pop()\n        return out\n    a, b = lines(student), lines(original)\n    if len(a) != len(b):\n        return [\"行数从 {} 变成了 {}：考场要求不增删语句（只修改原有的语句）\".format(len(b), len(a))]\n    probs = []\n    for i, (x, y) in enumerate(zip(a, b), 1):\n        xs = x.rstrip()\n        marked = xs.endswith(\"####\")\n        body = xs[:-4].rstrip() if marked else xs\n        while body.endswith(\"#\"):\n            body = body[:-1].rstrip()\n        changed = body != y.rstrip()\n        if changed and not marked:\n            probs.append(\"第 {} 行改动了但行末没有加 #### 标记\".format(i))\n        if marked and not changed:\n            probs.append(\"第 {} 行加了 #### 但内容和原题一样（没改的行不要加标记）\".format(i))\n    return probs\n\n\ndef check(argv):\n    root = root_dir(argv)\n    ks = os.path.join(root, \"ks\")\n    if not os.path.isdir(ks):\n        print(\"没有找到 \" + ks + \"，请先运行：python {}{}\".format(os.path.basename(__file__), \" --c\" if \"--c\" in argv else \"\"))\n        return 1\n    load_libs()\n    from harness import run_user  # noqa: E402  （与网站判题同一份 harness）\n\n    total = got_total = 0.0\n    report = []\n    mats, qs = layout()\n    data_of = {m[\"path\"]: m[\"data\"] for m in mats}\n    for i, q in enumerate(qs, 1):\n        path = os.path.join(ks, q[\"file\"])\n        total += q[\"points\"]\n        head = \"【{}】{} ({})\".format(i, q[\"title\"], q[\"file\"])\n        if not os.path.exists(path):\n            report.append((head, 0, q[\"points\"], [\"没有找到程序文件 \" + path]))\n            continue\n        with open(path, encoding=\"utf-8-sig\") as f:\n            code = f.read()\n        notes = []\n        missing = [w for w in q.get(\"wheels\", []) if not _wheel_installed(q, w)]\n        if missing:\n            notes.append(\"第三方包还没安装：pip install \" + \" \".join('\"c:/素材/{}\"'.format(w) for w in missing))\n        passed = 0\n        for k, t in enumerate(q[\"tests\"], 1):\n            work = tempfile.mkdtemp(prefix=\"py2pass_run_\")\n            for pth in q[\"mat_paths\"]:\n                write_file(os.path.join(work, pth), data_of[pth], binary=True)\n            old = os.getcwd()\n            os.chdir(work)\n            try:\n                r = run_user(code, t.get(\"stdin\", \"\"), check=t.get(\"check\"), cleanup=t.get(\"cleanup\"))\n            finally:\n                os.chdir(old)\n                shutil.rmtree(work, ignore_errors=True)\n            ok, why = _judge(r, t)\n            if ok:\n                passed += 1\n            else:\n                notes.append(\"测试 {}：{}\".format(k, why))\n        if q[\"kind\"] == \"fix\":\n            probs = marking_problems(code, q[\"code\"])\n            notes += probs\n            score = q[\"points\"] if passed == len(q[\"tests\"]) and not probs else 0\n        else:\n            score = round(q[\"points\"] * passed / len(q[\"tests\"]), 1)\n        got_total += score\n        report.append((head, score, q[\"points\"], notes))\n\n    print(PACK[\"title\"] + \" · 自检结果\")\n    print(\"-\" * 40)\n    for head, s, full, notes in report:\n        print(\"{}  {} / {} 分\".format(head, s, full))\n        for n in notes[:6]:\n            print(\"    · \" + n)\n    print(\"-\" * 40)\n    print(\"合计 {} / {} 分\".format(round(got_total, 1), round(total, 1)))\n    stamp = time.strftime(\"%Y-%m-%d %H:%M\")\n    try:\n        with open(os.path.join(root, \"自检记录.txt\"), \"a\", encoding=\"utf-8\") as f:\n            f.write(\"{}  {} / {}\\n\".format(stamp, round(got_total, 1), round(total, 1)))\n    except OSError:\n        pass\n    print(\"（判分规则与网站一致：比对输出，并检查绘图、数据库、写出的文件；改错题另查 #### 标记与语句数。）\")\n    return 0\n\n\ndef _wheel_installed(q, whl):\n    import importlib.util\n    mod = q[\"wheels_modules\"].get(whl)\n    return mod is None or importlib.util.find_spec(mod) is not None\n\n\ndef _norm(s):\n    return \"\\n\".join(ln.rstrip() for ln in str(s).replace(\"\\r\\n\", \"\\n\").split(\"\\n\")).strip()\n\n\ndef _judge(r, t):\n    if not r[\"ok\"]:\n        return False, \"运行出错：\" + (r[\"error\"] or \"\")\n    want = t.get(\"expected\", \"\")\n    if not (t.get(\"check\") and not want) and _norm(r[\"stdout\"]) != _norm(want):\n        got = _norm(r[\"stdout\"]).split(\"\\n\")\n        exp = _norm(want).split(\"\\n\")\n        for j in range(max(len(got), len(exp))):\n            g = got[j] if j < len(got) else \"（缺这一行）\"\n            e = exp[j] if j < len(exp) else \"（多了这一行）\"\n            if g != e:\n                return False, \"输出第 {} 行应为 {!r}，实际 {!r}\".format(j + 1, e, g)\n    if t.get(\"check\") and r.get(\"checkOk\") is not True:\n        return False, r.get(\"checkMsg\") or \"绘图/文件/数据库检查未通过\"\n    return True, \"\"\n\n\ndef env():\n    print(\"Python \" + sys.version.split()[0] + (\"  ✓\" if sys.version_info >= (3, 8) else \"  ✗ 需要 3.8 及以上\"))\n    for mod in (\"sqlite3\", \"turtle\", \"matplotlib\", \"openpyxl\"):\n        try:\n            __import__(mod)\n            print(\"  {:<12} ✓\".format(mod))\n        except Exception as e:\n            print(\"  {:<12} ✗ {}\".format(mod, e.__class__.__name__))\n    try:\n        import pip  # noqa: F401\n        print(\"  {:<12} ✓  （安装 whl：python -m pip install 文件路径.whl）\".format(\"pip\"))\n    except Exception:\n        print(\"  {:<12} ✗\".format(\"pip\"))\n    print(\"考场环境：Windows 10 + Python 3.x（建议 3.8 或 Anaconda3-2021.05），以考点实际安装为准。\")\n    return 0\n\n\ndef main(argv):\n    if \"env\" in argv:\n        return env()\n    if \"check\" in argv:\n        return check(argv)\n    setup(argv)\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main(sys.argv[1:]) or 0)\n", "libs": {"harness.py": "\"\"\"本地判题 harness —— 与 js/runner.js 中 HARNESS_PY 行为完全一致。\n\n约定：\n- input() 的提示文字单独捕获（不进入 stdout），\n- stdin_text 按行喂给 input()，\n- stdout 捕获 print 输出，\n- settrace 看门狗防死循环。\n\"\"\"\n\nimport io\nimport os\nimport sys\nimport time\nimport builtins\nimport traceback\n\n\nclass Watchdog(Exception):\n    pass\n\n\ndef run_user(\n    code: str,\n    stdin_text: str,\n    timeout_s: float = 8.0,\n    max_events: int = 2_000_000,\n    check: str = None,\n    cleanup=None,\n):\n    \"\"\"运行用户代码，返回 dict(ok, stdout, prompts, error, tb, checkOk, checkMsg)。\n\n    check：运行后检查代码（见 tools/py2check.py），未提供时 checkOk 为 None；\n    cleanup：运行前删除的文件名列表（防止上一次运行留下的输出文件冒充本次结果）。\n\n    与浏览器 HARNESS_PY 保持一致：prompt 进 prompts，不进 stdout。\n    matplotlib 题自动放宽预算（与浏览器 runner.js 行为一致）。\n    \"\"\"\n    if \"matplotlib\" in code:\n        timeout_s = max(timeout_s, 60.0)\n        max_events = max(max_events, 100_000_000)\n    inputs = stdin_text.split(\"\\n\") if stdin_text != \"\" else []\n    if inputs and inputs[-1] == \"\":\n        inputs.pop()\n\n    ctx = {\n        \"i\": 0,\n        \"events\": 0,\n        \"max_events\": max_events,\n        \"deadline\": time.monotonic() + timeout_s,\n        \"prompts\": [],\n        \"duration\": 0,\n    }\n    out = io.StringIO()\n\n    def _input(prompt=\"\"):\n        if prompt:\n            ctx[\"prompts\"].append(str(prompt))\n        if ctx[\"i\"] >= len(inputs):\n            raise EOFError(\"程序请求输入，但测试输入已用完\")\n        v = inputs[ctx[\"i\"]]\n        ctx[\"i\"] += 1\n        return v\n\n    def _trace(frame, event, arg):\n        ctx[\"events\"] += 1\n        if ctx[\"events\"] > ctx[\"max_events\"] or time.monotonic() > ctx[\"deadline\"]:\n            raise Watchdog(\"执行超时：程序运行时间过长或存在死循环\")\n        return _trace\n\n    env = {\"__name__\": \"__main__\", \"input\": _input, \"raw_input\": _input}\n\n    # 重型库预导入：与浏览器 harness 一致，避免 import 本身触发看门狗\n    try:\n        if \"matplotlib\" in code:\n            import matplotlib\n\n            matplotlib.use(\"Agg\")\n            import numpy  # noqa\n    except Exception:\n        pass\n\n    # turtle 桩：与浏览器 runner.js 注入的 turtle_shim 状态数学一致，\n    # 本地/CI 校验不依赖 tkinter，判题依据的 print 状态值两端相同\n    import py2check\n\n    py2check.cleanup_files(cleanup)\n    restore_paths = py2check.install_exam_paths()\n    segs = []\n    mpl_store = []\n    restore_mpl = py2check.install_mpl_hooks(mpl_store) if \"matplotlib\" in code else (lambda: None)\n\n    turtle_mod = None\n    try:\n        from turtle_stub import make_module\n\n        turtle_mod = make_module(segs)\n        env[\"turtle\"] = turtle_mod\n        sys.modules[\"turtle\"] = turtle_mod\n    except Exception:\n        turtle_mod = None\n\n    _t0 = time.monotonic()\n    saved_stdin, saved_stdout = sys.stdin, sys.stdout\n    saved_path = sys.path[:]\n    if \"\" not in saved_path and os.getcwd() not in saved_path:\n        sys.path.insert(0, os.getcwd())  # 使数据目录中的模块可 import（如 LossRatio.py）\n    sys.stdin = io.StringIO(stdin_text)\n    sys.stdout = out\n    old_input = builtins.input\n    builtins.input = _input\n    err = \"\"\n    tb = \"\"\n    try:\n        sys.settrace(_trace)\n        try:\n            exec(compile(code, \"<student>\", \"exec\"), env)\n        finally:\n            sys.settrace(None)\n    except Watchdog as w:\n        err = str(w)\n    except EOFError as e:\n        err = \"输入不足：\" + str(e)\n    except SystemExit:\n        pass\n    except BaseException as e:\n        err = e.__class__.__name__ + \": \" + str(e)\n        tb = \"\".join(traceback.format_exception_only(type(e), e)).strip()\n        try:\n            _frames = traceback.extract_tb(sys.exc_info()[2])\n            _user_frames = [f for f in _frames if f.filename == \"<student>\"]\n            if _user_frames:\n                tb = 'File \"<student>\", line ' + str(_user_frames[-1].lineno) + \"\\n\" + tb\n        except Exception:\n            pass\n    finally:\n        ctx[\"duration\"] = int((time.monotonic() - _t0) * 1000)\n        builtins.input = old_input\n        sys.stdin, sys.stdout = saved_stdin, saved_stdout\n        sys.path[:] = saved_path\n        if turtle_mod is not None:\n            try:\n                del sys.modules[\"turtle\"]\n            except Exception:\n                pass\n\n    check_ok, check_msg = None, \"\"\n    if check:\n        if err == \"\":\n            mpl_store.extend(py2check.mpl_snapshot())\n            check_ok, check_msg = py2check.run_check(\n                check,\n                {\"segs\": segs, \"mpl\": mpl_store, \"user\": env, \"stdin\": stdin_text, \"stdout\": out.getvalue()},\n            )\n        else:\n            check_ok = False\n    restore_mpl()\n    restore_paths()\n    if \"matplotlib.pyplot\" in sys.modules:\n        try:\n            sys.modules[\"matplotlib.pyplot\"].close(\"all\")\n        except Exception:\n            pass\n\n    return {\n        \"ok\": err == \"\",\n        \"stdout\": out.getvalue(),\n        \"prompts\": \"\\n\".join(ctx[\"prompts\"]),\n        \"error\": err,\n        \"tb\": tb,\n        \"durationMs\": ctx[\"duration\"],\n        \"checkOk\": check_ok,\n        \"checkMsg\": check_msg,\n    }\n", "py2check.py": "\"\"\"运行后检查（post-run check）—— 浏览器 Pyodide 与本地 harness 共用同一份源码。\n\n为什么需要：绘图题、写文件题光看 print 输出判不出对错（画错了照样能 print）。\n测试点可带 \"check\" 字段（一段 Python），学生代码运行结束后执行，检查：\n  - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）\n  - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]\n  - 写出的文件（read_text / read_bytes / exists）与数据库（db_rows / check_db_rows，新连接只看得到已提交的数据）\n  - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出\n检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。\n\n本文件由 tools/build_data.py 原样打包进 js/data.js（window.PY2CHECK_SRC），\n浏览器端以模块 py2check 载入，与本地校验逐字节一致。\n\"\"\"\nimport math\nimport os\n\n\nclass CheckFail(Exception):\n    pass\n\n\ndef fail(msg):\n    raise CheckFail(str(msg))\n\n\n# ---------------- 颜色 ----------------\n_NAMED = {\n    'red': (255, 0, 0), 'r': (255, 0, 0), 'green': (0, 128, 0), 'g': (0, 128, 0),\n    'lime': (0, 255, 0), 'blue': (0, 0, 255), 'b': (0, 0, 255), 'black': (0, 0, 0),\n    'k': (0, 0, 0), 'white': (255, 255, 255), 'w': (255, 255, 255),\n    'yellow': (255, 255, 0), 'y': (255, 255, 0), 'orange': (255, 165, 0),\n    'purple': (128, 0, 128), 'pink': (255, 192, 203), 'gray': (128, 128, 128),\n    'grey': (128, 128, 128), 'brown': (165, 42, 42), 'cyan': (0, 255, 255),\n    'c': (0, 255, 255), 'magenta': (255, 0, 255), 'm': (255, 0, 255),\n    'darkgreen': (0, 100, 0), 'darkred': (139, 0, 0), 'navy': (0, 0, 128),\n    'tab:red': (214, 39, 40), 'tab:green': (44, 160, 44), 'tab:blue': (31, 119, 180),\n}\n\n\ndef rgb(c):\n    \"\"\"把 'red' / '#ff0000' / (1, 0, 0) / (255, 0, 0) 统一成 0~255 的 (r, g, b)；认不出返回 None。\"\"\"\n    if c is None:\n        return None\n    if isinstance(c, (tuple, list)):\n        v = list(c)[:3]\n        if len(v) < 3:\n            return None\n        try:\n            v = [float(x) for x in v]\n        except (TypeError, ValueError):\n            return None\n        if all(0 <= x <= 1 for x in v):\n            return tuple(int(round(x * 255)) for x in v)\n        return tuple(int(round(x)) for x in v)\n    s = str(c).strip().lower()\n    if s in _NAMED:\n        return _NAMED[s]\n    if s.startswith('#') and len(s) in (4, 7, 9):\n        if len(s) == 4:\n            s = '#' + ''.join(ch * 2 for ch in s[1:])\n        try:\n            return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))\n        except ValueError:\n            return None\n    return None\n\n\ndef is_color(c, name):\n    \"\"\"颜色归类判断（宽松）：'red' 接受 red/#f00/#ff0000/(1,0,0)/'r'/'tab:red' 等。\"\"\"\n    v = rgb(c)\n    if v is None:\n        return False\n    r, g, b = v\n    hi, lo = 120, 110\n    name = name.lower()\n    if name == 'red':\n        return r >= hi and g < lo and b < lo\n    if name == 'green':\n        return g >= hi and r < lo + 20 and b < lo + 20\n    if name == 'blue':\n        return b >= hi and r < lo and g < lo + 60\n    if name == 'black':\n        return max(v) < 60\n    want = rgb(name)\n    return want is not None and all(abs(a - w) <= 40 for a, w in zip(v, want))\n\n\ndef approx(a, b, tol=1e-6):\n    return abs(float(a) - float(b)) <= tol\n\n\n# ---------------- 运行期采集 ----------------\ndef mpl_snapshot():\n    \"\"\"抓取当前所有 matplotlib 图形中的折线 / 线段集合 / 柱子（未导入 matplotlib 时返回 []）。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        return []\n    try:\n        from matplotlib import _pylab_helpers\n        from matplotlib.colors import to_hex\n    except Exception:\n        return []\n    out = []\n    for mgr in _pylab_helpers.Gcf.get_all_fig_managers():\n        fig = mgr.canvas.figure\n        for ax in fig.axes:\n            for ln in ax.get_lines():\n                try:\n                    xs = [float(x) for x in ln.get_xdata()]\n                    ys = [float(y) for y in ln.get_ydata()]\n                except (TypeError, ValueError):\n                    continue\n                item = {'kind': 'line', 'x': xs, 'y': ys,\n                        'color': to_hex(ln.get_color()), 'marker': str(ln.get_marker())}\n                # plt.axhline / axvline：数据坐标只有一维，另一维是 0~1 的轴坐标\n                tr = ln.get_transform()\n                if tr == ax.get_yaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'h', 'at': ys[0], 'color': item['color']}\n                elif tr == ax.get_xaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'v', 'at': xs[0], 'color': item['color']}\n                out.append(item)\n            for coll in ax.collections:\n                get_segments = getattr(coll, 'get_segments', None)\n                if get_segments is None:\n                    continue\n                colors = [to_hex(c) for c in coll.get_colors()] or ['#000000']\n                for i, seg in enumerate(get_segments()):\n                    if len(seg) >= 2:\n                        (x1, y1), (x2, y2) = seg[0], seg[-1]\n                        out.append({'kind': 'seg', 'x': [float(x1), float(x2)], 'y': [float(y1), float(y2)],\n                                    'color': colors[i % len(colors)]})\n            for p in ax.patches:\n                if hasattr(p, 'get_height') and hasattr(p, 'get_x'):\n                    out.append({'kind': 'bar', 'x': float(p.get_x() + p.get_width() / 2),\n                                'h': float(p.get_height()), 'color': to_hex(p.get_facecolor())})\n    return out\n\n\ndef install_mpl_hooks(store):\n    \"\"\"学生代码里的 plt.close() / plt.show() 会清掉或\"消费\"图形：调用前先快照。返回还原函数。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        try:\n            import matplotlib.pyplot  # noqa: F401  （matplotlib 题在 harness 中已预导入）\n        except Exception:\n            return lambda: None\n    plt = sys.modules['matplotlib.pyplot']\n    orig_close, orig_show = plt.close, plt.show\n\n    def close(*a, **k):\n        store.extend(mpl_snapshot())\n        return orig_close(*a, **k)\n\n    def show(*a, **k):\n        store.extend(mpl_snapshot())\n        return None\n\n    plt.close, plt.show = close, show\n\n    def restore():\n        plt.close, plt.show = orig_close, orig_show\n    return restore\n\n\n# ---------------- 考场路径 ----------------\n# 考场上素材在 c:/素材/、程序与结果存 c:/ks/。判题时把这两种前缀映射到当前判题目录，\n# 学生在网页和本机都可以按考场写法 open('c:/素材/data.csv')、sqlite3.connect('c:/素材/x.db')。\nimport re as _re\n_EXAM_PREFIX = _re.compile(r'^\\s*[cC]:[\\\\/]+(?:素材|[kK][sS])[\\\\/]+')\n\n\ndef map_exam_path(p):\n    if isinstance(p, str):\n        m = _EXAM_PREFIX.match(p)\n        if m:\n            return p[m.end():].replace('\\\\', '/')\n    return p\n\n\ndef install_exam_paths():\n    \"\"\"临时替换 open / os.path.exists / sqlite3.connect，返回还原函数。\"\"\"\n    import builtins\n    orig_open = builtins.open\n    orig_exists = os.path.exists\n\n    def _open(file, *a, **k):\n        return orig_open(map_exam_path(file), *a, **k)\n\n    def _exists(p):\n        return orig_exists(map_exam_path(p))\n\n    builtins.open = _open\n    os.path.exists = _exists\n    restores = [lambda: setattr(builtins, 'open', orig_open), lambda: setattr(os.path, 'exists', orig_exists)]\n    try:\n        import sqlite3\n        orig_connect = sqlite3.connect\n\n        def _connect(db, *a, **k):\n            return orig_connect(map_exam_path(db), *a, **k)\n\n        sqlite3.connect = _connect\n        restores.append(lambda: setattr(sqlite3, 'connect', orig_connect))\n    except Exception:\n        pass\n\n    def restore():\n        for r in reversed(restores):\n            r()\n    return restore\n\n\ndef cleanup_files(names):\n    for n in names or []:\n        try:\n            os.remove(n)\n        except OSError:\n            pass\n\n\n# ---------------- 文件 ----------------\ndef exists(name):\n    return os.path.exists(name)\n\n\ndef read_bytes(name):\n    if not os.path.exists(name):\n        fail('没有找到程序应生成的文件 ' + name)\n    with open(name, 'rb') as f:\n        return f.read()\n\n\ndef read_text(name, encoding='utf-8'):\n    data = read_bytes(name)\n    try:\n        return data.decode(encoding)\n    except UnicodeDecodeError:\n        hint = ''\n        if encoding.lower() in ('gbk', 'gb2312', 'gb18030'):\n            try:\n                data.decode('utf-8')\n                hint = '（看起来是按 UTF-8 写的，open 时要写 encoding=\\'gbk\\'）'\n            except UnicodeDecodeError:\n                pass\n        fail('文件 ' + name + ' 不能按 ' + encoding + ' 编码读取' + hint)\n\n\ndef check_lines(name, expected_lines, encoding='utf-8'):\n    \"\"\"文件内容逐行比对（忽略行尾空白与末尾空行）。\"\"\"\n    got = [ln.rstrip() for ln in read_text(name, encoding).replace('\\r\\n', '\\n').split('\\n')]\n    while got and got[-1] == '':\n        got.pop()\n    want = [ln.rstrip() for ln in expected_lines]\n    if got != want:\n        for i in range(max(len(got), len(want))):\n            g = got[i] if i < len(got) else '（缺少这一行）'\n            w = want[i] if i < len(want) else '（多出这一行）'\n            if g != w:\n                fail('文件 {} 第 {} 行不对：应为 {!r}，实际 {!r}'.format(name, i + 1, w, g))\n\n\ndef check_png(name):\n    data = read_bytes(name)\n    if not data.startswith(b'\\x89PNG'):\n        fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')\n\n\n# ---------------- 面向对象 ----------------\ndef check_class(user, name, methods=(), base=None):\n    \"\"\"学生程序必须自己定义类 name（有构造方法和指定的实例方法）；base 给出时还必须是 base 的子类，且 methods 在子类中重写。\n\n    防止\"不写类、直接 print 结果\"也能通过编程题。\n    \"\"\"\n    cls = user.get(name)\n    if not isinstance(cls, type):\n        fail('程序里没有定义类 {0}（题目要求用 class {0} 定义）'.format(name))\n    if base is None:\n        if '__init__' not in cls.__dict__:\n            fail('类 {} 没有定义构造方法 __init__'.format(name))\n    else:\n        parent = user.get(base)\n        if not isinstance(parent, type):\n            fail('程序里没有定义父类 {}'.format(base))\n        if cls is parent or not issubclass(cls, parent):\n            fail('类 {} 应继承自 {}（写成 class {}({}):）'.format(name, base, name, base))\n    for m in methods:\n        if not callable(getattr(cls, m, None)):\n            fail('类 {} 缺少实例方法 {}()'.format(name, m))\n        if m not in cls.__dict__:\n            fail(('子类 {} 要重写方法 {}()' if base is not None else '方法 {1}() 要定义在类 {0} 里面（注意缩进）').format(name, m))\n\n\n# ---------------- SQLite ----------------\ndef db_rows(name, sql, params=()):\n    \"\"\"用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。\"\"\"\n    if not os.path.exists(name):\n        fail('没有找到数据库文件 ' + name)\n    import sqlite3\n    conn = sqlite3.connect(name, timeout=1)\n    try:\n        return [tuple(r) for r in conn.execute(sql, params).fetchall()]\n    except sqlite3.Error as e:\n        fail('读取数据库 {} 出错：{}'.format(name, e))\n    finally:\n        conn.close()\n\n\ndef check_db_rows(name, sql, expected, hint=''):\n    \"\"\"程序结束后数据库里的查询结果必须等于 expected（行的列表）。\"\"\"\n    got = db_rows(name, sql)\n    want = [tuple(r) for r in expected]\n    if got != want:\n        fail('程序结束后数据库 {} 的内容不对：应为 {}，实际 {}{}'.format(\n            name, want if want else '（无记录）', got if got else '（无记录）', '。' + hint if hint else ''))\n\n\n# ---------------- turtle ----------------\ndef _seglen(s):\n    return math.hypot(s[2] - s[0], s[3] - s[1])\n\n\ndef check_polygon(segs, n, side, color, tol=1.0):\n    \"\"\"画出的同色线段恰好构成一个边长 side 的闭合正 n 边形。\"\"\"\n    mine = [s for s in segs if is_color(s[4], color)]\n    if not mine:\n        fail('画布上没有{}色线条（检查 pencolor/color 的设置）'.format(_CN.get(color, color)))\n    if len(mine) != n:\n        fail('{}色线条应有 {} 条边，实际画了 {} 条'.format(_CN.get(color, color), n, len(mine)))\n    for i, s in enumerate(mine):\n        if abs(_seglen(s) - side) > tol:\n            fail('第 {} 条边长度约为 {:.1f}，应为 {}'.format(i + 1, _seglen(s), side))\n        nxt = mine[(i + 1) % n]\n        if math.hypot(s[2] - nxt[0], s[3] - nxt[1]) > tol:\n            fail('第 {} 条边与下一条边没有首尾相接，图形不闭合'.format(i + 1))\n    for i in range(n):\n        a, b = mine[i], mine[(i + 1) % n]\n        v1 = (a[2] - a[0], a[3] - a[1])\n        v2 = (b[2] - b[0], b[3] - b[1])\n        cosang = (v1[0] * v2[0] + v1[1] * v2[1]) / (side * side)\n        turn = math.degrees(math.acos(max(-1.0, min(1.0, cosang))))\n        if abs(turn - 360.0 / n) > 1.0:\n            fail('第 {} 个转角约 {:.0f}°，正 {} 边形每次应转 {:.0f}°'.format(i + 1, turn, n, 360.0 / n))\n\n\ndef _axis_ok(lines, color, min_len):\n    h = v = False\n    for (x1, y1, x2, y2, c) in lines:\n        if not is_color(c, color):\n            continue\n        if abs(y1) < 2 and abs(y2) < 2 and abs(x2 - x1) >= min_len and min(x1, x2) < 0 < max(x1, x2):\n            h = True\n        if abs(x1) < 2 and abs(x2) < 2 and abs(y2 - y1) >= min_len and min(y1, y2) < 0 < max(y1, y2):\n            v = True\n    return h, v\n\n\ndef _as_lines(segs, mpl):\n    \"\"\"turtle 线段 + matplotlib 线条统一成 (x1, y1, x2, y2, color) 线段列表。\"\"\"\n    out = list(segs)\n    for item in mpl:\n        if item['kind'] in ('line', 'seg'):\n            xs, ys = item['x'], item['y']\n            for i in range(len(xs) - 1):\n                out.append((xs[i], ys[i], xs[i + 1], ys[i + 1], item['color']))\n    return out\n\n\ndef check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1), to='y'):\n    \"\"\"函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 的 line_color 色连线。\n\n    to='y'：数据点向 y 轴画水平线（官方 27A 编程 3）；to='x'：数据点向 x 轴画竖线。\n    turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。\n    \"\"\"\n    lines = _as_lines(segs, mpl)\n    if not lines:\n        fail('没有检测到任何绘图（turtle 线条或 matplotlib 图形）')\n    mpl_lines = _as_lines([], mpl)\n    expect_n = int(round((x1 - x0) / step)) + 1\n    best = None\n    for k in scales:\n        hits, xs_cov = 0, []\n        tol = 0.05 * k + 0.5\n        for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):\n            if not is_color(c, line_color):\n                continue\n            if to == 'y':\n                if abs(b1 - b2) > tol:\n                    continue\n                if abs(a1) <= tol:\n                    px, py = a2, b2\n                elif abs(a2) <= tol:\n                    px, py = a1, b1\n                else:\n                    continue\n            else:\n                if abs(a1 - a2) > tol:\n                    continue\n                if abs(b1) <= tol:\n                    px, py = a2, b2\n                elif abs(b2) <= tol:\n                    px, py = a1, b1\n                else:\n                    continue\n            x = px / k\n            if x0 - step <= x <= x1 + step and abs(py / k - f(x)) <= 0.05:\n                hits += 1\n                xs_cov.append(x)\n        if best is None or hits > best[0]:\n            best = (hits, k, xs_cov)\n    hits, k, xs_cov = best\n    if hits < 0.9 * expect_n:\n        kind_cn = '水平线' if to == 'y' else '竖线'\n        fail('{}色{}与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 {} 轴）'\n             .format(_CN.get(line_color, line_color), kind_cn, hits, expect_n, scales[0], to))\n    if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:\n        fail('连线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'\n             .format(x0, x1, min(xs_cov), max(xs_cov)))\n    h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)\n    for item in mpl:\n        if item['kind'] == 'axline' and abs(item['at']) < 1e-9 and is_color(item['color'], axis_color):\n            h = h or item['dir'] == 'h'\n            v = v or item['dir'] == 'v'\n    if not (h and v):\n        missing = '、'.join(n for n, ok in (('横轴', h), ('纵轴', v)) if not ok)\n        fail('缺少{}色坐标轴：{}（应为过原点的实线）'.format(_CN.get(axis_color, axis_color), missing))\n\n\n# ---------------- matplotlib ----------------\ndef check_mpl_line(mpl, xs, ys, marker=None):\n    lines = [m for m in mpl if m['kind'] == 'line']\n    if not lines:\n        fail('没有检测到 matplotlib 折线（是否调用了 plt.plot？）')\n    xs = [float(x) for x in xs]\n    ys = [float(y) for y in ys]\n    for ln in lines:\n        if len(ln['x']) == len(xs) and all(approx(a, b, 1e-6) for a, b in zip(ln['x'], xs)) \\\n                and all(approx(a, b, 1e-6) for a, b in zip(ln['y'], ys)):\n            if marker and ln.get('marker') != marker:\n                fail('折线数据正确，但没有用 {!r} 标记数据点（plot 的格式串要带 o）'.format(marker))\n            return\n    got = lines[0]\n    fail('折线数据不对：应为 x={} y={}，实际画的是 x={} y={}'.format(\n        _short(xs), _short(ys), _short(got['x']), _short(got['y'])))\n\n\ndef check_mpl_curve(mpl, f, x0, x1, color=None, min_points=50, tol=0.02):\n    \"\"\"matplotlib 函数曲线：存在一条折线，点数足够、x 覆盖 [x0, x1]、各点都满足 y ≈ f(x)。\"\"\"\n    lines = [m for m in mpl if m['kind'] == 'line' and len(m['x']) >= 2]\n    if not lines:\n        fail('没有检测到 matplotlib 曲线（是否调用了 plt.plot？）')\n    why = ''\n    for ln in lines:\n        if color and not is_color(ln['color'], color):\n            why = why or '曲线颜色应为{}'.format(_CN.get(color, color))\n            continue\n        if len(ln['x']) < min_points:\n            why = why or '曲线只有 {} 个点，太少了（步长取小一些，至少 {} 个点）'.format(len(ln['x']), min_points)\n            continue\n        if min(ln['x']) > x0 + 0.05 or max(ln['x']) < x1 - 0.05:\n            why = why or 'x 范围不对：应覆盖 {} ~ {}，实际 {:.2f} ~ {:.2f}'.format(x0, x1, min(ln['x']), max(ln['x']))\n            continue\n        bad = [x for x, y in zip(ln['x'], ln['y']) if abs(y - f(x)) > tol * max(1.0, abs(f(x)))]\n        if bad:\n            why = why or '曲线上有 {} 个点不满足函数式（例如 x={:.2f}），检查函数写法'.format(len(bad), bad[0])\n            continue\n        return\n    fail(why or '没有找到符合要求的曲线')\n\n\ndef _short(v):\n    v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]\n    return str(v if len(v) <= 8 else v[:8] + ['…'])\n\n\n_CN = {'red': '红', 'green': '绿', 'blue': '蓝', 'black': '黑'}\n\n\ndef run_check(src, ns):\n    \"\"\"执行一段检查代码，返回 (ok, msg)。\"\"\"\n    env = {name: globals()[name] for name in (\n        'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',\n        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows',\n        'check_class', 'check_mpl_curve')}\n    env['math'] = math\n    env.update(ns)\n    try:\n        exec(compile(src, '<check>', 'exec'), env)\n        return True, ''\n    except CheckFail as e:\n        return False, str(e)\n    except AssertionError as e:\n        return False, str(e) or '绘图/文件检查未通过'\n    except Exception as e:\n        return False, '检查时出错：{}: {}'.format(e.__class__.__name__, e)\n", "turtle_stub.py": "\"\"\"纯 Python turtle 桩 —— 供本地/CI 校验使用。\n\n行为与 js/runner.js 中注入浏览器的 turtle_shim 的状态数学完全一致\n（浏览器中 turtle 绘制到 canvas，本地桩只维护坐标/角度/画笔状态）。\n考试 turtle 题的判题依据是 print 出的状态值，两端一致即可互验。\n\"\"\"\nimport math\nimport types\n\n\nclass Turtle:\n    _segs = None  # make_module 绑定：画笔落下时记录线段，供运行后检查（tools/py2check.py）\n\n    def __init__(self):\n        self.x, self.y, self._hd = 0.0, 0.0, 0.0\n        self.pen_down = True\n        self.color_v = '#000000'\n        self.fillcolor_v = '#000000'\n        self.filling = False\n        self.fill_pts = []\n        self.speed_v = 6\n\n    def _seg(self, nx, ny):\n        if self.pen_down and self._segs is not None:\n            self._segs.append((self.x, self.y, nx, ny, self.color_v))\n        self.x, self.y = nx, ny\n\n    def forward(self, d):\n        r = math.radians(self._hd)\n        self._seg(self.x + d * math.cos(r), self.y + d * math.sin(r))\n    fd = forward\n\n    def backward(self, d):\n        self.forward(-d)\n    bk = back = backward\n\n    def right(self, a):\n        self._hd -= float(a)\n    rt = right\n\n    def left(self, a):\n        self._hd += float(a)\n    lt = left\n\n    def goto(self, x, y=None):\n        if y is None:\n            x, y = x\n        self._seg(float(x), float(y))\n    setpos = setposition = goto\n\n    def setx(self, x):\n        self._seg(float(x), self.y)\n\n    def sety(self, y):\n        self._seg(self.x, float(y))\n\n    def setheading(self, a):\n        self._hd = float(a)\n    seth = setheading\n\n    def home(self):\n        self.goto(0, 0)\n        self.setheading(0)\n\n    def circle(self, r, extent=None, steps=None):\n        r = float(r)\n        extent = 360.0 if extent is None else float(extent)\n        steps = steps or max(8, int(abs(extent) / 5))\n        if abs(r) < 1e-9:\n            return\n        cx = self.x + r * math.cos(math.radians(self._hd + 90))\n        cy = self.y + r * math.sin(math.radians(self._hd + 90))\n        a0 = math.radians(self._hd - 90)\n        for i in range(1, steps + 1):\n            a = a0 + math.radians(extent) * i / steps\n            nx = cx + abs(r) * math.cos(a)\n            ny = cy + abs(r) * math.sin(a)\n            if r >= 0:\n                self._seg(nx, ny)\n            else:\n                self._seg(2 * self.x - nx, 2 * self.y - ny)\n        self._hd += extent\n\n    def dot(self, size=1, color=None):\n        pass\n\n    def penup(self):\n        self.pen_down = False\n    pu = up = penup\n\n    def pendown(self):\n        self.pen_down = True\n    pd = down = pendown\n\n    def pencolor(self, *a):\n        if a:\n            self.color_v = a[0] if len(a) == 1 else '#%02x%02x%02x' % tuple(a)\n        return self.color_v\n\n    def fillcolor(self, *a):\n        if a:\n            self.fillcolor_v = a[0] if len(a) == 1 else '#%02x%02x%02x' % tuple(a)\n        return self.fillcolor_v\n\n    def color(self, *a):\n        if a:\n            self.pencolor(*a[:1])\n            if len(a) > 1:\n                self.fillcolor(a[1])\n        return (self.color_v, self.fillcolor_v)\n\n    def begin_fill(self):\n        self.filling = True\n        self.fill_pts = [(self.x, self.y)]\n\n    def end_fill(self):\n        self.filling = False\n        self.fill_pts = []\n\n    def write(self, s, *a, **k):\n        pass\n\n    def heading(self):\n        return self._hd\n\n    def speed(self, s):\n        self.speed_v = s\n\n    def hideturtle(self):\n        pass\n    ht = hideturtle\n\n    def showturtle(self):\n        pass\n    st = showturtle\n\n    def tracer(self, *a):\n        pass\n\n    def update(self):\n        pass\n\n    def done(self):\n        pass\n\n    def exitonclick(self):\n        pass\n\n    def mainloop(self):\n        pass\n\n    def screensize(self, *a):\n        pass\n\n    def setup(self, *a, **k):\n        pass\n\n    def title(self, *a):\n        pass\n\n    def bgcolor(self, *a):\n        pass\n\n    def colormode(self, *a):\n        pass\n\n    def mode(self, *a):\n        pass\n\n    def reset(self):\n        self.x, self.y, self._hd = 0.0, 0.0, 0.0\n        self.pen_down = True\n\n    def clear(self):\n        pass\n\n    def position(self):\n        return (self.x, self.y)\n    pos = position\n\n    def xcor(self):\n        return self.x\n\n    def ycor(self):\n        return self.y\n\n    def towards(self, *a):\n        return 0.0\n\n    def distance(self, *a):\n        return 0.0\n\n    def pen(self, *a, **k):\n        pass\n\n    def isdown(self):\n        return self.pen_down\n\n    def isvisible(self):\n        return True\n\n    def window_width(self):\n        return 480\n\n    def window_height(self):\n        return 360\n\n\nclass Screen:\n    def __getattr__(self, name):\n        def _noop(*a, **k):\n            return None\n        return _noop\n\n\ndef make_module(segs=None):\n    mod = types.ModuleType('turtle')\n    state = {'t': None}\n\n    class BoundTurtle(Turtle):\n        _segs = segs\n\n    def _get():\n        if state['t'] is None:\n            state['t'] = BoundTurtle()\n        return state['t']\n\n    def _module_getattr(name):\n        return getattr(_get(), name)\n\n    mod.__getattr__ = _module_getattr\n    mod.Turtle = BoundTurtle\n    mod.Pen = BoundTurtle\n    mod.RawTurtle = BoundTurtle\n    mod.Screen = Screen\n    mod.getscreen = lambda *a, **k: Screen()\n    mod.__all__ = ['Turtle', 'Pen', 'RawTurtle', 'Screen', 'getscreen'] + [\n        'forward', 'fd', 'backward', 'bk', 'back', 'right', 'rt', 'left', 'lt',\n        'goto', 'setpos', 'setposition', 'setx', 'sety', 'setheading', 'seth',\n        'home', 'circle', 'dot', 'penup', 'pu', 'up', 'pendown', 'pd', 'down',\n        'pencolor', 'fillcolor', 'color', 'begin_fill', 'end_fill', 'write',\n        'speed', 'hideturtle', 'ht', 'showturtle', 'st', 'tracer', 'update',\n        'done', 'exitonclick', 'mainloop', 'screensize', 'setup', 'title',\n        'bgcolor', 'colormode', 'reset', 'clear', 'position', 'pos', 'xcor',\n        'ycor', 'towards', 'distance', 'pen', 'isdown', 'isvisible',\n        'window_width', 'window_height']\n    return mod\n"}};
 /* 运行后检查源码（tools/py2check.py 原样打包；浏览器判题装成 py2check 模块） */
-window.PY2CHECK_SRC = "\"\"\"运行后检查（post-run check）—— 浏览器 Pyodide 与本地 harness 共用同一份源码。\n\n为什么需要：绘图题、写文件题光看 print 输出判不出对错（画错了照样能 print）。\n测试点可带 \"check\" 字段（一段 Python），学生代码运行结束后执行，检查：\n  - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）\n  - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]\n  - 写出的文件（read_text / read_bytes / exists）与数据库（db_rows / check_db_rows，新连接只看得到已提交的数据）\n  - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出\n检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。\n\n本文件由 tools/build_data.py 原样打包进 js/data.js（window.PY2CHECK_SRC），\n浏览器端以模块 py2check 载入，与本地校验逐字节一致。\n\"\"\"\nimport math\nimport os\n\n\nclass CheckFail(Exception):\n    pass\n\n\ndef fail(msg):\n    raise CheckFail(str(msg))\n\n\n# ---------------- 颜色 ----------------\n_NAMED = {\n    'red': (255, 0, 0), 'r': (255, 0, 0), 'green': (0, 128, 0), 'g': (0, 128, 0),\n    'lime': (0, 255, 0), 'blue': (0, 0, 255), 'b': (0, 0, 255), 'black': (0, 0, 0),\n    'k': (0, 0, 0), 'white': (255, 255, 255), 'w': (255, 255, 255),\n    'yellow': (255, 255, 0), 'y': (255, 255, 0), 'orange': (255, 165, 0),\n    'purple': (128, 0, 128), 'pink': (255, 192, 203), 'gray': (128, 128, 128),\n    'grey': (128, 128, 128), 'brown': (165, 42, 42), 'cyan': (0, 255, 255),\n    'c': (0, 255, 255), 'magenta': (255, 0, 255), 'm': (255, 0, 255),\n    'darkgreen': (0, 100, 0), 'darkred': (139, 0, 0), 'navy': (0, 0, 128),\n    'tab:red': (214, 39, 40), 'tab:green': (44, 160, 44), 'tab:blue': (31, 119, 180),\n}\n\n\ndef rgb(c):\n    \"\"\"把 'red' / '#ff0000' / (1, 0, 0) / (255, 0, 0) 统一成 0~255 的 (r, g, b)；认不出返回 None。\"\"\"\n    if c is None:\n        return None\n    if isinstance(c, (tuple, list)):\n        v = list(c)[:3]\n        if len(v) < 3:\n            return None\n        try:\n            v = [float(x) for x in v]\n        except (TypeError, ValueError):\n            return None\n        if all(0 <= x <= 1 for x in v):\n            return tuple(int(round(x * 255)) for x in v)\n        return tuple(int(round(x)) for x in v)\n    s = str(c).strip().lower()\n    if s in _NAMED:\n        return _NAMED[s]\n    if s.startswith('#') and len(s) in (4, 7, 9):\n        if len(s) == 4:\n            s = '#' + ''.join(ch * 2 for ch in s[1:])\n        try:\n            return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))\n        except ValueError:\n            return None\n    return None\n\n\ndef is_color(c, name):\n    \"\"\"颜色归类判断（宽松）：'red' 接受 red/#f00/#ff0000/(1,0,0)/'r'/'tab:red' 等。\"\"\"\n    v = rgb(c)\n    if v is None:\n        return False\n    r, g, b = v\n    hi, lo = 120, 110\n    name = name.lower()\n    if name == 'red':\n        return r >= hi and g < lo and b < lo\n    if name == 'green':\n        return g >= hi and r < lo + 20 and b < lo + 20\n    if name == 'blue':\n        return b >= hi and r < lo and g < lo + 60\n    if name == 'black':\n        return max(v) < 60\n    want = rgb(name)\n    return want is not None and all(abs(a - w) <= 40 for a, w in zip(v, want))\n\n\ndef approx(a, b, tol=1e-6):\n    return abs(float(a) - float(b)) <= tol\n\n\n# ---------------- 运行期采集 ----------------\ndef mpl_snapshot():\n    \"\"\"抓取当前所有 matplotlib 图形中的折线 / 线段集合 / 柱子（未导入 matplotlib 时返回 []）。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        return []\n    try:\n        from matplotlib import _pylab_helpers\n        from matplotlib.colors import to_hex\n    except Exception:\n        return []\n    out = []\n    for mgr in _pylab_helpers.Gcf.get_all_fig_managers():\n        fig = mgr.canvas.figure\n        for ax in fig.axes:\n            for ln in ax.get_lines():\n                try:\n                    xs = [float(x) for x in ln.get_xdata()]\n                    ys = [float(y) for y in ln.get_ydata()]\n                except (TypeError, ValueError):\n                    continue\n                item = {'kind': 'line', 'x': xs, 'y': ys,\n                        'color': to_hex(ln.get_color()), 'marker': str(ln.get_marker())}\n                # plt.axhline / axvline：数据坐标只有一维，另一维是 0~1 的轴坐标\n                tr = ln.get_transform()\n                if tr == ax.get_yaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'h', 'at': ys[0], 'color': item['color']}\n                elif tr == ax.get_xaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'v', 'at': xs[0], 'color': item['color']}\n                out.append(item)\n            for coll in ax.collections:\n                get_segments = getattr(coll, 'get_segments', None)\n                if get_segments is None:\n                    continue\n                colors = [to_hex(c) for c in coll.get_colors()] or ['#000000']\n                for i, seg in enumerate(get_segments()):\n                    if len(seg) >= 2:\n                        (x1, y1), (x2, y2) = seg[0], seg[-1]\n                        out.append({'kind': 'seg', 'x': [float(x1), float(x2)], 'y': [float(y1), float(y2)],\n                                    'color': colors[i % len(colors)]})\n            for p in ax.patches:\n                if hasattr(p, 'get_height') and hasattr(p, 'get_x'):\n                    out.append({'kind': 'bar', 'x': float(p.get_x() + p.get_width() / 2),\n                                'h': float(p.get_height()), 'color': to_hex(p.get_facecolor())})\n    return out\n\n\ndef install_mpl_hooks(store):\n    \"\"\"学生代码里的 plt.close() / plt.show() 会清掉或\"消费\"图形：调用前先快照。返回还原函数。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        try:\n            import matplotlib.pyplot  # noqa: F401  （matplotlib 题在 harness 中已预导入）\n        except Exception:\n            return lambda: None\n    plt = sys.modules['matplotlib.pyplot']\n    orig_close, orig_show = plt.close, plt.show\n\n    def close(*a, **k):\n        store.extend(mpl_snapshot())\n        return orig_close(*a, **k)\n\n    def show(*a, **k):\n        store.extend(mpl_snapshot())\n        return None\n\n    plt.close, plt.show = close, show\n\n    def restore():\n        plt.close, plt.show = orig_close, orig_show\n    return restore\n\n\ndef cleanup_files(names):\n    for n in names or []:\n        try:\n            os.remove(n)\n        except OSError:\n            pass\n\n\n# ---------------- 文件 ----------------\ndef exists(name):\n    return os.path.exists(name)\n\n\ndef read_bytes(name):\n    if not os.path.exists(name):\n        fail('没有找到程序应生成的文件 ' + name)\n    with open(name, 'rb') as f:\n        return f.read()\n\n\ndef read_text(name, encoding='utf-8'):\n    data = read_bytes(name)\n    try:\n        return data.decode(encoding)\n    except UnicodeDecodeError:\n        hint = ''\n        if encoding.lower() in ('gbk', 'gb2312', 'gb18030'):\n            try:\n                data.decode('utf-8')\n                hint = '（看起来是按 UTF-8 写的，open 时要写 encoding=\\'gbk\\'）'\n            except UnicodeDecodeError:\n                pass\n        fail('文件 ' + name + ' 不能按 ' + encoding + ' 编码读取' + hint)\n\n\ndef check_lines(name, expected_lines, encoding='utf-8'):\n    \"\"\"文件内容逐行比对（忽略行尾空白与末尾空行）。\"\"\"\n    got = [ln.rstrip() for ln in read_text(name, encoding).replace('\\r\\n', '\\n').split('\\n')]\n    while got and got[-1] == '':\n        got.pop()\n    want = [ln.rstrip() for ln in expected_lines]\n    if got != want:\n        for i in range(max(len(got), len(want))):\n            g = got[i] if i < len(got) else '（缺少这一行）'\n            w = want[i] if i < len(want) else '（多出这一行）'\n            if g != w:\n                fail('文件 {} 第 {} 行不对：应为 {!r}，实际 {!r}'.format(name, i + 1, w, g))\n\n\ndef check_png(name):\n    data = read_bytes(name)\n    if not data.startswith(b'\\x89PNG'):\n        fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')\n\n\n# ---------------- 面向对象 ----------------\ndef check_class(user, name, methods=(), base=None):\n    \"\"\"学生程序必须自己定义类 name（有构造方法和指定的实例方法）；base 给出时还必须是 base 的子类，且 methods 在子类中重写。\n\n    防止\"不写类、直接 print 结果\"也能通过编程题。\n    \"\"\"\n    cls = user.get(name)\n    if not isinstance(cls, type):\n        fail('程序里没有定义类 {0}（题目要求用 class {0} 定义）'.format(name))\n    if base is None:\n        if '__init__' not in cls.__dict__:\n            fail('类 {} 没有定义构造方法 __init__'.format(name))\n    else:\n        parent = user.get(base)\n        if not isinstance(parent, type):\n            fail('程序里没有定义父类 {}'.format(base))\n        if cls is parent or not issubclass(cls, parent):\n            fail('类 {} 应继承自 {}（写成 class {}({}):）'.format(name, base, name, base))\n    for m in methods:\n        if not callable(getattr(cls, m, None)):\n            fail('类 {} 缺少实例方法 {}()'.format(name, m))\n        if m not in cls.__dict__:\n            fail(('子类 {} 要重写方法 {}()' if base is not None else '方法 {1}() 要定义在类 {0} 里面（注意缩进）').format(name, m))\n\n\n# ---------------- SQLite ----------------\ndef db_rows(name, sql, params=()):\n    \"\"\"用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。\"\"\"\n    if not os.path.exists(name):\n        fail('没有找到数据库文件 ' + name)\n    import sqlite3\n    conn = sqlite3.connect(name, timeout=1)\n    try:\n        return [tuple(r) for r in conn.execute(sql, params).fetchall()]\n    except sqlite3.Error as e:\n        fail('读取数据库 {} 出错：{}'.format(name, e))\n    finally:\n        conn.close()\n\n\ndef check_db_rows(name, sql, expected, hint=''):\n    \"\"\"程序结束后数据库里的查询结果必须等于 expected（行的列表）。\"\"\"\n    got = db_rows(name, sql)\n    want = [tuple(r) for r in expected]\n    if got != want:\n        fail('程序结束后数据库 {} 的内容不对：应为 {}，实际 {}{}'.format(\n            name, want if want else '（无记录）', got if got else '（无记录）', '。' + hint if hint else ''))\n\n\n# ---------------- turtle ----------------\ndef _seglen(s):\n    return math.hypot(s[2] - s[0], s[3] - s[1])\n\n\ndef check_polygon(segs, n, side, color, tol=1.0):\n    \"\"\"画出的同色线段恰好构成一个边长 side 的闭合正 n 边形。\"\"\"\n    mine = [s for s in segs if is_color(s[4], color)]\n    if not mine:\n        fail('画布上没有{}色线条（检查 pencolor/color 的设置）'.format(_CN.get(color, color)))\n    if len(mine) != n:\n        fail('{}色线条应有 {} 条边，实际画了 {} 条'.format(_CN.get(color, color), n, len(mine)))\n    for i, s in enumerate(mine):\n        if abs(_seglen(s) - side) > tol:\n            fail('第 {} 条边长度约为 {:.1f}，应为 {}'.format(i + 1, _seglen(s), side))\n        nxt = mine[(i + 1) % n]\n        if math.hypot(s[2] - nxt[0], s[3] - nxt[1]) > tol:\n            fail('第 {} 条边与下一条边没有首尾相接，图形不闭合'.format(i + 1))\n    for i in range(n):\n        a, b = mine[i], mine[(i + 1) % n]\n        v1 = (a[2] - a[0], a[3] - a[1])\n        v2 = (b[2] - b[0], b[3] - b[1])\n        cosang = (v1[0] * v2[0] + v1[1] * v2[1]) / (side * side)\n        turn = math.degrees(math.acos(max(-1.0, min(1.0, cosang))))\n        if abs(turn - 360.0 / n) > 1.0:\n            fail('第 {} 个转角约 {:.0f}°，正 {} 边形每次应转 {:.0f}°'.format(i + 1, turn, n, 360.0 / n))\n\n\ndef _axis_ok(lines, color, min_len):\n    h = v = False\n    for (x1, y1, x2, y2, c) in lines:\n        if not is_color(c, color):\n            continue\n        if abs(y1) < 2 and abs(y2) < 2 and abs(x2 - x1) >= min_len and min(x1, x2) < 0 < max(x1, x2):\n            h = True\n        if abs(x1) < 2 and abs(x2) < 2 and abs(y2 - y1) >= min_len and min(y1, y2) < 0 < max(y1, y2):\n            v = True\n    return h, v\n\n\ndef _as_lines(segs, mpl):\n    \"\"\"turtle 线段 + matplotlib 线条统一成 (x1, y1, x2, y2, color) 线段列表。\"\"\"\n    out = list(segs)\n    for item in mpl:\n        if item['kind'] in ('line', 'seg'):\n            xs, ys = item['x'], item['y']\n            for i in range(len(xs) - 1):\n                out.append((xs[i], ys[i], xs[i + 1], ys[i + 1], item['color']))\n    return out\n\n\ndef check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1)):\n    \"\"\"函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 向 y 轴的 line_color 色水平线。\n\n    turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。\n    \"\"\"\n    lines = _as_lines(segs, mpl)\n    if not lines:\n        fail('没有检测到任何绘图（turtle 线条或 matplotlib 图形）')\n    mpl_lines = _as_lines([], mpl)\n    expect_n = int(round((x1 - x0) / step)) + 1\n    best = None\n    for k in scales:\n        hits, xs_cov = 0, []\n        for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):\n            if not is_color(c, line_color) or abs(b1 - b2) > 0.05 * k + 0.5:\n                continue\n            if abs(a1) <= 0.05 * k + 0.5:\n                ex, ey = a2, b2\n            elif abs(a2) <= 0.05 * k + 0.5:\n                ex, ey = a1, b1\n            else:\n                continue\n            x = ex / k\n            if x0 - step <= x <= x1 + step and abs(ey / k - f(x)) <= 0.05:\n                hits += 1\n                xs_cov.append(x)\n        if best is None or hits > best[0]:\n            best = (hits, k, xs_cov)\n    hits, k, xs_cov = best\n    if hits < 0.9 * expect_n:\n        fail('{}色水平线与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 y 轴）'\n             .format(_CN.get(line_color, line_color), hits, expect_n, scales[0]))\n    if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:\n        fail('水平线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'\n             .format(x0, x1, min(xs_cov), max(xs_cov)))\n    h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)\n    for item in mpl:\n        if item['kind'] == 'axline' and abs(item['at']) < 1e-9 and is_color(item['color'], axis_color):\n            h = h or item['dir'] == 'h'\n            v = v or item['dir'] == 'v'\n    if not (h and v):\n        missing = '、'.join(n for n, ok in (('横轴', h), ('纵轴', v)) if not ok)\n        fail('缺少{}色坐标轴：{}（应为过原点的实线）'.format(_CN.get(axis_color, axis_color), missing))\n\n\n# ---------------- matplotlib ----------------\ndef check_mpl_line(mpl, xs, ys, marker=None):\n    lines = [m for m in mpl if m['kind'] == 'line']\n    if not lines:\n        fail('没有检测到 matplotlib 折线（是否调用了 plt.plot？）')\n    xs = [float(x) for x in xs]\n    ys = [float(y) for y in ys]\n    for ln in lines:\n        if len(ln['x']) == len(xs) and all(approx(a, b, 1e-6) for a, b in zip(ln['x'], xs)) \\\n                and all(approx(a, b, 1e-6) for a, b in zip(ln['y'], ys)):\n            if marker and ln.get('marker') != marker:\n                fail('折线数据正确，但没有用 {!r} 标记数据点（plot 的格式串要带 o）'.format(marker))\n            return\n    got = lines[0]\n    fail('折线数据不对：应为 x={} y={}，实际画的是 x={} y={}'.format(\n        _short(xs), _short(ys), _short(got['x']), _short(got['y'])))\n\n\ndef _short(v):\n    v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]\n    return str(v if len(v) <= 8 else v[:8] + ['…'])\n\n\n_CN = {'red': '红', 'green': '绿', 'blue': '蓝', 'black': '黑'}\n\n\ndef run_check(src, ns):\n    \"\"\"执行一段检查代码，返回 (ok, msg)。\"\"\"\n    env = {name: globals()[name] for name in (\n        'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',\n        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows',\n        'check_class')}\n    env['math'] = math\n    env.update(ns)\n    try:\n        exec(compile(src, '<check>', 'exec'), env)\n        return True, ''\n    except CheckFail as e:\n        return False, str(e)\n    except AssertionError as e:\n        return False, str(e) or '绘图/文件检查未通过'\n    except Exception as e:\n        return False, '检查时出错：{}: {}'.format(e.__class__.__name__, e)\n";
+window.PY2CHECK_SRC = "\"\"\"运行后检查（post-run check）—— 浏览器 Pyodide 与本地 harness 共用同一份源码。\n\n为什么需要：绘图题、写文件题光看 print 输出判不出对错（画错了照样能 print）。\n测试点可带 \"check\" 字段（一段 Python），学生代码运行结束后执行，检查：\n  - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）\n  - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]\n  - 写出的文件（read_text / read_bytes / exists）与数据库（db_rows / check_db_rows，新连接只看得到已提交的数据）\n  - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出\n检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。\n\n本文件由 tools/build_data.py 原样打包进 js/data.js（window.PY2CHECK_SRC），\n浏览器端以模块 py2check 载入，与本地校验逐字节一致。\n\"\"\"\nimport math\nimport os\n\n\nclass CheckFail(Exception):\n    pass\n\n\ndef fail(msg):\n    raise CheckFail(str(msg))\n\n\n# ---------------- 颜色 ----------------\n_NAMED = {\n    'red': (255, 0, 0), 'r': (255, 0, 0), 'green': (0, 128, 0), 'g': (0, 128, 0),\n    'lime': (0, 255, 0), 'blue': (0, 0, 255), 'b': (0, 0, 255), 'black': (0, 0, 0),\n    'k': (0, 0, 0), 'white': (255, 255, 255), 'w': (255, 255, 255),\n    'yellow': (255, 255, 0), 'y': (255, 255, 0), 'orange': (255, 165, 0),\n    'purple': (128, 0, 128), 'pink': (255, 192, 203), 'gray': (128, 128, 128),\n    'grey': (128, 128, 128), 'brown': (165, 42, 42), 'cyan': (0, 255, 255),\n    'c': (0, 255, 255), 'magenta': (255, 0, 255), 'm': (255, 0, 255),\n    'darkgreen': (0, 100, 0), 'darkred': (139, 0, 0), 'navy': (0, 0, 128),\n    'tab:red': (214, 39, 40), 'tab:green': (44, 160, 44), 'tab:blue': (31, 119, 180),\n}\n\n\ndef rgb(c):\n    \"\"\"把 'red' / '#ff0000' / (1, 0, 0) / (255, 0, 0) 统一成 0~255 的 (r, g, b)；认不出返回 None。\"\"\"\n    if c is None:\n        return None\n    if isinstance(c, (tuple, list)):\n        v = list(c)[:3]\n        if len(v) < 3:\n            return None\n        try:\n            v = [float(x) for x in v]\n        except (TypeError, ValueError):\n            return None\n        if all(0 <= x <= 1 for x in v):\n            return tuple(int(round(x * 255)) for x in v)\n        return tuple(int(round(x)) for x in v)\n    s = str(c).strip().lower()\n    if s in _NAMED:\n        return _NAMED[s]\n    if s.startswith('#') and len(s) in (4, 7, 9):\n        if len(s) == 4:\n            s = '#' + ''.join(ch * 2 for ch in s[1:])\n        try:\n            return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))\n        except ValueError:\n            return None\n    return None\n\n\ndef is_color(c, name):\n    \"\"\"颜色归类判断（宽松）：'red' 接受 red/#f00/#ff0000/(1,0,0)/'r'/'tab:red' 等。\"\"\"\n    v = rgb(c)\n    if v is None:\n        return False\n    r, g, b = v\n    hi, lo = 120, 110\n    name = name.lower()\n    if name == 'red':\n        return r >= hi and g < lo and b < lo\n    if name == 'green':\n        return g >= hi and r < lo + 20 and b < lo + 20\n    if name == 'blue':\n        return b >= hi and r < lo and g < lo + 60\n    if name == 'black':\n        return max(v) < 60\n    want = rgb(name)\n    return want is not None and all(abs(a - w) <= 40 for a, w in zip(v, want))\n\n\ndef approx(a, b, tol=1e-6):\n    return abs(float(a) - float(b)) <= tol\n\n\n# ---------------- 运行期采集 ----------------\ndef mpl_snapshot():\n    \"\"\"抓取当前所有 matplotlib 图形中的折线 / 线段集合 / 柱子（未导入 matplotlib 时返回 []）。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        return []\n    try:\n        from matplotlib import _pylab_helpers\n        from matplotlib.colors import to_hex\n    except Exception:\n        return []\n    out = []\n    for mgr in _pylab_helpers.Gcf.get_all_fig_managers():\n        fig = mgr.canvas.figure\n        for ax in fig.axes:\n            for ln in ax.get_lines():\n                try:\n                    xs = [float(x) for x in ln.get_xdata()]\n                    ys = [float(y) for y in ln.get_ydata()]\n                except (TypeError, ValueError):\n                    continue\n                item = {'kind': 'line', 'x': xs, 'y': ys,\n                        'color': to_hex(ln.get_color()), 'marker': str(ln.get_marker())}\n                # plt.axhline / axvline：数据坐标只有一维，另一维是 0~1 的轴坐标\n                tr = ln.get_transform()\n                if tr == ax.get_yaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'h', 'at': ys[0], 'color': item['color']}\n                elif tr == ax.get_xaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'v', 'at': xs[0], 'color': item['color']}\n                out.append(item)\n            for coll in ax.collections:\n                get_segments = getattr(coll, 'get_segments', None)\n                if get_segments is None:\n                    continue\n                colors = [to_hex(c) for c in coll.get_colors()] or ['#000000']\n                for i, seg in enumerate(get_segments()):\n                    if len(seg) >= 2:\n                        (x1, y1), (x2, y2) = seg[0], seg[-1]\n                        out.append({'kind': 'seg', 'x': [float(x1), float(x2)], 'y': [float(y1), float(y2)],\n                                    'color': colors[i % len(colors)]})\n            for p in ax.patches:\n                if hasattr(p, 'get_height') and hasattr(p, 'get_x'):\n                    out.append({'kind': 'bar', 'x': float(p.get_x() + p.get_width() / 2),\n                                'h': float(p.get_height()), 'color': to_hex(p.get_facecolor())})\n    return out\n\n\ndef install_mpl_hooks(store):\n    \"\"\"学生代码里的 plt.close() / plt.show() 会清掉或\"消费\"图形：调用前先快照。返回还原函数。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        try:\n            import matplotlib.pyplot  # noqa: F401  （matplotlib 题在 harness 中已预导入）\n        except Exception:\n            return lambda: None\n    plt = sys.modules['matplotlib.pyplot']\n    orig_close, orig_show = plt.close, plt.show\n\n    def close(*a, **k):\n        store.extend(mpl_snapshot())\n        return orig_close(*a, **k)\n\n    def show(*a, **k):\n        store.extend(mpl_snapshot())\n        return None\n\n    plt.close, plt.show = close, show\n\n    def restore():\n        plt.close, plt.show = orig_close, orig_show\n    return restore\n\n\n# ---------------- 考场路径 ----------------\n# 考场上素材在 c:/素材/、程序与结果存 c:/ks/。判题时把这两种前缀映射到当前判题目录，\n# 学生在网页和本机都可以按考场写法 open('c:/素材/data.csv')、sqlite3.connect('c:/素材/x.db')。\nimport re as _re\n_EXAM_PREFIX = _re.compile(r'^\\s*[cC]:[\\\\/]+(?:素材|[kK][sS])[\\\\/]+')\n\n\ndef map_exam_path(p):\n    if isinstance(p, str):\n        m = _EXAM_PREFIX.match(p)\n        if m:\n            return p[m.end():].replace('\\\\', '/')\n    return p\n\n\ndef install_exam_paths():\n    \"\"\"临时替换 open / os.path.exists / sqlite3.connect，返回还原函数。\"\"\"\n    import builtins\n    orig_open = builtins.open\n    orig_exists = os.path.exists\n\n    def _open(file, *a, **k):\n        return orig_open(map_exam_path(file), *a, **k)\n\n    def _exists(p):\n        return orig_exists(map_exam_path(p))\n\n    builtins.open = _open\n    os.path.exists = _exists\n    restores = [lambda: setattr(builtins, 'open', orig_open), lambda: setattr(os.path, 'exists', orig_exists)]\n    try:\n        import sqlite3\n        orig_connect = sqlite3.connect\n\n        def _connect(db, *a, **k):\n            return orig_connect(map_exam_path(db), *a, **k)\n\n        sqlite3.connect = _connect\n        restores.append(lambda: setattr(sqlite3, 'connect', orig_connect))\n    except Exception:\n        pass\n\n    def restore():\n        for r in reversed(restores):\n            r()\n    return restore\n\n\ndef cleanup_files(names):\n    for n in names or []:\n        try:\n            os.remove(n)\n        except OSError:\n            pass\n\n\n# ---------------- 文件 ----------------\ndef exists(name):\n    return os.path.exists(name)\n\n\ndef read_bytes(name):\n    if not os.path.exists(name):\n        fail('没有找到程序应生成的文件 ' + name)\n    with open(name, 'rb') as f:\n        return f.read()\n\n\ndef read_text(name, encoding='utf-8'):\n    data = read_bytes(name)\n    try:\n        return data.decode(encoding)\n    except UnicodeDecodeError:\n        hint = ''\n        if encoding.lower() in ('gbk', 'gb2312', 'gb18030'):\n            try:\n                data.decode('utf-8')\n                hint = '（看起来是按 UTF-8 写的，open 时要写 encoding=\\'gbk\\'）'\n            except UnicodeDecodeError:\n                pass\n        fail('文件 ' + name + ' 不能按 ' + encoding + ' 编码读取' + hint)\n\n\ndef check_lines(name, expected_lines, encoding='utf-8'):\n    \"\"\"文件内容逐行比对（忽略行尾空白与末尾空行）。\"\"\"\n    got = [ln.rstrip() for ln in read_text(name, encoding).replace('\\r\\n', '\\n').split('\\n')]\n    while got and got[-1] == '':\n        got.pop()\n    want = [ln.rstrip() for ln in expected_lines]\n    if got != want:\n        for i in range(max(len(got), len(want))):\n            g = got[i] if i < len(got) else '（缺少这一行）'\n            w = want[i] if i < len(want) else '（多出这一行）'\n            if g != w:\n                fail('文件 {} 第 {} 行不对：应为 {!r}，实际 {!r}'.format(name, i + 1, w, g))\n\n\ndef check_png(name):\n    data = read_bytes(name)\n    if not data.startswith(b'\\x89PNG'):\n        fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')\n\n\n# ---------------- 面向对象 ----------------\ndef check_class(user, name, methods=(), base=None):\n    \"\"\"学生程序必须自己定义类 name（有构造方法和指定的实例方法）；base 给出时还必须是 base 的子类，且 methods 在子类中重写。\n\n    防止\"不写类、直接 print 结果\"也能通过编程题。\n    \"\"\"\n    cls = user.get(name)\n    if not isinstance(cls, type):\n        fail('程序里没有定义类 {0}（题目要求用 class {0} 定义）'.format(name))\n    if base is None:\n        if '__init__' not in cls.__dict__:\n            fail('类 {} 没有定义构造方法 __init__'.format(name))\n    else:\n        parent = user.get(base)\n        if not isinstance(parent, type):\n            fail('程序里没有定义父类 {}'.format(base))\n        if cls is parent or not issubclass(cls, parent):\n            fail('类 {} 应继承自 {}（写成 class {}({}):）'.format(name, base, name, base))\n    for m in methods:\n        if not callable(getattr(cls, m, None)):\n            fail('类 {} 缺少实例方法 {}()'.format(name, m))\n        if m not in cls.__dict__:\n            fail(('子类 {} 要重写方法 {}()' if base is not None else '方法 {1}() 要定义在类 {0} 里面（注意缩进）').format(name, m))\n\n\n# ---------------- SQLite ----------------\ndef db_rows(name, sql, params=()):\n    \"\"\"用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。\"\"\"\n    if not os.path.exists(name):\n        fail('没有找到数据库文件 ' + name)\n    import sqlite3\n    conn = sqlite3.connect(name, timeout=1)\n    try:\n        return [tuple(r) for r in conn.execute(sql, params).fetchall()]\n    except sqlite3.Error as e:\n        fail('读取数据库 {} 出错：{}'.format(name, e))\n    finally:\n        conn.close()\n\n\ndef check_db_rows(name, sql, expected, hint=''):\n    \"\"\"程序结束后数据库里的查询结果必须等于 expected（行的列表）。\"\"\"\n    got = db_rows(name, sql)\n    want = [tuple(r) for r in expected]\n    if got != want:\n        fail('程序结束后数据库 {} 的内容不对：应为 {}，实际 {}{}'.format(\n            name, want if want else '（无记录）', got if got else '（无记录）', '。' + hint if hint else ''))\n\n\n# ---------------- turtle ----------------\ndef _seglen(s):\n    return math.hypot(s[2] - s[0], s[3] - s[1])\n\n\ndef check_polygon(segs, n, side, color, tol=1.0):\n    \"\"\"画出的同色线段恰好构成一个边长 side 的闭合正 n 边形。\"\"\"\n    mine = [s for s in segs if is_color(s[4], color)]\n    if not mine:\n        fail('画布上没有{}色线条（检查 pencolor/color 的设置）'.format(_CN.get(color, color)))\n    if len(mine) != n:\n        fail('{}色线条应有 {} 条边，实际画了 {} 条'.format(_CN.get(color, color), n, len(mine)))\n    for i, s in enumerate(mine):\n        if abs(_seglen(s) - side) > tol:\n            fail('第 {} 条边长度约为 {:.1f}，应为 {}'.format(i + 1, _seglen(s), side))\n        nxt = mine[(i + 1) % n]\n        if math.hypot(s[2] - nxt[0], s[3] - nxt[1]) > tol:\n            fail('第 {} 条边与下一条边没有首尾相接，图形不闭合'.format(i + 1))\n    for i in range(n):\n        a, b = mine[i], mine[(i + 1) % n]\n        v1 = (a[2] - a[0], a[3] - a[1])\n        v2 = (b[2] - b[0], b[3] - b[1])\n        cosang = (v1[0] * v2[0] + v1[1] * v2[1]) / (side * side)\n        turn = math.degrees(math.acos(max(-1.0, min(1.0, cosang))))\n        if abs(turn - 360.0 / n) > 1.0:\n            fail('第 {} 个转角约 {:.0f}°，正 {} 边形每次应转 {:.0f}°'.format(i + 1, turn, n, 360.0 / n))\n\n\ndef _axis_ok(lines, color, min_len):\n    h = v = False\n    for (x1, y1, x2, y2, c) in lines:\n        if not is_color(c, color):\n            continue\n        if abs(y1) < 2 and abs(y2) < 2 and abs(x2 - x1) >= min_len and min(x1, x2) < 0 < max(x1, x2):\n            h = True\n        if abs(x1) < 2 and abs(x2) < 2 and abs(y2 - y1) >= min_len and min(y1, y2) < 0 < max(y1, y2):\n            v = True\n    return h, v\n\n\ndef _as_lines(segs, mpl):\n    \"\"\"turtle 线段 + matplotlib 线条统一成 (x1, y1, x2, y2, color) 线段列表。\"\"\"\n    out = list(segs)\n    for item in mpl:\n        if item['kind'] in ('line', 'seg'):\n            xs, ys = item['x'], item['y']\n            for i in range(len(xs) - 1):\n                out.append((xs[i], ys[i], xs[i + 1], ys[i + 1], item['color']))\n    return out\n\n\ndef check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1), to='y'):\n    \"\"\"函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 的 line_color 色连线。\n\n    to='y'：数据点向 y 轴画水平线（官方 27A 编程 3）；to='x'：数据点向 x 轴画竖线。\n    turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。\n    \"\"\"\n    lines = _as_lines(segs, mpl)\n    if not lines:\n        fail('没有检测到任何绘图（turtle 线条或 matplotlib 图形）')\n    mpl_lines = _as_lines([], mpl)\n    expect_n = int(round((x1 - x0) / step)) + 1\n    best = None\n    for k in scales:\n        hits, xs_cov = 0, []\n        tol = 0.05 * k + 0.5\n        for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):\n            if not is_color(c, line_color):\n                continue\n            if to == 'y':\n                if abs(b1 - b2) > tol:\n                    continue\n                if abs(a1) <= tol:\n                    px, py = a2, b2\n                elif abs(a2) <= tol:\n                    px, py = a1, b1\n                else:\n                    continue\n            else:\n                if abs(a1 - a2) > tol:\n                    continue\n                if abs(b1) <= tol:\n                    px, py = a2, b2\n                elif abs(b2) <= tol:\n                    px, py = a1, b1\n                else:\n                    continue\n            x = px / k\n            if x0 - step <= x <= x1 + step and abs(py / k - f(x)) <= 0.05:\n                hits += 1\n                xs_cov.append(x)\n        if best is None or hits > best[0]:\n            best = (hits, k, xs_cov)\n    hits, k, xs_cov = best\n    if hits < 0.9 * expect_n:\n        kind_cn = '水平线' if to == 'y' else '竖线'\n        fail('{}色{}与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 {} 轴）'\n             .format(_CN.get(line_color, line_color), kind_cn, hits, expect_n, scales[0], to))\n    if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:\n        fail('连线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'\n             .format(x0, x1, min(xs_cov), max(xs_cov)))\n    h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)\n    for item in mpl:\n        if item['kind'] == 'axline' and abs(item['at']) < 1e-9 and is_color(item['color'], axis_color):\n            h = h or item['dir'] == 'h'\n            v = v or item['dir'] == 'v'\n    if not (h and v):\n        missing = '、'.join(n for n, ok in (('横轴', h), ('纵轴', v)) if not ok)\n        fail('缺少{}色坐标轴：{}（应为过原点的实线）'.format(_CN.get(axis_color, axis_color), missing))\n\n\n# ---------------- matplotlib ----------------\ndef check_mpl_line(mpl, xs, ys, marker=None):\n    lines = [m for m in mpl if m['kind'] == 'line']\n    if not lines:\n        fail('没有检测到 matplotlib 折线（是否调用了 plt.plot？）')\n    xs = [float(x) for x in xs]\n    ys = [float(y) for y in ys]\n    for ln in lines:\n        if len(ln['x']) == len(xs) and all(approx(a, b, 1e-6) for a, b in zip(ln['x'], xs)) \\\n                and all(approx(a, b, 1e-6) for a, b in zip(ln['y'], ys)):\n            if marker and ln.get('marker') != marker:\n                fail('折线数据正确，但没有用 {!r} 标记数据点（plot 的格式串要带 o）'.format(marker))\n            return\n    got = lines[0]\n    fail('折线数据不对：应为 x={} y={}，实际画的是 x={} y={}'.format(\n        _short(xs), _short(ys), _short(got['x']), _short(got['y'])))\n\n\ndef check_mpl_curve(mpl, f, x0, x1, color=None, min_points=50, tol=0.02):\n    \"\"\"matplotlib 函数曲线：存在一条折线，点数足够、x 覆盖 [x0, x1]、各点都满足 y ≈ f(x)。\"\"\"\n    lines = [m for m in mpl if m['kind'] == 'line' and len(m['x']) >= 2]\n    if not lines:\n        fail('没有检测到 matplotlib 曲线（是否调用了 plt.plot？）')\n    why = ''\n    for ln in lines:\n        if color and not is_color(ln['color'], color):\n            why = why or '曲线颜色应为{}'.format(_CN.get(color, color))\n            continue\n        if len(ln['x']) < min_points:\n            why = why or '曲线只有 {} 个点，太少了（步长取小一些，至少 {} 个点）'.format(len(ln['x']), min_points)\n            continue\n        if min(ln['x']) > x0 + 0.05 or max(ln['x']) < x1 - 0.05:\n            why = why or 'x 范围不对：应覆盖 {} ~ {}，实际 {:.2f} ~ {:.2f}'.format(x0, x1, min(ln['x']), max(ln['x']))\n            continue\n        bad = [x for x, y in zip(ln['x'], ln['y']) if abs(y - f(x)) > tol * max(1.0, abs(f(x)))]\n        if bad:\n            why = why or '曲线上有 {} 个点不满足函数式（例如 x={:.2f}），检查函数写法'.format(len(bad), bad[0])\n            continue\n        return\n    fail(why or '没有找到符合要求的曲线')\n\n\ndef _short(v):\n    v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]\n    return str(v if len(v) <= 8 else v[:8] + ['…'])\n\n\n_CN = {'red': '红', 'green': '绿', 'blue': '蓝', 'black': '黑'}\n\n\ndef run_check(src, ns):\n    \"\"\"执行一段检查代码，返回 (ok, msg)。\"\"\"\n    env = {name: globals()[name] for name in (\n        'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',\n        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows',\n        'check_class', 'check_mpl_curve')}\n    env['math'] = math\n    env.update(ns)\n    try:\n        exec(compile(src, '<check>', 'exec'), env)\n        return True, ''\n    except CheckFail as e:\n        return False, str(e)\n    except AssertionError as e:\n        return False, str(e) or '绘图/文件检查未通过'\n    except Exception as e:\n        return False, '检查时出错：{}: {}'.format(e.__class__.__name__, e)\n";

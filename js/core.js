@@ -374,6 +374,7 @@
       d.index = i + 1;
       return d;
     });
+    assignLocal(days, o.localPool, t3);
     return { totalDays: D, longPlan: false, days: days };
   }
 
@@ -396,6 +397,85 @@
     }
     return { ok: true, line: 0, want: null, got: null };
   }
+
+  /* ---------- 编程题按官方五类组卷 ---------- */
+  /** 官方 27A 编程题顺序与分值：数据分析 17 / 运算（第三方包）18 / 图形绘制 15 / 数据库 12 / 文本正则 13，共 75 */
+  var FIVE_CATS = [
+    { cat: 'data', name: '数据分析', score: 17 },
+    { cat: 'calc', name: '运算（第三方包）', score: 18 },
+    { cat: 'draw', name: '图形绘制', score: 15 },
+    { cat: 'db', name: '数据库应用', score: 12 },
+    { cat: 'text', name: '文本正则', score: 13 }
+  ];
+  /** 每类各抽 1 道（按 seed 确定，同 seed 同卷）；官方卷原题（p27-）留给"官方 A 卷"，不参与随机组卷 */
+  function pickFiveCats(coding, seed) {
+    var out = [];
+    FIVE_CATS.forEach(function (c, i) {
+      var pool = coding.filter(function (q) { return q.cat === c.cat && !/^p27-/.test(q.id); });
+      if (!pool.length) pool = coding.filter(function (q) { return q.cat === c.cat; });
+      if (pool.length) out.push(pool[Math.abs(seed * 7 + i * 13) % pool.length]);
+    });
+    return out;
+  }
+  function catScore(cat) {
+    for (var i = 0; i < FIVE_CATS.length; i++) if (FIVE_CATS[i].cat === cat) return FIVE_CATS[i].score;
+    return 0;
+  }
+
+  /**
+   * 每天的本机实操（在 IDLE/Anaconda 里按考场目录 c:/ks、c:/素材 完成，下载的实操包可自动判分）。
+   * pool = { byLevel: { L: { fix: [id], coding: [id] } }, byCat: { data|calc|draw|db|text: [id] } }
+   * 给每天加 d.local = { kind: 'ids'|'paper'|'env', ids, label }，并在任务列表末尾加一条本机任务。
+   */
+  function assignLocal(days, pool, t3) {
+    if (!pool) return;
+    var cursor = {};
+    var take = function (key, arr, n) {
+      var out = [];
+      if (!arr || !arr.length) return out;
+      var c = cursor[key] || 0;
+      for (var i = 0; i < n && i < arr.length; i++) out.push(arr[(c + i) % arr.length]);
+      cursor[key] = c + n;
+      return out;
+    };
+    var cats = t3 ? ['db', 'text', 'draw', 'calc'] : ['data', 'calc', 'draw', 'text'];
+    var offlineN = 0;
+    var reviewN = 0;
+    days.forEach(function (d) {
+      var loc = null;
+      if (d.kind === 'study') {
+        var L = d.levels[0];
+        var lv = (pool.byLevel || {})[L] || {};
+        var ids = take('f' + L, lv.fix, 1).concat(take('c' + L, lv.coding, d.levels.length > 1 ? 1 : 1));
+        if (d.levels.length > 1) {
+          var L2 = d.levels[d.levels.length - 1];
+          ids = ids.concat(take('c' + L2, ((pool.byLevel || {})[L2] || {}).coding, 1));
+        }
+        if (ids.length) loc = { kind: 'ids', ids: ids, label: '本机实操：第 ' + d.levels.join('、') + ' 关 ' + ids.length + ' 题（改错 + 编程）' };
+      } else if (d.kind === 'mock') {
+        loc = { kind: 'paper', ids: [], label: '本机模拟卷：调试改错 3 + 编程 5（按官方五类，105 分）在 IDLE 里限时完成' };
+      } else if (d.kind === 'offline') {
+        offlineN++;
+        var want = offlineN === 1 ? ['data', 'calc'] : ['db', 'text', 'draw'];
+        var oids = [];
+        want.forEach(function (c) { oids = oids.concat(take('k' + c, (pool.byCat || {})[c], 1)); });
+        if (oids.length) loc = { kind: 'ids', ids: oids, label: '本机实操包：' + want.map(function (c) { return CAT_NAME[c]; }).join(' + ') + '（含 whl 安装 / 考场目录）' };
+      } else if (d.kind === 'review') {
+        var c1 = cats[(reviewN * 2) % cats.length];
+        var c2 = cats[(reviewN * 2 + 1) % cats.length];
+        reviewN++;
+        var rids = take('k' + c1, (pool.byCat || {})[c1], 1).concat(take('k' + c2, (pool.byCat || {})[c2], 1));
+        if (rids.length) loc = { kind: 'ids', ids: rids, label: '本机实操：' + CAT_NAME[c1] + ' + ' + CAT_NAME[c2] + ' 各 1 题' };
+      } else if (d.kind === 'rest') {
+        loc = { kind: 'env', ids: [], label: '本机环境检查：Python 版本、matplotlib、sqlite3、pip 是否可用' };
+      }
+      if (loc) {
+        d.local = loc;
+        d.tasks.push({ text: '💻 ' + loc.label, href: '#local/' + (loc.kind === 'ids' ? 'ids=' + loc.ids.join(',') : loc.kind), local: true });
+      }
+    });
+  }
+  var CAT_NAME = { data: '数据分析', calc: '运算（第三方包）', draw: '图形绘制', db: '数据库', text: '文本正则' };
 
   /** 一道题在模拟考中"浏览器判不了"的分值（如 whl 安装截图），不计入得分与满分 */
   function unjudgedPoints(q) {
@@ -425,6 +505,9 @@
     judgeTest: judgeTest,
     unjudgedPoints: unjudgedPoints,
     judgeOutputAnswer: judgeOutputAnswer,
+    FIVE_CATS: FIVE_CATS,
+    pickFiveCats: pickFiveCats,
+    catScore: catScore,
     buildCountdownPlan: buildCountdownPlan,
     ymd: ymd
   };
