@@ -217,6 +217,31 @@ def check_png(name):
         fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')
 
 
+# ---------------- 面向对象 ----------------
+def check_class(user, name, methods=(), base=None):
+    """学生程序必须自己定义类 name（有构造方法和指定的实例方法）；base 给出时还必须是 base 的子类，且 methods 在子类中重写。
+
+    防止"不写类、直接 print 结果"也能通过编程题。
+    """
+    cls = user.get(name)
+    if not isinstance(cls, type):
+        fail('程序里没有定义类 {0}（题目要求用 class {0} 定义）'.format(name))
+    if base is None:
+        if '__init__' not in cls.__dict__:
+            fail('类 {} 没有定义构造方法 __init__'.format(name))
+    else:
+        parent = user.get(base)
+        if not isinstance(parent, type):
+            fail('程序里没有定义父类 {}'.format(base))
+        if cls is parent or not issubclass(cls, parent):
+            fail('类 {} 应继承自 {}（写成 class {}({}):）'.format(name, base, name, base))
+    for m in methods:
+        if not callable(getattr(cls, m, None)):
+            fail('类 {} 缺少实例方法 {}()'.format(name, m))
+        if m not in cls.__dict__:
+            fail(('子类 {} 要重写方法 {}()' if base is not None else '方法 {1}() 要定义在类 {0} 里面（注意缩进）').format(name, m))
+
+
 # ---------------- SQLite ----------------
 def db_rows(name, sql, params=()):
     """用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。"""
@@ -367,7 +392,8 @@ def run_check(src, ns):
     """执行一段检查代码，返回 (ok, msg)。"""
     env = {name: globals()[name] for name in (
         'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',
-        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows')}
+        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows',
+        'check_class')}
     env['math'] = math
     env.update(ns)
     try:

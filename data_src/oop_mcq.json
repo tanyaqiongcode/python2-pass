@@ -1,0 +1,568 @@
+{
+ "kind": "mcq",
+ "items": [
+  {
+   "id": "mcq-oop-001",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "实例方法与 self",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return self.name + '汪'\nd = Dog('旺财')\nprint(d.speak())\n",
+   "opts": [
+    "旺财汪",
+    "name汪",
+    "汪",
+    "程序报错"
+   ],
+   "ans": 0,
+   "exp": "`Dog('旺财')` 调用 `__init__`，把 '旺财' 存进 `self.name`；`d.speak()` 中 self 就是 d，返回 '旺财' + '汪'。",
+   "difficulty": 1,
+   "run_expected": "旺财汪"
+  },
+  {
+   "id": "mcq-oop-002",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "实例相互独立",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Counter:\n    def __init__(self):\n        self.n = 0\n    def add(self):\n        self.n += 1\na = Counter()\nb = Counter()\na.add()\na.add()\nb.add()\nprint(a.n, b.n)\n",
+   "opts": [
+    "2 1",
+    "3 3",
+    "1 1",
+    "2 2"
+   ],
+   "ans": 0,
+   "exp": "每个对象都有自己的实例属性 n：a 加了两次是 2，b 加了一次是 1，互不影响。",
+   "difficulty": 1,
+   "run_expected": "2 1"
+  },
+  {
+   "id": "mcq-oop-003",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "修改属性后调用方法",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Box:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def area(self):\n        return self.w * self.h\nb = Box(3, 4)\nb.w = 5\nprint(b.area())\n",
+   "opts": [
+    "12",
+    "20",
+    "15",
+    "程序报错"
+   ],
+   "ans": 1,
+   "exp": "`area()` 每次调用时才读取 self.w、self.h；w 已改成 5，所以是 5×4=20。",
+   "difficulty": 1,
+   "run_expected": "20"
+  },
+  {
+   "id": "mcq-oop-004",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "缺少 self 参数",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class A:\n    def show():\n        print('A')\na = A()\na.show()\n",
+   "opts": [
+    "A",
+    "无输出",
+    "None",
+    "程序报错（TypeError）"
+   ],
+   "ans": 3,
+   "exp": "用实例调用方法时，Python 会自动把实例作为第一个参数传进去；`show()` 定义时没有参数接收它，于是抛出 TypeError。实例方法的第一个参数要写 self。",
+   "difficulty": 2,
+   "run_error": "TypeError"
+  },
+  {
+   "id": "mcq-oop-005",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "构造方法默认参数",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Student:\n    def __init__(self, name, score=60):\n        self.name = name\n        self.score = score\ns1 = Student('张三')\ns2 = Student('李四', 90)\nprint(s1.score + s2.score)\n",
+   "opts": [
+    "150",
+    "90",
+    "60",
+    "程序报错"
+   ],
+   "ans": 0,
+   "exp": "s1 没传 score，用默认值 60；s2 传了 90；60+90=150。",
+   "difficulty": 1,
+   "run_expected": "150"
+  },
+  {
+   "id": "mcq-oop-006",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "方法里用 self 调用其他方法",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Calc:\n    def __init__(self, x):\n        self.x = x\n    def double(self):\n        return self.x * 2\n    def quad(self):\n        return self.double() * 2\nprint(Calc(3).quad())\n",
+   "opts": [
+    "6",
+    "9",
+    "12",
+    "程序报错"
+   ],
+   "ans": 2,
+   "exp": "`quad()` 里通过 `self.double()` 调用本对象的另一个方法：3×2=6，再×2=12。",
+   "difficulty": 2,
+   "run_expected": "12"
+  },
+  {
+   "id": "mcq-oop-007",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "列表类型的实例属性",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Cart:\n    def __init__(self):\n        self.items = []\n    def add(self, item):\n        self.items.append(item)\n        return len(self.items)\nc = Cart()\nc.add('笔')\nprint(c.add('本'), c.items)\n",
+   "opts": [
+    "2 ['笔', '本']",
+    "1 ['本']",
+    "2 ['本', '笔']",
+    "1 ['笔']"
+   ],
+   "ans": 0,
+   "exp": "第一次 add 后列表里有 '笔'；第二次 add 追加 '本' 并返回长度 2。append 加在末尾，顺序是 ['笔', '本']。",
+   "difficulty": 2,
+   "run_expected": "2 ['笔', '本']"
+  },
+  {
+   "id": "mcq-oop-008",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "对象赋值是引用",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class P:\n    def __init__(self, v):\n        self.v = v\na = P(1)\nb = a\nb.v = 5\nprint(a.v)\n",
+   "opts": [
+    "1",
+    "5",
+    "None",
+    "程序报错"
+   ],
+   "ans": 1,
+   "exp": "`b = a` 没有创建新对象，a 和 b 指向同一个对象，通过 b 修改 v，a.v 也变成 5。",
+   "difficulty": 2,
+   "run_expected": "5"
+  },
+  {
+   "id": "mcq-oop-009",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "方法没有 return",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class T:\n    def __init__(self, t):\n        self.t = t\n    def show(self):\n        print(self.t)\nx = T(7)\nprint(x.show())\n",
+   "opts": [
+    "只输出一行 7",
+    "第一行 7，第二行 None",
+    "只输出一行 None",
+    "程序报错"
+   ],
+   "ans": 1,
+   "exp": "`x.show()` 先在方法里打印 7；方法没有 return，返回值是 None，外层 print 再打印 None。",
+   "difficulty": 2,
+   "run_expected": "7\nNone"
+  },
+  {
+   "id": "mcq-oop-010",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "对象列表的遍历",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Item:\n    def __init__(self, name, price):\n        self.name = name\n        self.price = price\ngoods = [Item('A', 3), Item('B', 5), Item('C', 2)]\ntotal = 0\nfor g in goods:\n    if g.price >= 3:\n        total += g.price\nprint(total)\n",
+   "opts": [
+    "10",
+    "8",
+    "5",
+    "3"
+   ],
+   "ans": 1,
+   "exp": "价格 ≥3 的是 A(3) 和 B(5)，合计 8；C 的价格 2 不计入。",
+   "difficulty": 1,
+   "run_expected": "8"
+  },
+  {
+   "id": "mcq-oop-011",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "方法返回布尔值",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Account:\n    def __init__(self, money):\n        self.money = money\n    def take(self, x):\n        if x > self.money:\n            return False\n        self.money -= x\n        return True\na = Account(100)\nprint(a.take(30), a.take(80), a.money)\n",
+   "opts": [
+    "True True -10",
+    "True False 70",
+    "False False 100",
+    "True False 100"
+   ],
+   "ans": 1,
+   "exp": "取 30 成功，余额 70；再取 80 超过余额，返回 False 且余额不变，最后输出 70。print 的参数从左到右依次求值。",
+   "difficulty": 2,
+   "run_expected": "True False 70"
+  },
+  {
+   "id": "mcq-oop-012",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "打擂台找最大对象",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Stu:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\ns = [Stu('甲', 78), Stu('乙', 92), Stu('丙', 85)]\nbest = s[0]\nfor x in s:\n    if x.score > best.score:\n        best = x\nprint(best.name)\n",
+   "opts": [
+    "甲",
+    "乙",
+    "丙",
+    "92"
+   ],
+   "ans": 1,
+   "exp": "best 先是甲，遇到乙(92)更新为乙，丙(85)比 92 小不更新；输出的是对象的 name 属性。",
+   "difficulty": 1,
+   "run_expected": "乙"
+  },
+  {
+   "id": "mcq-oop-013",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "访问不存在的属性",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class C:\n    def __init__(self):\n        self.a = 1\nc = C()\nprint(c.b)\n",
+   "opts": [
+    "1",
+    "None",
+    "0",
+    "程序报错（AttributeError）"
+   ],
+   "ans": 3,
+   "exp": "对象只有在 `__init__` 里创建的属性 a，没有 b，访问不存在的属性会抛出 AttributeError。",
+   "difficulty": 2,
+   "run_error": "AttributeError"
+  },
+  {
+   "id": "mcq-oop-014",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "self 只是约定名称",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class K:\n    def __init__(this, v):\n        this.v = v\n    def get(this):\n        return this.v + 1\nprint(K(9).get())\n",
+   "opts": [
+    "10",
+    "9",
+    "程序报错",
+    "None"
+   ],
+   "ans": 0,
+   "exp": "第一个参数叫 self 只是约定，换成 this 也一样指向实例对象，所以 9+1=10。考试中仍然建议写 self。",
+   "difficulty": 3,
+   "run_expected": "10"
+  },
+  {
+   "id": "mcq-oop-015",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "构造方法中的输出",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Hello:\n    def __init__(self, who):\n        print('创建', who)\n        self.who = who\nh1 = Hello('A')\nh2 = Hello('B')\nprint(h1.who + h2.who)\n",
+   "opts": [
+    "只输出 AB",
+    "依次输出 创建 A、创建 B 两行",
+    "依次输出 创建 A、创建 B、AB 三行",
+    "程序报错"
+   ],
+   "ans": 2,
+   "exp": "每创建一个对象都会自动调用一次 `__init__`，所以先打印两行“创建”，最后打印 'A'+'B'。",
+   "difficulty": 2,
+   "run_expected": "创建 A\n创建 B\nAB"
+  },
+  {
+   "id": "mcq-oop-016",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "形参与实例属性同名",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class M:\n    def __init__(self, n):\n        self.n = n\n    def f(self, n):\n        return self.n - n\nm = M(10)\nprint(m.f(3))\n",
+   "opts": [
+    "0",
+    "7",
+    "-7",
+    "13"
+   ],
+   "ans": 1,
+   "exp": "方法里 `self.n` 是实例属性 10，`n` 是形参 3，两者不是同一个变量：10-3=7。",
+   "difficulty": 2,
+   "run_expected": "7"
+  },
+  {
+   "id": "mcq-oop-017",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "方法中的循环",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Word:\n    def __init__(self, s):\n        self.s = s\n    def count_vowel(self):\n        k = 0\n        for ch in self.s:\n            if ch in 'aeiou':\n                k += 1\n        return k\nprint(Word('education').count_vowel())\n",
+   "opts": [
+    "4",
+    "5",
+    "6",
+    "9"
+   ],
+   "ans": 1,
+   "exp": "education 中的元音字母是 e、u、a、i、o，共 5 个。",
+   "difficulty": 1,
+   "run_expected": "5"
+  },
+  {
+   "id": "mcq-oop-018",
+   "level": 7,
+   "set": "oop",
+   "sub": "code",
+   "topic": "对象作为参数",
+   "q": "执行以下程序，输出结果是____。",
+   "code": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def dist2(self, other):\n        return (self.x - other.x) ** 2 + (self.y - other.y) ** 2\np = Point(1, 2)\nq = Point(4, 6)\nprint(p.dist2(q), q.dist2(p))\n",
+   "opts": [
+    "25 25",
+    "5 5",
+    "25 -25",
+    "程序报错"
+   ],
+   "ans": 0,
+   "exp": "方法的参数也可以是另一个对象：(1-4)²+(2-6)²=9+16=25；平方后交换顺序结果相同。",
+   "difficulty": 3,
+   "run_expected": "25 25"
+  },
+  {
+   "id": "mcq-oop-019",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "定义类的关键字",
+   "q": "在 Python 中，用来定义类的关键字是____。",
+   "opts": [
+    "def",
+    "class",
+    "object",
+    "new"
+   ],
+   "ans": 1,
+   "exp": "`class 类名:` 定义类，`def` 定义函数或方法；Python 创建对象不需要 new。",
+   "difficulty": 1
+  },
+  {
+   "id": "mcq-oop-020",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "__init__ 构造方法",
+   "q": "关于 `__init__` 方法，下列说法正确的是____。",
+   "opts": [
+    "创建对象时会自动调用，常用来给实例属性赋初值",
+    "必须用 return 返回创建好的对象",
+    "每个类都必须定义 `__init__`，否则不能创建对象",
+    "`__init__` 只能有 self 一个参数"
+   ],
+   "ans": 0,
+   "exp": "`__init__` 在 `类名(...)` 创建对象时自动执行，用于初始化；它不能返回对象（返回值应为 None）；不定义也能创建对象；可以有多个参数。",
+   "difficulty": 1
+  },
+  {
+   "id": "mcq-oop-021",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "self 的含义",
+   "q": "关于实例方法中的 self，下列说法正确的是____。",
+   "opts": [
+    "self 指向调用该方法的那个实例对象",
+    "self 是关键字，不能换成别的名字",
+    "调用实例方法时必须手动把 self 作为实参传进去",
+    "self 指向类本身"
+   ],
+   "ans": 0,
+   "exp": "`obj.f()` 调用时 Python 自动把 obj 传给 self；self 只是约定名称（不是关键字）；调用时不用手动传。",
+   "difficulty": 1
+  },
+  {
+   "id": "mcq-oop-022",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "类与对象",
+   "q": "关于类与对象的关系，下列说法正确的是____。",
+   "opts": [
+    "类是对象的模板，对象是根据类创建的实例",
+    "一个类只能创建一个对象",
+    "对象是类的模板，类是对象的实例",
+    "类和对象是同一个概念"
+   ],
+   "ans": 0,
+   "exp": "类描述一类事物共有的属性和方法；根据类可以创建任意多个对象（实例）。",
+   "difficulty": 1
+  },
+  {
+   "id": "mcq-oop-023",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "封装",
+   "q": "面向对象程序设计中，把数据（属性）和操作这些数据的方法组织在一个类里、外部通过方法来使用，这种特性称为____。",
+   "opts": [
+    "继承",
+    "多态",
+    "封装",
+    "重载"
+   ],
+   "ans": 2,
+   "exp": "封装：把属性和方法捆绑在类中，对外提供方法接口。继承是子类获得父类成员；多态是同一方法调用在不同对象上表现不同。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-oop-024",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "继承",
+   "q": "关于继承，下列说法正确的是____。",
+   "opts": [
+    "子类自动拥有父类的属性和方法，还可以增加新方法或重写父类方法",
+    "子类不能修改父类已有的方法",
+    "父类会自动获得子类新增的方法",
+    "Python 不支持继承"
+   ],
+   "ans": 0,
+   "exp": "继承让子类复用父类代码；子类可新增方法，也可定义同名方法覆盖（重写）父类方法；父类不会获得子类的方法。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-oop-025",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "多态",
+   "q": "“不同类的对象调用同名方法时，各自产生不同的行为”体现的是面向对象的____特性。",
+   "opts": [
+    "封装",
+    "继承",
+    "多态",
+    "抽象"
+   ],
+   "ans": 2,
+   "exp": "多态：例如 Dog 和 Cat 都有 speak()，同样调用 speak()，一个输出汪汪、一个输出喵喵。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-oop-026",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "面向对象三大特征",
+   "q": "面向对象程序设计的三大基本特征是____。",
+   "opts": [
+    "顺序、选择、循环",
+    "封装、继承、多态",
+    "类、对象、方法",
+    "输入、处理、输出"
+   ],
+   "ans": 1,
+   "exp": "封装、继承、多态是面向对象的三大特征；顺序/选择/循环是结构化程序设计的三种基本结构。",
+   "difficulty": 1
+  },
+  {
+   "id": "mcq-oop-027",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "创建实例",
+   "q": "已定义 `class Car:` 且没有自定义 `__init__`，下列能创建 Car 对象的语句是____。",
+   "opts": [
+    "c = Car()",
+    "c = Car",
+    "c = new Car()",
+    "c = class Car()"
+   ],
+   "ans": 0,
+   "exp": "`类名()` 创建对象；`c = Car` 只是让 c 指向类本身，没有创建对象；Python 没有 new 关键字。",
+   "difficulty": 1
+  },
+  {
+   "id": "mcq-oop-028",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "构造方法的参数",
+   "q": "已定义 `class Point:` 且其中有 `def __init__(self, x, y):`，下列创建对象的写法正确的是____。",
+   "opts": [
+    "Point(1, 2)",
+    "Point(self, 1, 2)",
+    "Point()",
+    "Point(1)"
+   ],
+   "ans": 0,
+   "exp": "self 由 Python 自动传入，创建时只需给出 x、y 两个实参；少给参数会报 TypeError。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-oop-029",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "实例属性",
+   "q": "关于实例属性，下列说法错误的是____。",
+   "opts": [
+    "通常在 `__init__` 中用 `self.属性名 = 值` 创建",
+    "同一个类的不同对象，同名实例属性互不影响",
+    "可以用 `对象.属性名` 读取实例属性",
+    "修改一个对象的实例属性，会同时改变该类所有对象的这个属性"
+   ],
+   "ans": 3,
+   "exp": "实例属性属于各个对象自己，改 a 的属性不会影响 b（D 错误）。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-oop-030",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "方法调用的实参",
+   "q": "类中定义了 `def f(self, x):`，执行 `obj.f(5)` 时，形参 x 的值是____。",
+   "opts": [
+    "obj",
+    "5",
+    "self",
+    "None"
+   ],
+   "ans": 1,
+   "exp": "self 接收 obj（自动传入），x 接收实参 5。",
+   "difficulty": 2
+  },
+  {
+   "id": "mcq-oop-031",
+   "level": 7,
+   "set": "oop",
+   "sub": "concept",
+   "topic": "继承的语法",
+   "q": "语句 `class Dog(Animal):` 表示____。",
+   "opts": [
+    "Dog 继承自 Animal，Dog 是子类",
+    "Animal 继承自 Dog",
+    "创建了一个 Dog 对象",
+    "Dog 和 Animal 是同一个类"
+   ],
+   "ans": 0,
+   "exp": "类名后括号里写的是父类：Dog 是子类，Animal 是父类（基类）。",
+   "difficulty": 2
+  }
+ ]
+}

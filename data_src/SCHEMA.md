@@ -166,3 +166,11 @@ kind 取值：`mcq`（单选）| `blank`（程序填空）| `fix`（调试改错
 ```
 
 cat 取值：official / github / tutorial / video / tool / paper。
+
+## OOP 专项（`"set": "oop"`）与 output 读程序写结果题
+
+- 带 `"set": "oop"` 的 mcq / coding 题打包进 `BANK.oop`（`oop.mcq` / `oop.coding`），在 `#oop` 专项页练习，**不计入关卡通关条件、不进模拟考抽题**。
+- mcq 可带 `code`（题干代码块）。带 code 的代码阅读题必须给出 `run_expected`（程序真实输出）或 `run_error`（如 `"TypeError"`），构建工具会真实运行核对。`sub` 取 `code`（代码阅读）或 `concept`（概念）。
+- `kind: "output"`（读程序写运行结果）：`{id, level, set, title, code, expected, exp, difficulty, tags}`；代码不得有 `input()`，`expected` 必须与真实运行结果一致（构建时核对）。作答比对只忽略行尾空格与末尾空行。
+- OOP 编程题的每个测试点用 `check_class(user, '类名', methods=[...], base='父类')` 检查学生确实定义了类、构造方法和方法（见 `tools/py2check.py`），防止不写类直接 print 也能通过。
+- 代码题以 class / `__init__` / self / 实例方法为主；标 `继承` 的少量题按 2025 大纲"三级全部为掌握"（含创建子类）补充。

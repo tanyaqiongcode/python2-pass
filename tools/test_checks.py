@@ -125,6 +125,27 @@ expect("不管回答什么都新增判错", c4, c4["ref"].replace("        if an
        False, c4["tests"][2], msg_has="不应新增")
 expect("最后不 close 但已 commit 仍通过", c4, c4["ref"].replace("conn.close()", "pass"), True, c4["tests"][0])
 
+print("== OOP 编程小题：必须自己定义类 ==")
+with open(os.path.join(ROOT, "data_src", "oop_coding.json"), encoding="utf-8") as _f:
+    OOP = json.load(_f)["items"]
+for q in OOP:
+    t = q["tests"][0]
+    ok_ref, _ = judge(q, q["ref"], t)
+    ok_start, _ = judge(q, q["starter"], t)
+    # 不写类、直接把正确输出 print 出来（"背答案"）
+    cheat = "".join(
+        "print(%r)\n" % line for line in t["expected"].split("\n"))
+    ok_cheat, r_cheat = judge(q, cheat, t)
+    good = ok_ref and not ok_start and not ok_cheat
+    print(("  ✓ " if good else "  ✗ ") + q["id"] + " " + q["title"] + "：参考通过 / 起始代码不通过 / 只 print 不写类不通过"
+          + ("" if good else "  → ref=%s starter=%s cheat=%s" % (ok_ref, ok_start, ok_cheat)))
+    FAILS += 0 if good else 1
+dog = item("oop_coding.json", "code-oop-013")
+expect("Dog 没继承 Animal 判错", dog, dog["ref"].replace("class Dog(Animal):", "class Dog:\n    def __init__(self, name):\n        self.name = name\n"),
+       False, dog["tests"][0], msg_has="继承")
+expect("Cat 没重写 speak 判错", dog, dog["ref"].replace("    def speak(self):\n        return '喵喵'\n", "    pass\n"),
+       False, dog["tests"][1])
+
 print("== 旧输出文件不能冒充本次结果（cleanup） ==")
 with run_dir(k9):
     run_user(k9["ref"], "")  # 第一次：正确程序写出 out.txt

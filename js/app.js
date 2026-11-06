@@ -53,6 +53,7 @@ const App = {
       if (parts[0] === 'home') return this.viewHome(app);
       if (parts[0] === 'plan') return this.viewPlan(app);
       if (parts[0] === 'sprint') return this.viewSprint(app);
+      if (parts[0] === 'oop') return this.viewOop(app, parts[1] || 'mcq');
       if (parts[0] === 'path') return this.viewPath(app);
       if (parts[0] === 'diagnostic') return this.viewDiagnostic(app);
       if (parts[0] === 'bank') return this.viewBank(app);
@@ -201,6 +202,7 @@ const App = {
       h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap' },
         h('a', { class: 'btn', href: '#level/1/lesson' }, '从第 1 关开始'),
         h('a', { class: 'btn btn-ghost', href: '#bank' }, '按题型刷题'),
+        h('a', { class: 'btn btn-ghost', href: '#oop' }, '🧱 OOP 专项'),
         h('a', { class: 'btn btn-ghost', href: '#mock' }, '全真模拟考'),
         h('a', { class: 'btn btn-ghost', href: '#wrong' }, '错题本'),
         h('a', { class: 'btn btn-ghost', href: '#resources' }, '资源库'),
@@ -687,13 +689,110 @@ const App = {
   },
 
   /* ============================================================
+   * OOP 专项（单选 / 读程序写运行结果 / 编程小题）
+   * 题目单独成池（BANK.oop）：不计入关卡通关条件，也不进模拟考抽题
+   * ============================================================ */
+  viewOop(app, tab) {
+    app.innerHTML = '';
+    const O = window.BANK.oop || { mcq: [], output: [], coding: [] };
+    const doneMcq = O.mcq.filter(q => (State.mcqStat(q.id) || {}).correct).length;
+    const doneOut = O.output.filter(q => (State.codeStat('output', q.id) || {}).passed).length;
+    const doneCode = O.coding.filter(q => (State.codeStat('coding', q.id) || {}).passed).length;
+    const sub = tab.split('-');
+    app.append(
+      h('h1', { class: 'page-title' }, '🧱 OOP 专项（面向对象）'),
+      h('p', { class: 'page-sub' },
+        `单选 ${O.mcq.length} 道（代码阅读 + 概念）· 读程序写运行结果 ${O.output.length} 道 · 编程小题 ${O.coding.length} 道。`
+        + `已完成：单选 ${doneMcq}/${O.mcq.length} · 读程序 ${doneOut}/${O.output.length} · 编程 ${doneCode}/${O.coding.length}。`),
+      h('div', { class: 'notice' },
+        h('b', null, '范围说明：'),
+        ' 代码题以 class、__init__、self、实例方法为主；标"继承"的少量题是按《考试大纲（2025 年版）》"三级全部为掌握"（含创建子类）补充的，二级可跳过。',
+        ' 上信考真卷的题型是单选 / 程序填空 / 调试改错 / 编程，没有"写运行结果"这种题；读程序题在真卷里以单选"运行结果是____"出现，这里单独练是为了把读程序练扎实。',
+        ' 本专项不计入关卡通关，也不进模拟考抽题（官方 27A 卷里没有 OOP 题）。'),
+      h('div', { class: 'tabs' },
+        h('a', { href: '#oop/mcq', class: sub[0] === 'mcq' ? 'active' : '' }, `✅ 单选（${O.mcq.length}）`),
+        h('a', { href: '#oop/output', class: sub[0] === 'output' ? 'active' : '' }, `🔍 读程序写结果（${O.output.length}）`),
+        h('a', { href: '#oop/coding', class: sub[0] === 'coding' ? 'active' : '' }, `💻 编程小题（${O.coding.length}）`))
+    );
+    const box = h('div');
+    app.append(box);
+    if (sub[0] === 'mcq') {
+      const pick = sub[1] || 'all';
+      box.append(h('div', { style: 'display:flex;gap:8px;margin:8px 0' },
+        [['all', '全部'], ['code', '代码阅读'], ['concept', 'OOP 概念']].map(([k, t]) =>
+          h('a', { class: 'sec-tab' + (pick === k ? ' active' : ''), href: k === 'all' ? '#oop/mcq' : `#oop/mcq-${k}` },
+            `${t}（${k === 'all' ? O.mcq.length : O.mcq.filter(q => q.sub === k).length}）`))));
+      this.renderMcqList(box, pick === 'all' ? O.mcq : O.mcq.filter(q => q.sub === pick));
+    } else if (sub[0] === 'output') {
+      box.append(h('div', { class: 'notice' }, h('b', null, '玩法：'),
+        ' 先自己读程序，在框里写出完整的运行结果（每个 print 一行；end=\' \' 的写在同一行），再点"核对"。',
+        '比对时只忽略行尾空格和末尾空行，其余逐字比较。答错可以再改，也可以看答案和解析。'));
+      const qs = O.output.slice().sort((a, b) => (a.difficulty || 2) - (b.difficulty || 2) || a.id.localeCompare(b.id));
+      qs.forEach((q, i) => box.append(this.outputCard(q, i + 1)));
+    } else {
+      this.renderCodeTasks(box, 'coding', O.coding);
+    }
+  },
+
+  /* 读程序写运行结果：输入框作答，与真实运行结果逐行比对 */
+  outputCard(q, no) {
+    const card = h('div', { class: 'qcard' });
+    const st = State.codeStat('output', q.id);
+    const badges = [];
+    if ((q.tags || []).includes('继承')) badges.push(h('span', { class: 'badge', title: q.note || '' }, '继承'));
+    if (q.difficulty) badges.push(h('span', { class: 'muted small' }, '★'.repeat(q.difficulty)));
+    card.append(h('div', { class: 'qhead' },
+      h('span', { class: 'qno' }, `${no}. ${q.title}`),
+      h('span', null, ...badges, ' ', h('span', { class: 'qtag' }, '读程序写结果' + (st && st.passed ? ' · 已通过 ✓' : '')))));
+    card.append(h('div', { class: 'qtext' }, '写出下面程序的运行结果：'), codeBlock(q.code));
+    const draftKey = 'output_' + q.id;
+    const ta = h('textarea', { class: 'code-editor', rows: String(Math.min(8, Math.max(3, q.expected.split('\n').length + 1))),
+      spellcheck: 'false', placeholder: '在这里写出运行结果，每行一个输出…' });
+    ta.value = State.draft(draftKey) || '';
+    ta.addEventListener('input', () => State.saveDraft(draftKey, ta.value));
+    const outBox = h('div');
+    const btn = h('button', { class: 'btn btn-green' }, st && st.passed ? '▶ 重新核对' : '▶ 核对');
+    const showBtn = h('button', { class: 'btn btn-ghost btn-sm', style: (st && st.tries >= 1) ? '' : 'display:none' }, '看答案与解析');
+    const reveal = () => {
+      outBox.append(h('div', { class: 'io-label' }, '正确运行结果：'));
+      const pre = h('pre', { class: 'output' }); pre.textContent = q.expected;
+      outBox.append(pre, h('div', { class: 'explain', html: miniMdInline(q.exp || '') }));
+    };
+    btn.addEventListener('click', () => {
+      if (!ta.value.trim()) {
+        outBox.innerHTML = '';
+        outBox.append(h('div', { class: 'result-banner fail' }, '先写出你认为的运行结果再核对。'));
+        return;
+      }
+      const res = PY2CORE.judgeOutputAnswer(ta.value, q.expected);
+      State.recordCode('output', q.id, res.ok);
+      outBox.innerHTML = '';
+      if (res.ok) {
+        outBox.append(h('div', { class: 'result-banner pass' }, '✅ 完全正确！'), h('div', { class: 'explain', html: miniMdInline(q.exp || '') }));
+        const tag = card.querySelector('.qtag');
+        if (tag) tag.textContent = '读程序写结果 · 已通过 ✓';
+      } else {
+        const what = res.want === null ? `第 ${res.line} 行是多出来的（程序没有这一行输出）`
+          : res.got === null ? `少写了第 ${res.line} 行` : `第 ${res.line} 行不对`;
+        outBox.append(h('div', { class: 'result-banner fail' }, '❌ ' + what + '。再读一遍程序，可以修改后重新核对。'));
+      }
+      showBtn.style.display = '';
+      btn.textContent = '▶ 重新核对';
+    });
+    showBtn.addEventListener('click', () => { outBox.innerHTML = ''; reveal(); showBtn.style.display = 'none'; });
+    card.append(ta, h('div', { style: 'display:flex;gap:10px;margin-top:8px;flex-wrap:wrap' }, btn, showBtn), outBox);
+    return card;
+  },
+
+  /* ============================================================
    * 题库总览
    * ============================================================ */
   viewBank(app) {
     app.innerHTML = '';
     const B = window.BANK;
     app.append(h('h1', { class: 'page-title' }, '📚 题库刷题'), h('p', { class: 'page-sub' },
-      `共 ${B.mcq.length} 道单选 · ${B.blanks.length} 道程序填空 · ${B.fixes.length} 道调试改错 · ${B.coding.length} 道编程题`));
+      `共 ${B.mcq.length} 道单选 · ${B.blanks.length} 道程序填空 · ${B.fixes.length} 道调试改错 · ${B.coding.length} 道编程题`,
+      B.oop ? h('span', null, ' · 另有 ', h('a', { href: '#oop' }, `OOP 专项 ${B.oop.mcq.length + B.oop.output.length + B.oop.coding.length} 道`)) : null));
     const grid = h('div', { class: 'levelmap' });
     for (const m of LEVEL_META) {
       const st = State.levelStat(m.no);
@@ -793,9 +892,12 @@ const App = {
 
   /* ---------- 单选题渲染 ---------- */
   renderMcqs(box, level) {
-    const qs = window.BANK.mcq.filter(q => q.level === level)
-      .sort((a, b) => (a.difficulty || 2) - (b.difficulty || 2) || a.id.localeCompare(b.id));
-    if (!qs.length) { box.append(h('div', { class: 'card' }, '本关暂无选择题')); return; }
+    this.renderMcqList(box, window.BANK.mcq.filter(q => q.level === level));
+  },
+
+  renderMcqList(box, list) {
+    const qs = list.slice().sort((a, b) => (a.difficulty || 2) - (b.difficulty || 2) || a.id.localeCompare(b.id));
+    if (!qs.length) { box.append(h('div', { class: 'card' }, '暂无选择题')); return; }
     let done = 0, idx = 0, lastDiff = 0;
     const stageName = { 1: '★ 基础', 2: '★★ 进阶', 3: '★★★ 挑战' };
     qs.forEach((q) => {
@@ -826,6 +928,7 @@ const App = {
       h('span', { class: 'qtag' }, q.topic || '')
     ));
     card.append(h('div', { class: 'qtext', html: miniMdInline(q.q) }));
+    if (q.code) card.append(codeBlock(q.code));   // 代码阅读题：题干代码单独成块
     const opts = h('div', { class: 'opts' });
     const locked = !!(st && st.correct);   // 答对锁定；答错可重试
     const attempted = !!st;                 // 有作答记录就给即时反馈
@@ -1107,10 +1210,14 @@ const App = {
     // 今日待复习队列
     const dueItems = State.srsDueItems();
     if (dueItems.length) {
-      const kindCn2 = { mcq: '单选', blank: '填空', fix: '改错', coding: '编程' };
+      const kindCn2 = { mcq: '单选', blank: '填空', fix: '改错', coding: '编程', parsons: '拼程序', output: '读程序' };
       const BB = window.BANK;
-      const qOf = (qid) => BB.mcq.find(x => x.id === qid) || BB.blanks.find(x => x.id === qid) ||
-        BB.fixes.find(x => x.id === qid) || BB.coding.find(x => x.id === qid);
+      const OO = BB.oop || { mcq: [], output: [], coding: [] };
+      const pools = [BB.mcq, BB.blanks, BB.fixes, BB.coding, BB.parsons || [], OO.mcq, OO.output, OO.coding];
+      const qOf = (qid) => { for (const arr of pools) { const f = arr.find(x => x.id === qid); if (f) return f; } return null; };
+      const hrefOf = (q, kind) => q.set === 'oop'
+        ? `#oop/${kind === 'mcq' ? 'mcq' : kind === 'output' ? 'output' : 'coding'}`
+        : `#level/${q.level}/${kind === 'mcq' ? 'mcq' : kind}`;
       const rev = h('div', { class: 'card', style: 'border-color:#e8c9a0;background:#fffaf2' },
         h('h2', null, `⏰ 今日待复习（${dueItems.length}）`),
         h('div', { class: 'muted small', style: 'margin-bottom:10px' }, '到期错题按先后排队，点进去重做一遍；答对后自动排到更远的日期。'),
@@ -1118,10 +1225,10 @@ const App = {
           const q = qOf(x.qid);
           const lv = q ? q.level : '?';
           const title = q ? (q.title || q.topic || q.q.slice(0, 24)) : x.qid;
-          return h('a', { class: 'res-item', href: q && q.level ? `#level/${lv}/${x.kind === 'mcq' ? 'mcq' : x.kind}` : '#wrong' },
-            h('span', { class: 'res-ico' }, { mcq: '✅', blank: '✏️', fix: '🐞', coding: '💻' }[x.kind] || '📌'),
-            h('span', null, h('b', null, `${kindCn2[x.kind]} · ${title}`),
-              h('div', { class: 'res-desc' }, `第 ${lv} 关 · 连对 ${x.streak} 次`)));
+          return h('a', { class: 'res-item', href: q && q.level ? hrefOf(q, x.kind) : '#wrong' },
+            h('span', { class: 'res-ico' }, { mcq: '✅', blank: '✏️', fix: '🐞', coding: '💻', parsons: '🧩', output: '🔍' }[x.kind] || '📌'),
+            h('span', null, h('b', null, `${kindCn2[x.kind] || x.kind} · ${title}`),
+              h('div', { class: 'res-desc' }, `${q && q.set === 'oop' ? 'OOP 专项' : '第 ' + lv + ' 关'} · 连对 ${x.streak} 次`)));
         })));
       app.append(rev);
     }
@@ -1136,17 +1243,25 @@ const App = {
       return;
     }
     const B = window.BANK;
-    const byKind = { mcq: [], blank: [], fix: [], coding: [] };
-    items.forEach(it => byKind[it.kind].push(it.q));
+    const byKind = { mcq: [], blank: [], fix: [], coding: [], parsons: [], output: [] };
+    items.forEach(it => (byKind[it.kind] = byKind[it.kind] || []).push(it.q));
     if (byKind.mcq.length) {
       app.append(h('h2', null, `单选题（${byKind.mcq.length}）`));
       byKind.mcq.forEach((q, i) => app.append(this.mcqCard(q, i + 1, State.mcqStat(q.id))));
     }
-    for (const [kind, label] of [['blank', '程序填空'], ['fix', '调试改错'], ['coding', '编程题'], ['parsons', '拼程序']]) {
+    for (const [kind, label] of [['blank', '程序填空'], ['fix', '调试改错'], ['coding', '编程题']]) {
       if (byKind[kind].length) {
         app.append(h('h2', null, `${label}（${byKind[kind].length}）`));
         this.renderCodeTasks(app, kind, byKind[kind]);
       }
+    }
+    if (byKind.parsons.length) {
+      app.append(h('h2', null, `拼程序（${byKind.parsons.length}）`));
+      byKind.parsons.forEach(q => app.append(this.parsonsCard(q)));
+    }
+    if (byKind.output.length) {
+      app.append(h('h2', null, `读程序写结果（${byKind.output.length}）`));
+      byKind.output.forEach((q, i) => app.append(this.outputCard(q, i + 1)));
     }
   },
 

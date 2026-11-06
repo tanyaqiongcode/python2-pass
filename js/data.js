@@ -7144,6 +7144,1326 @@ window.BANK = {
    "ref": "import re\ntext = '联系:13812345678 备用:15987654321'\nphones = re.findall(r'1[35789]\\d{9}', text)\nfor p in phones:\n    print(p)"
   }
  ],
+ "oop": {
+  "mcq": [
+   {
+    "id": "mcq-oop-001",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "实例方法与 self",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return self.name + '汪'\nd = Dog('旺财')\nprint(d.speak())\n",
+    "opts": [
+     "旺财汪",
+     "name汪",
+     "汪",
+     "程序报错"
+    ],
+    "ans": 0,
+    "exp": "`Dog('旺财')` 调用 `__init__`，把 '旺财' 存进 `self.name`；`d.speak()` 中 self 就是 d，返回 '旺财' + '汪'。",
+    "difficulty": 1,
+    "run_expected": "旺财汪"
+   },
+   {
+    "id": "mcq-oop-002",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "实例相互独立",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Counter:\n    def __init__(self):\n        self.n = 0\n    def add(self):\n        self.n += 1\na = Counter()\nb = Counter()\na.add()\na.add()\nb.add()\nprint(a.n, b.n)\n",
+    "opts": [
+     "2 1",
+     "3 3",
+     "1 1",
+     "2 2"
+    ],
+    "ans": 0,
+    "exp": "每个对象都有自己的实例属性 n：a 加了两次是 2，b 加了一次是 1，互不影响。",
+    "difficulty": 1,
+    "run_expected": "2 1"
+   },
+   {
+    "id": "mcq-oop-003",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "修改属性后调用方法",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Box:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def area(self):\n        return self.w * self.h\nb = Box(3, 4)\nb.w = 5\nprint(b.area())\n",
+    "opts": [
+     "12",
+     "20",
+     "15",
+     "程序报错"
+    ],
+    "ans": 1,
+    "exp": "`area()` 每次调用时才读取 self.w、self.h；w 已改成 5，所以是 5×4=20。",
+    "difficulty": 1,
+    "run_expected": "20"
+   },
+   {
+    "id": "mcq-oop-004",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "缺少 self 参数",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class A:\n    def show():\n        print('A')\na = A()\na.show()\n",
+    "opts": [
+     "A",
+     "无输出",
+     "None",
+     "程序报错（TypeError）"
+    ],
+    "ans": 3,
+    "exp": "用实例调用方法时，Python 会自动把实例作为第一个参数传进去；`show()` 定义时没有参数接收它，于是抛出 TypeError。实例方法的第一个参数要写 self。",
+    "difficulty": 2,
+    "run_error": "TypeError"
+   },
+   {
+    "id": "mcq-oop-005",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "构造方法默认参数",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Student:\n    def __init__(self, name, score=60):\n        self.name = name\n        self.score = score\ns1 = Student('张三')\ns2 = Student('李四', 90)\nprint(s1.score + s2.score)\n",
+    "opts": [
+     "150",
+     "90",
+     "60",
+     "程序报错"
+    ],
+    "ans": 0,
+    "exp": "s1 没传 score，用默认值 60；s2 传了 90；60+90=150。",
+    "difficulty": 1,
+    "run_expected": "150"
+   },
+   {
+    "id": "mcq-oop-006",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "方法里用 self 调用其他方法",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Calc:\n    def __init__(self, x):\n        self.x = x\n    def double(self):\n        return self.x * 2\n    def quad(self):\n        return self.double() * 2\nprint(Calc(3).quad())\n",
+    "opts": [
+     "6",
+     "9",
+     "12",
+     "程序报错"
+    ],
+    "ans": 2,
+    "exp": "`quad()` 里通过 `self.double()` 调用本对象的另一个方法：3×2=6，再×2=12。",
+    "difficulty": 2,
+    "run_expected": "12"
+   },
+   {
+    "id": "mcq-oop-007",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "列表类型的实例属性",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Cart:\n    def __init__(self):\n        self.items = []\n    def add(self, item):\n        self.items.append(item)\n        return len(self.items)\nc = Cart()\nc.add('笔')\nprint(c.add('本'), c.items)\n",
+    "opts": [
+     "2 ['笔', '本']",
+     "1 ['本']",
+     "2 ['本', '笔']",
+     "1 ['笔']"
+    ],
+    "ans": 0,
+    "exp": "第一次 add 后列表里有 '笔'；第二次 add 追加 '本' 并返回长度 2。append 加在末尾，顺序是 ['笔', '本']。",
+    "difficulty": 2,
+    "run_expected": "2 ['笔', '本']"
+   },
+   {
+    "id": "mcq-oop-008",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "对象赋值是引用",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class P:\n    def __init__(self, v):\n        self.v = v\na = P(1)\nb = a\nb.v = 5\nprint(a.v)\n",
+    "opts": [
+     "1",
+     "5",
+     "None",
+     "程序报错"
+    ],
+    "ans": 1,
+    "exp": "`b = a` 没有创建新对象，a 和 b 指向同一个对象，通过 b 修改 v，a.v 也变成 5。",
+    "difficulty": 2,
+    "run_expected": "5"
+   },
+   {
+    "id": "mcq-oop-009",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "方法没有 return",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class T:\n    def __init__(self, t):\n        self.t = t\n    def show(self):\n        print(self.t)\nx = T(7)\nprint(x.show())\n",
+    "opts": [
+     "只输出一行 7",
+     "第一行 7，第二行 None",
+     "只输出一行 None",
+     "程序报错"
+    ],
+    "ans": 1,
+    "exp": "`x.show()` 先在方法里打印 7；方法没有 return，返回值是 None，外层 print 再打印 None。",
+    "difficulty": 2,
+    "run_expected": "7\nNone"
+   },
+   {
+    "id": "mcq-oop-010",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "对象列表的遍历",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Item:\n    def __init__(self, name, price):\n        self.name = name\n        self.price = price\ngoods = [Item('A', 3), Item('B', 5), Item('C', 2)]\ntotal = 0\nfor g in goods:\n    if g.price >= 3:\n        total += g.price\nprint(total)\n",
+    "opts": [
+     "10",
+     "8",
+     "5",
+     "3"
+    ],
+    "ans": 1,
+    "exp": "价格 ≥3 的是 A(3) 和 B(5)，合计 8；C 的价格 2 不计入。",
+    "difficulty": 1,
+    "run_expected": "8"
+   },
+   {
+    "id": "mcq-oop-011",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "方法返回布尔值",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Account:\n    def __init__(self, money):\n        self.money = money\n    def take(self, x):\n        if x > self.money:\n            return False\n        self.money -= x\n        return True\na = Account(100)\nprint(a.take(30), a.take(80), a.money)\n",
+    "opts": [
+     "True True -10",
+     "True False 70",
+     "False False 100",
+     "True False 100"
+    ],
+    "ans": 1,
+    "exp": "取 30 成功，余额 70；再取 80 超过余额，返回 False 且余额不变，最后输出 70。print 的参数从左到右依次求值。",
+    "difficulty": 2,
+    "run_expected": "True False 70"
+   },
+   {
+    "id": "mcq-oop-012",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "打擂台找最大对象",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Stu:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\ns = [Stu('甲', 78), Stu('乙', 92), Stu('丙', 85)]\nbest = s[0]\nfor x in s:\n    if x.score > best.score:\n        best = x\nprint(best.name)\n",
+    "opts": [
+     "甲",
+     "乙",
+     "丙",
+     "92"
+    ],
+    "ans": 1,
+    "exp": "best 先是甲，遇到乙(92)更新为乙，丙(85)比 92 小不更新；输出的是对象的 name 属性。",
+    "difficulty": 1,
+    "run_expected": "乙"
+   },
+   {
+    "id": "mcq-oop-013",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "访问不存在的属性",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class C:\n    def __init__(self):\n        self.a = 1\nc = C()\nprint(c.b)\n",
+    "opts": [
+     "1",
+     "None",
+     "0",
+     "程序报错（AttributeError）"
+    ],
+    "ans": 3,
+    "exp": "对象只有在 `__init__` 里创建的属性 a，没有 b，访问不存在的属性会抛出 AttributeError。",
+    "difficulty": 2,
+    "run_error": "AttributeError"
+   },
+   {
+    "id": "mcq-oop-014",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "self 只是约定名称",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class K:\n    def __init__(this, v):\n        this.v = v\n    def get(this):\n        return this.v + 1\nprint(K(9).get())\n",
+    "opts": [
+     "10",
+     "9",
+     "程序报错",
+     "None"
+    ],
+    "ans": 0,
+    "exp": "第一个参数叫 self 只是约定，换成 this 也一样指向实例对象，所以 9+1=10。考试中仍然建议写 self。",
+    "difficulty": 3,
+    "run_expected": "10"
+   },
+   {
+    "id": "mcq-oop-015",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "构造方法中的输出",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Hello:\n    def __init__(self, who):\n        print('创建', who)\n        self.who = who\nh1 = Hello('A')\nh2 = Hello('B')\nprint(h1.who + h2.who)\n",
+    "opts": [
+     "只输出 AB",
+     "依次输出 创建 A、创建 B 两行",
+     "依次输出 创建 A、创建 B、AB 三行",
+     "程序报错"
+    ],
+    "ans": 2,
+    "exp": "每创建一个对象都会自动调用一次 `__init__`，所以先打印两行“创建”，最后打印 'A'+'B'。",
+    "difficulty": 2,
+    "run_expected": "创建 A\n创建 B\nAB"
+   },
+   {
+    "id": "mcq-oop-016",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "形参与实例属性同名",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class M:\n    def __init__(self, n):\n        self.n = n\n    def f(self, n):\n        return self.n - n\nm = M(10)\nprint(m.f(3))\n",
+    "opts": [
+     "0",
+     "7",
+     "-7",
+     "13"
+    ],
+    "ans": 1,
+    "exp": "方法里 `self.n` 是实例属性 10，`n` 是形参 3，两者不是同一个变量：10-3=7。",
+    "difficulty": 2,
+    "run_expected": "7"
+   },
+   {
+    "id": "mcq-oop-017",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "方法中的循环",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Word:\n    def __init__(self, s):\n        self.s = s\n    def count_vowel(self):\n        k = 0\n        for ch in self.s:\n            if ch in 'aeiou':\n                k += 1\n        return k\nprint(Word('education').count_vowel())\n",
+    "opts": [
+     "4",
+     "5",
+     "6",
+     "9"
+    ],
+    "ans": 1,
+    "exp": "education 中的元音字母是 e、u、a、i、o，共 5 个。",
+    "difficulty": 1,
+    "run_expected": "5"
+   },
+   {
+    "id": "mcq-oop-018",
+    "level": 7,
+    "set": "oop",
+    "sub": "code",
+    "topic": "对象作为参数",
+    "q": "执行以下程序，输出结果是____。",
+    "code": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def dist2(self, other):\n        return (self.x - other.x) ** 2 + (self.y - other.y) ** 2\np = Point(1, 2)\nq = Point(4, 6)\nprint(p.dist2(q), q.dist2(p))\n",
+    "opts": [
+     "25 25",
+     "5 5",
+     "25 -25",
+     "程序报错"
+    ],
+    "ans": 0,
+    "exp": "方法的参数也可以是另一个对象：(1-4)²+(2-6)²=9+16=25；平方后交换顺序结果相同。",
+    "difficulty": 3,
+    "run_expected": "25 25"
+   },
+   {
+    "id": "mcq-oop-019",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "定义类的关键字",
+    "q": "在 Python 中，用来定义类的关键字是____。",
+    "opts": [
+     "def",
+     "class",
+     "object",
+     "new"
+    ],
+    "ans": 1,
+    "exp": "`class 类名:` 定义类，`def` 定义函数或方法；Python 创建对象不需要 new。",
+    "difficulty": 1
+   },
+   {
+    "id": "mcq-oop-020",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "__init__ 构造方法",
+    "q": "关于 `__init__` 方法，下列说法正确的是____。",
+    "opts": [
+     "创建对象时会自动调用，常用来给实例属性赋初值",
+     "必须用 return 返回创建好的对象",
+     "每个类都必须定义 `__init__`，否则不能创建对象",
+     "`__init__` 只能有 self 一个参数"
+    ],
+    "ans": 0,
+    "exp": "`__init__` 在 `类名(...)` 创建对象时自动执行，用于初始化；它不能返回对象（返回值应为 None）；不定义也能创建对象；可以有多个参数。",
+    "difficulty": 1
+   },
+   {
+    "id": "mcq-oop-021",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "self 的含义",
+    "q": "关于实例方法中的 self，下列说法正确的是____。",
+    "opts": [
+     "self 指向调用该方法的那个实例对象",
+     "self 是关键字，不能换成别的名字",
+     "调用实例方法时必须手动把 self 作为实参传进去",
+     "self 指向类本身"
+    ],
+    "ans": 0,
+    "exp": "`obj.f()` 调用时 Python 自动把 obj 传给 self；self 只是约定名称（不是关键字）；调用时不用手动传。",
+    "difficulty": 1
+   },
+   {
+    "id": "mcq-oop-022",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "类与对象",
+    "q": "关于类与对象的关系，下列说法正确的是____。",
+    "opts": [
+     "类是对象的模板，对象是根据类创建的实例",
+     "一个类只能创建一个对象",
+     "对象是类的模板，类是对象的实例",
+     "类和对象是同一个概念"
+    ],
+    "ans": 0,
+    "exp": "类描述一类事物共有的属性和方法；根据类可以创建任意多个对象（实例）。",
+    "difficulty": 1
+   },
+   {
+    "id": "mcq-oop-023",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "封装",
+    "q": "面向对象程序设计中，把数据（属性）和操作这些数据的方法组织在一个类里、外部通过方法来使用，这种特性称为____。",
+    "opts": [
+     "继承",
+     "多态",
+     "封装",
+     "重载"
+    ],
+    "ans": 2,
+    "exp": "封装：把属性和方法捆绑在类中，对外提供方法接口。继承是子类获得父类成员；多态是同一方法调用在不同对象上表现不同。",
+    "difficulty": 2
+   },
+   {
+    "id": "mcq-oop-024",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "继承",
+    "q": "关于继承，下列说法正确的是____。",
+    "opts": [
+     "子类自动拥有父类的属性和方法，还可以增加新方法或重写父类方法",
+     "子类不能修改父类已有的方法",
+     "父类会自动获得子类新增的方法",
+     "Python 不支持继承"
+    ],
+    "ans": 0,
+    "exp": "继承让子类复用父类代码；子类可新增方法，也可定义同名方法覆盖（重写）父类方法；父类不会获得子类的方法。",
+    "difficulty": 2
+   },
+   {
+    "id": "mcq-oop-025",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "多态",
+    "q": "“不同类的对象调用同名方法时，各自产生不同的行为”体现的是面向对象的____特性。",
+    "opts": [
+     "封装",
+     "继承",
+     "多态",
+     "抽象"
+    ],
+    "ans": 2,
+    "exp": "多态：例如 Dog 和 Cat 都有 speak()，同样调用 speak()，一个输出汪汪、一个输出喵喵。",
+    "difficulty": 2
+   },
+   {
+    "id": "mcq-oop-026",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "面向对象三大特征",
+    "q": "面向对象程序设计的三大基本特征是____。",
+    "opts": [
+     "顺序、选择、循环",
+     "封装、继承、多态",
+     "类、对象、方法",
+     "输入、处理、输出"
+    ],
+    "ans": 1,
+    "exp": "封装、继承、多态是面向对象的三大特征；顺序/选择/循环是结构化程序设计的三种基本结构。",
+    "difficulty": 1
+   },
+   {
+    "id": "mcq-oop-027",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "创建实例",
+    "q": "已定义 `class Car:` 且没有自定义 `__init__`，下列能创建 Car 对象的语句是____。",
+    "opts": [
+     "c = Car()",
+     "c = Car",
+     "c = new Car()",
+     "c = class Car()"
+    ],
+    "ans": 0,
+    "exp": "`类名()` 创建对象；`c = Car` 只是让 c 指向类本身，没有创建对象；Python 没有 new 关键字。",
+    "difficulty": 1
+   },
+   {
+    "id": "mcq-oop-028",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "构造方法的参数",
+    "q": "已定义 `class Point:` 且其中有 `def __init__(self, x, y):`，下列创建对象的写法正确的是____。",
+    "opts": [
+     "Point(1, 2)",
+     "Point(self, 1, 2)",
+     "Point()",
+     "Point(1)"
+    ],
+    "ans": 0,
+    "exp": "self 由 Python 自动传入，创建时只需给出 x、y 两个实参；少给参数会报 TypeError。",
+    "difficulty": 2
+   },
+   {
+    "id": "mcq-oop-029",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "实例属性",
+    "q": "关于实例属性，下列说法错误的是____。",
+    "opts": [
+     "通常在 `__init__` 中用 `self.属性名 = 值` 创建",
+     "同一个类的不同对象，同名实例属性互不影响",
+     "可以用 `对象.属性名` 读取实例属性",
+     "修改一个对象的实例属性，会同时改变该类所有对象的这个属性"
+    ],
+    "ans": 3,
+    "exp": "实例属性属于各个对象自己，改 a 的属性不会影响 b（D 错误）。",
+    "difficulty": 2
+   },
+   {
+    "id": "mcq-oop-030",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "方法调用的实参",
+    "q": "类中定义了 `def f(self, x):`，执行 `obj.f(5)` 时，形参 x 的值是____。",
+    "opts": [
+     "obj",
+     "5",
+     "self",
+     "None"
+    ],
+    "ans": 1,
+    "exp": "self 接收 obj（自动传入），x 接收实参 5。",
+    "difficulty": 2
+   },
+   {
+    "id": "mcq-oop-031",
+    "level": 7,
+    "set": "oop",
+    "sub": "concept",
+    "topic": "继承的语法",
+    "q": "语句 `class Dog(Animal):` 表示____。",
+    "opts": [
+     "Dog 继承自 Animal，Dog 是子类",
+     "Animal 继承自 Dog",
+     "创建了一个 Dog 对象",
+     "Dog 和 Animal 是同一个类"
+    ],
+    "ans": 0,
+    "exp": "类名后括号里写的是父类：Dog 是子类，Animal 是父类（基类）。",
+    "difficulty": 2
+   }
+  ],
+  "output": [
+   {
+    "id": "out-oop-001",
+    "level": 7,
+    "set": "oop",
+    "title": "矩形的面积与周长",
+    "code": "class Rect:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def area(self):\n        return self.w * self.h\n    def perimeter(self):\n        return 2 * (self.w + self.h)\nr = Rect(4, 6)\nprint(r.area())\nprint(r.perimeter())\n",
+    "expected": "24\n20",
+    "exp": "area 返回 4×6=24，perimeter 返回 2×(4+6)=20。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-002",
+    "level": 7,
+    "set": "oop",
+    "title": "计数器步进",
+    "code": "class Counter:\n    def __init__(self, start):\n        self.value = start\n    def step(self, k):\n        self.value += k\n        return self.value\nc = Counter(10)\nprint(c.step(3))\nprint(c.step(-5))\nprint(c.value)\n",
+    "expected": "13\n8\n8",
+    "exp": "初值 10，+3 得 13，再 -5 得 8；value 保存的就是最后的 8。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-003",
+    "level": 7,
+    "set": "oop",
+    "title": "两盏灯的开关",
+    "code": "class Lamp:\n    def __init__(self):\n        self.on = False\n    def press(self):\n        self.on = not self.on\na = Lamp()\nb = Lamp()\na.press()\na.press()\nb.press()\nprint(a.on, b.on)\n",
+    "expected": "False True",
+    "exp": "a 按了两次：False→True→False；b 按一次变 True。两个对象各自保存状态。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-004",
+    "level": 7,
+    "set": "oop",
+    "title": "学生平均分",
+    "code": "class Student:\n    def __init__(self, name, scores):\n        self.name = name\n        self.scores = scores\n    def avg(self):\n        return sum(self.scores) / len(self.scores)\ns = Student('小明', [80, 90, 85])\nprint(s.name, '{:.1f}'.format(s.avg()))\n",
+    "expected": "小明 85.0",
+    "exp": "(80+90+85)/3=85.0，格式化保留 1 位小数。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-005",
+    "level": 7,
+    "set": "oop",
+    "title": "筛选对象列表",
+    "code": "class Book:\n    def __init__(self, title, price):\n        self.title = title\n        self.price = price\nbooks = [Book('Python', 59), Book('C语言', 39), Book('数据库', 45)]\nfor b in books:\n    if b.price < 50:\n        print(b.title)\n",
+    "expected": "C语言\n数据库",
+    "exp": "只有 C语言(39) 和 数据库(45) 价格低于 50，按列表顺序输出。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-006",
+    "level": 7,
+    "set": "oop",
+    "title": "方法里调用方法",
+    "code": "class Temp:\n    def __init__(self, c):\n        self.c = c\n    def to_f(self):\n        return self.c * 9 / 5 + 32\n    def report(self):\n        return str(self.c) + '℃=' + str(self.to_f()) + '℉'\nprint(Temp(25).report())\n",
+    "expected": "25℃=77.0℉",
+    "exp": "25×9/5+32=77.0（用了 / 除法，结果是浮点数），report 通过 self.to_f() 调用另一个方法。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-007",
+    "level": 7,
+    "set": "oop",
+    "title": "引用与新对象",
+    "code": "class Box:\n    def __init__(self, n):\n        self.n = n\nx = Box(1)\ny = x\nz = Box(1)\ny.n = 3\nprint(x.n, z.n)\n",
+    "expected": "3 1",
+    "exp": "y 与 x 是同一个对象，改 y.n 就是改 x.n；z 是另外创建的对象，仍是 1。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-008",
+    "level": 7,
+    "set": "oop",
+    "title": "钱包记账",
+    "code": "class Wallet:\n    def __init__(self):\n        self.money = 0\n        self.log = []\n    def income(self, x):\n        self.money += x\n        self.log.append('+' + str(x))\n    def spend(self, x):\n        if x <= self.money:\n            self.money -= x\n            self.log.append('-' + str(x))\nw = Wallet()\nw.income(50)\nw.spend(80)\nw.spend(20)\nw.income(10)\nprint(w.money)\nprint(','.join(w.log))\n",
+    "expected": "40\n+50,-20,+10",
+    "exp": "50 进账；花 80 超过余额，什么都不做也不记账；花 20 剩 30；再进 10 得 40。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-009",
+    "level": 7,
+    "set": "oop",
+    "title": "构造时打印",
+    "code": "class Order:\n    def __init__(self, no):\n        self.no = no\n        print('订单', no, '已创建')\no1 = Order(101)\no2 = Order(102)\nprint(o2.no - o1.no)\n",
+    "expected": "订单 101 已创建\n订单 102 已创建\n1",
+    "exp": "每创建一个对象就执行一次 __init__ 里的 print；最后 102-101=1。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-010",
+    "level": 7,
+    "set": "oop",
+    "title": "没有返回值的方法",
+    "code": "class Greeter:\n    def __init__(self, name):\n        self.name = name\n    def hello(self):\n        print('你好,' + self.name)\ng = Greeter('小红')\nr = g.hello()\nprint(r)\n",
+    "expected": "你好,小红\nNone",
+    "exp": "hello() 在方法内部打印问候语，没有 return，所以 r 是 None。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-011",
+    "level": 7,
+    "set": "oop",
+    "title": "最长的单词",
+    "code": "class Text:\n    def __init__(self, s):\n        self.s = s\n    def words(self):\n        return self.s.split()\n    def longest(self):\n        best = ''\n        for w in self.words():\n            if len(w) > len(best):\n                best = w\n        return best\nt = Text('I love Python programming')\nprint(len(t.words()), t.longest())\n",
+    "expected": "4 programming",
+    "exp": "split() 按空白切成 4 个单词；最长的是 programming（11 个字母）。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-012",
+    "level": 7,
+    "set": "oop",
+    "title": "字典类型的属性",
+    "code": "class Stock:\n    def __init__(self):\n        self.d = {}\n    def add(self, name, n):\n        self.d[name] = self.d.get(name, 0) + n\ns = Stock()\ns.add('苹果', 3)\ns.add('香蕉', 2)\ns.add('苹果', 4)\nprint(s.d)\n",
+    "expected": "{'苹果': 7, '香蕉': 2}",
+    "exp": "get(name, 0) 取不到时按 0 算：苹果 3+4=7，香蕉 2；字典按插入顺序输出。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-013",
+    "level": 7,
+    "set": "oop",
+    "title": "形参与属性同名",
+    "code": "class P:\n    def __init__(self, x):\n        self.x = x\n    def move(self, x):\n        self.x = self.x + x\n        x = 0\n        return x\np = P(5)\nprint(p.move(2), p.x)\n",
+    "expected": "0 7",
+    "exp": "self.x 是实例属性（5+2=7），x 是形参，最后被赋为 0 并返回；两者互不影响。",
+    "difficulty": 3,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-014",
+    "level": 7,
+    "set": "oop",
+    "title": "修改属性后重新计算",
+    "code": "class Circle:\n    def __init__(self, r):\n        self.r = r\n    def area(self):\n        return round(3.14 * self.r * self.r, 2)\nc = Circle(1)\nprint(c.area())\nc.r = 2\nprint(c.area())\n",
+    "expected": "3.14\n12.56",
+    "exp": "方法每次调用都按当前的 self.r 计算：3.14×1×1=3.14，3.14×2×2=12.56。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-015",
+    "level": 7,
+    "set": "oop",
+    "title": "按属性排序",
+    "code": "class Emp:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\nes = [Emp('赵', 30), Emp('钱', 25), Emp('孙', 35)]\nes.sort(key=lambda e: e.age)\nfor e in es:\n    print(e.name, e.age)\n",
+    "expected": "钱 25\n赵 30\n孙 35",
+    "exp": "key 取每个对象的 age，按年龄升序：钱 25、赵 30、孙 35。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-016",
+    "level": 7,
+    "set": "oop",
+    "title": "队列",
+    "code": "class Queue:\n    def __init__(self):\n        self.data = []\n    def push(self, x):\n        self.data.append(x)\n    def pop(self):\n        return self.data.pop(0)\n    def size(self):\n        return len(self.data)\nq = Queue()\nfor i in range(1, 5):\n    q.push(i * 10)\nprint(q.pop(), q.pop())\nprint(q.size())\n",
+    "expected": "10 20\n2",
+    "exp": "依次放入 10、20、30、40；pop(0) 从队头取，先取 10 再取 20，剩 2 个。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-017",
+    "level": 7,
+    "set": "oop",
+    "title": "成绩等级",
+    "code": "class Score:\n    def __init__(self, v):\n        self.v = v\n    def level(self):\n        if self.v >= 90:\n            return '优'\n        elif self.v >= 75:\n            return '良'\n        elif self.v >= 60:\n            return '中'\n        return '差'\nfor v in [95, 60, 74, 30]:\n    print(Score(v).level(), end=' ')\n",
+    "expected": "优 中 中 差 ",
+    "exp": "95→优，60→中（≥60 但 <75），74→中，30→差；end=' ' 让结果输出在同一行。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "out-oop-018",
+    "level": 7,
+    "set": "oop",
+    "title": "子类重写方法",
+    "code": "class Animal:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return '...'\nclass Dog(Animal):\n    def speak(self):\n        return '汪汪'\na = Animal('动物')\nd = Dog('小黑')\nprint(a.name, a.speak())\nprint(d.name, d.speak())\n",
+    "expected": "动物 ...\n小黑 汪汪",
+    "exp": "Dog 没写 __init__，沿用父类的，所以有 name；Dog 重写了 speak，调用时用子类自己的版本。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象",
+     "继承"
+    ],
+    "note": "大纲口径补充：基础继承"
+   },
+   {
+    "id": "out-oop-019",
+    "level": 7,
+    "set": "oop",
+    "title": "子类调用父类构造方法",
+    "code": "class Person:\n    def __init__(self, name):\n        self.name = name\n    def intro(self):\n        return '我是' + self.name\nclass Student(Person):\n    def __init__(self, name, school):\n        super().__init__(name)\n        self.school = school\n    def intro(self):\n        return Person.intro(self) + '，就读于' + self.school\ns = Student('小李', '海大')\nprint(s.intro())\n",
+    "expected": "我是小李，就读于海大",
+    "exp": "super().__init__(name) 让父类设置 name；子类的 intro 先调用父类 intro 得到“我是小李”，再拼接学校。",
+    "difficulty": 3,
+    "tags": [
+     "面向对象",
+     "继承"
+    ],
+    "note": "大纲口径补充：基础继承"
+   },
+   {
+    "id": "out-oop-020",
+    "level": 7,
+    "set": "oop",
+    "title": "多态：同名方法不同结果",
+    "code": "class Shape:\n    def area(self):\n        return 0\nclass Square(Shape):\n    def __init__(self, a):\n        self.a = a\n    def area(self):\n        return self.a * self.a\nclass Tri(Shape):\n    def __init__(self, b, h):\n        self.b = b\n        self.h = h\n    def area(self):\n        return self.b * self.h / 2\nfor s in [Square(3), Tri(4, 5), Shape()]:\n    print(s.area())\n",
+    "expected": "9\n10.0\n0",
+    "exp": "同样调用 area()，各对象用自己类的版本：3×3=9，4×5/2=10.0（/ 除法得浮点数），Shape 返回 0。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象",
+     "继承"
+    ],
+    "note": "大纲口径补充：基础继承"
+   }
+  ],
+  "coding": [
+   {
+    "id": "code-oop-001",
+    "level": 7,
+    "set": "oop",
+    "title": "矩形类 Rectangle",
+    "desc": "定义矩形类 `Rectangle`：构造方法接收宽 w、高 h 并保存为实例属性；实例方法 `area()` 返回面积，`perimeter()` 返回周长。主程序输入一行两个整数（宽 高，空格分隔），创建对象后输出两行：`面积:X`、`周长:Y`。",
+    "starter": "class Rectangle:\n    # 1. __init__(self, w, h)：保存宽和高\n    # 2. area(self)：返回面积\n    # 3. perimeter(self)：返回周长\n    pass\n\nw, h = map(int, input().split())\n# 创建 Rectangle 对象，按格式输出面积和周长\n",
+    "tests": [
+     {
+      "stdin": "3 4\n",
+      "expected": "面积:12\n周长:14",
+      "check": "check_class(user, 'Rectangle', methods=['area', 'perimeter'])"
+     },
+     {
+      "stdin": "10 2\n",
+      "expected": "面积:20\n周长:24",
+      "check": "check_class(user, 'Rectangle', methods=['area', 'perimeter'])"
+     },
+     {
+      "stdin": "7 7\n",
+      "expected": "面积:49\n周长:28",
+      "check": "check_class(user, 'Rectangle', methods=['area', 'perimeter'])"
+     }
+    ],
+    "ref": "class Rectangle:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n\n    def area(self):\n        return self.w * self.h\n\n    def perimeter(self):\n        return 2 * (self.w + self.h)\n\nw, h = map(int, input().split())\nr = Rectangle(w, h)\nprint('面积:' + str(r.area()))\nprint('周长:' + str(r.perimeter()))\n",
+    "hint": "构造方法里写 self.w = w、self.h = h；方法里用 self.w、self.h 计算。",
+    "exp": "考查类的定义、构造方法保存实例属性、实例方法返回计算结果。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-002",
+    "level": 7,
+    "set": "oop",
+    "title": "圆类 Circle",
+    "desc": "定义圆类 `Circle`：构造方法接收半径 r；`area()` 返回面积，`circumference()` 返回周长（圆周率用 `math.pi`）。输入一个半径（可能是小数），输出两行：`面积:X`、`周长:Y`，都保留 2 位小数。",
+    "starter": "import math\n\nclass Circle:\n    # __init__ 保存半径；area() 返回面积；circumference() 返回周长\n    pass\n\nr = float(input())\n",
+    "tests": [
+     {
+      "stdin": "1\n",
+      "expected": "面积:3.14\n周长:6.28",
+      "check": "check_class(user, 'Circle', methods=['area', 'circumference'])"
+     },
+     {
+      "stdin": "2.5\n",
+      "expected": "面积:19.63\n周长:15.71",
+      "check": "check_class(user, 'Circle', methods=['area', 'circumference'])"
+     },
+     {
+      "stdin": "10\n",
+      "expected": "面积:314.16\n周长:62.83",
+      "check": "check_class(user, 'Circle', methods=['area', 'circumference'])"
+     }
+    ],
+    "ref": "import math\n\nclass Circle:\n    def __init__(self, r):\n        self.r = r\n\n    def area(self):\n        return math.pi * self.r * self.r\n\n    def circumference(self):\n        return 2 * math.pi * self.r\n\nr = float(input())\nc = Circle(r)\nprint('面积:{:.2f}'.format(c.area()))\nprint('周长:{:.2f}'.format(c.circumference()))\n",
+    "hint": "面积 πr²，周长 2πr；输出用 '{:.2f}'.format(...)。",
+    "exp": "考查构造方法、实例方法与 math 模块、格式化输出。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-003",
+    "level": 7,
+    "set": "oop",
+    "title": "计数器 Counter",
+    "desc": "定义计数器类 `Counter`：构造方法把计数值设为 0；`add(n)` 让计数增加 n；`reset()` 把计数清零；`get()` 返回当前计数。第一行输入命令条数 m，之后 m 行每行一条命令：`add 整数` 或 `reset`。每执行完一条命令，输出一行当前计数。",
+    "starter": "class Counter:\n    # __init__：计数值设为 0\n    # add(self, n) / reset(self) / get(self)\n    pass\n\nm = int(input())\nc = Counter()\nfor i in range(m):\n    cmd = input().split()\n    # 按命令调用对应方法，然后输出 c.get()\n",
+    "tests": [
+     {
+      "stdin": "3\nadd 5\nadd 3\nreset\n",
+      "expected": "5\n8\n0",
+      "check": "check_class(user, 'Counter', methods=['add', 'reset', 'get'])"
+     },
+     {
+      "stdin": "4\nadd 10\nadd -4\nadd 1\nadd 2\n",
+      "expected": "10\n6\n7\n9",
+      "check": "check_class(user, 'Counter', methods=['add', 'reset', 'get'])"
+     },
+     {
+      "stdin": "5\nreset\nadd 7\nreset\nadd 1\nadd 1\n",
+      "expected": "0\n7\n0\n1\n2",
+      "check": "check_class(user, 'Counter', methods=['add', 'reset', 'get'])"
+     }
+    ],
+    "ref": "class Counter:\n    def __init__(self):\n        self.value = 0\n\n    def add(self, n):\n        self.value += n\n\n    def reset(self):\n        self.value = 0\n\n    def get(self):\n        return self.value\n\nm = int(input())\nc = Counter()\nfor i in range(m):\n    cmd = input().split()\n    if cmd[0] == 'add':\n        c.add(int(cmd[1]))\n    else:\n        c.reset()\n    print(c.get())\n",
+    "hint": "split() 后 cmd[0] 是命令名，add 时 cmd[1] 要转成 int。",
+    "exp": "考查构造方法初始化、多个实例方法共同操作同一个实例属性。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-004",
+    "level": 7,
+    "set": "oop",
+    "title": "学生成绩 Student",
+    "desc": "定义学生类 `Student`：构造方法接收姓名 name 和成绩列表 scores；`total()` 返回总分，`average()` 返回平均分，`is_pass()` 在平均分 ≥60 时返回 True，否则返回 False。第一行输入姓名，第二行输入若干个整数成绩（空格分隔）。输出一行：`姓名 总分 平均分 及格/不及格`，平均分保留 1 位小数。",
+    "starter": "class Student:\n    # __init__(self, name, scores)\n    # total(self) / average(self) / is_pass(self)\n    pass\n\nname = input()\nscores = list(map(int, input().split()))\n",
+    "tests": [
+     {
+      "stdin": "张三\n80 90 70\n",
+      "expected": "张三 240 80.0 及格",
+      "check": "check_class(user, 'Student', methods=['total', 'average', 'is_pass'])"
+     },
+     {
+      "stdin": "李四\n50 60 65\n",
+      "expected": "李四 175 58.3 不及格",
+      "check": "check_class(user, 'Student', methods=['total', 'average', 'is_pass'])"
+     },
+     {
+      "stdin": "王五\n59 61\n",
+      "expected": "王五 120 60.0 及格",
+      "check": "check_class(user, 'Student', methods=['total', 'average', 'is_pass'])"
+     }
+    ],
+    "ref": "class Student:\n    def __init__(self, name, scores):\n        self.name = name\n        self.scores = scores\n\n    def total(self):\n        return sum(self.scores)\n\n    def average(self):\n        return self.total() / len(self.scores)\n\n    def is_pass(self):\n        return self.average() >= 60\n\nname = input()\nscores = list(map(int, input().split()))\ns = Student(name, scores)\nprint(s.name, s.total(), '{:.1f}'.format(s.average()), '及格' if s.is_pass() else '不及格')\n",
+    "hint": "average() 可以直接调用 self.total()；三目表达式 '及格' if 条件 else '不及格'。",
+    "exp": "考查列表类型的实例属性、方法之间用 self 互相调用、布尔返回值。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-005",
+    "level": 7,
+    "set": "oop",
+    "title": "图书借还 Book",
+    "desc": "定义图书类 `Book`：构造方法接收书名 title 和库存 stock；`borrow()` 在库存大于 0 时库存减 1 并返回 True，否则返回 False；`give_back()` 库存加 1。第一行输入书名和库存（空格分隔），第二行输入一串操作字符，B 表示借、R 表示还。逐个处理操作：借成功输出 `借出成功`，借不到输出 `库存不足`，还书输出 `已归还`；最后输出 `《书名》剩余N本`。",
+    "starter": "class Book:\n    # __init__(self, title, stock)\n    # borrow(self)：成功返回 True，库存不足返回 False\n    # give_back(self)\n    pass\n\ntitle, stock = input().split()\nops = input()\n",
+    "tests": [
+     {
+      "stdin": "Python 2\nBBB\n",
+      "expected": "借出成功\n借出成功\n库存不足\n《Python》剩余0本",
+      "check": "check_class(user, 'Book', methods=['borrow', 'give_back'])"
+     },
+     {
+      "stdin": "数据库 1\nBRBB\n",
+      "expected": "借出成功\n已归还\n借出成功\n库存不足\n《数据库》剩余0本",
+      "check": "check_class(user, 'Book', methods=['borrow', 'give_back'])"
+     },
+     {
+      "stdin": "算法 0\nRBB\n",
+      "expected": "已归还\n借出成功\n库存不足\n《算法》剩余0本",
+      "check": "check_class(user, 'Book', methods=['borrow', 'give_back'])"
+     }
+    ],
+    "ref": "class Book:\n    def __init__(self, title, stock):\n        self.title = title\n        self.stock = stock\n\n    def borrow(self):\n        if self.stock > 0:\n            self.stock -= 1\n            return True\n        return False\n\n    def give_back(self):\n        self.stock += 1\n\ntitle, stock = input().split()\nb = Book(title, int(stock))\nfor op in input():\n    if op == 'B':\n        print('借出成功' if b.borrow() else '库存不足')\n    elif op == 'R':\n        b.give_back()\n        print('已归还')\nprint('《' + b.title + '》剩余' + str(b.stock) + '本')\n",
+    "hint": "库存要转成 int 再传给构造方法；遍历字符串就能逐个取出操作字符。",
+    "exp": "考查实例方法修改对象状态、带返回值的判断方法。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-006",
+    "level": 7,
+    "set": "oop",
+    "title": "购物车 Cart",
+    "desc": "定义购物车类 `Cart`：构造方法创建空的商品列表；`add(name, price, qty)` 加入一种商品；`count()` 返回商品总件数（数量之和）；`total()` 返回总金额（单价×数量之和）。第一行输入商品种数 n，之后 n 行每行 `名称 单价 数量`（单价可能是小数，数量是整数）。输出一行 `共N件 合计X元`，金额保留 2 位小数。",
+    "starter": "class Cart:\n    # __init__：self.items = []\n    # add(self, name, price, qty) / count(self) / total(self)\n    pass\n\nn = int(input())\ncart = Cart()\n",
+    "tests": [
+     {
+      "stdin": "2\n笔 2.5 4\n本子 6 3\n",
+      "expected": "共7件 合计28.00元",
+      "check": "check_class(user, 'Cart', methods=['add', 'count', 'total'])"
+     },
+     {
+      "stdin": "1\n书包 129.9 1\n",
+      "expected": "共1件 合计129.90元",
+      "check": "check_class(user, 'Cart', methods=['add', 'count', 'total'])"
+     },
+     {
+      "stdin": "3\n苹果 3.2 5\n香蕉 2.8 2\n牛奶 4.5 6\n",
+      "expected": "共13件 合计48.60元",
+      "check": "check_class(user, 'Cart', methods=['add', 'count', 'total'])"
+     }
+    ],
+    "ref": "class Cart:\n    def __init__(self):\n        self.items = []\n\n    def add(self, name, price, qty):\n        self.items.append((name, price, qty))\n\n    def count(self):\n        k = 0\n        for it in self.items:\n            k += it[2]\n        return k\n\n    def total(self):\n        s = 0\n        for it in self.items:\n            s += it[1] * it[2]\n        return s\n\nn = int(input())\ncart = Cart()\nfor i in range(n):\n    name, price, qty = input().split()\n    cart.add(name, float(price), int(qty))\nprint('共{}件 合计{:.2f}元'.format(cart.count(), cart.total()))\n",
+    "hint": "列表里存元组 (名称, 单价, 数量)；price 转 float、qty 转 int。",
+    "exp": "考查在实例属性中保存多条数据、遍历累加。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-007",
+    "level": 7,
+    "set": "oop",
+    "title": "气温记录 Thermometer",
+    "desc": "定义类 `Thermometer`：构造方法创建空的温度列表；`record(t)` 记录一个温度；`highest()`、`lowest()`、`average()` 分别返回最高、最低、平均温度。输入一行若干个整数温度（空格分隔），逐个 record 后输出一行：`最高X 最低Y 平均Z`，平均值保留 1 位小数。",
+    "starter": "class Thermometer:\n    # __init__ / record(self, t) / highest(self) / lowest(self) / average(self)\n    pass\n\ntemps = list(map(int, input().split()))\n",
+    "tests": [
+     {
+      "stdin": "12 18 25 9 16\n",
+      "expected": "最高25 最低9 平均16.0",
+      "check": "check_class(user, 'Thermometer', methods=['record', 'highest', 'lowest', 'average'])"
+     },
+     {
+      "stdin": "-3 -8 0 1\n",
+      "expected": "最高1 最低-8 平均-2.5",
+      "check": "check_class(user, 'Thermometer', methods=['record', 'highest', 'lowest', 'average'])"
+     },
+     {
+      "stdin": "30\n",
+      "expected": "最高30 最低30 平均30.0",
+      "check": "check_class(user, 'Thermometer', methods=['record', 'highest', 'lowest', 'average'])"
+     }
+    ],
+    "ref": "class Thermometer:\n    def __init__(self):\n        self.data = []\n\n    def record(self, t):\n        self.data.append(t)\n\n    def highest(self):\n        return max(self.data)\n\n    def lowest(self):\n        return min(self.data)\n\n    def average(self):\n        return sum(self.data) / len(self.data)\n\nth = Thermometer()\nfor t in map(int, input().split()):\n    th.record(t)\nprint('最高{} 最低{} 平均{:.1f}'.format(th.highest(), th.lowest(), th.average()))\n",
+    "hint": "max()、min()、sum()/len() 都可以直接作用在列表上。",
+    "exp": "考查实例属性保存数据、多个查询方法。",
+    "difficulty": 1,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-008",
+    "level": 7,
+    "set": "oop",
+    "title": "时钟 Clock",
+    "desc": "定义时钟类 `Clock`：构造方法接收时、分、秒；`tick(n)` 让时间前进 n 秒（要正确进位，超过 23:59:59 回到 00:00:00）；`show()` 返回 `HH:MM:SS` 格式的字符串（不足两位补 0）。第一行输入时 分 秒（空格分隔），第二行输入秒数 n。输出两行：前进前的时间、前进 n 秒后的时间。",
+    "starter": "class Clock:\n    # __init__(self, h, m, s)\n    # tick(self, n)：前进 n 秒，注意进位\n    # show(self)：返回 'HH:MM:SS'\n    pass\n\nh, m, s = map(int, input().split())\nn = int(input())\n",
+    "tests": [
+     {
+      "stdin": "9 59 50\n15\n",
+      "expected": "09:59:50\n10:00:05",
+      "check": "check_class(user, 'Clock', methods=['tick', 'show'])"
+     },
+     {
+      "stdin": "23 59 59\n1\n",
+      "expected": "23:59:59\n00:00:00",
+      "check": "check_class(user, 'Clock', methods=['tick', 'show'])"
+     },
+     {
+      "stdin": "0 0 0\n3725\n",
+      "expected": "00:00:00\n01:02:05",
+      "check": "check_class(user, 'Clock', methods=['tick', 'show'])"
+     }
+    ],
+    "ref": "class Clock:\n    def __init__(self, h, m, s):\n        self.h = h\n        self.m = m\n        self.s = s\n\n    def tick(self, n):\n        total = (self.h * 3600 + self.m * 60 + self.s + n) % 86400\n        self.h = total // 3600\n        self.m = total % 3600 // 60\n        self.s = total % 60\n\n    def show(self):\n        return '{:02d}:{:02d}:{:02d}'.format(self.h, self.m, self.s)\n\nh, m, s = map(int, input().split())\nn = int(input())\nc = Clock(h, m, s)\nprint(c.show())\nc.tick(n)\nprint(c.show())\n",
+    "hint": "先换算成总秒数再 % 86400，最后用 // 和 % 拆回时分秒；'{:02d}' 补 0。",
+    "exp": "考查实例方法修改多个属性、整除与取余的综合运用、格式化输出。",
+    "difficulty": 3,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-009",
+    "level": 7,
+    "set": "oop",
+    "title": "分数化简 Fraction",
+    "desc": "定义分数类 `Fraction`：构造方法接收分子 a、分母 b（b 为正整数）；`simplify()` 把分数化成最简形式；`show()` 返回字符串：分母为 1 时只返回分子，否则返回 `分子/分母`。输入一行两个整数 a b，输出化简后的结果。",
+    "starter": "import math\n\nclass Fraction:\n    # __init__(self, a, b)\n    # simplify(self)：用 math.gcd 约分\n    # show(self)\n    pass\n\na, b = map(int, input().split())\n",
+    "tests": [
+     {
+      "stdin": "6 8\n",
+      "expected": "3/4",
+      "check": "check_class(user, 'Fraction', methods=['simplify', 'show'])"
+     },
+     {
+      "stdin": "12 4\n",
+      "expected": "3",
+      "check": "check_class(user, 'Fraction', methods=['simplify', 'show'])"
+     },
+     {
+      "stdin": "7 9\n",
+      "expected": "7/9",
+      "check": "check_class(user, 'Fraction', methods=['simplify', 'show'])"
+     }
+    ],
+    "ref": "import math\n\nclass Fraction:\n    def __init__(self, a, b):\n        self.a = a\n        self.b = b\n\n    def simplify(self):\n        g = math.gcd(self.a, self.b)\n        self.a = self.a // g\n        self.b = self.b // g\n\n    def show(self):\n        if self.b == 1:\n            return str(self.a)\n        return str(self.a) + '/' + str(self.b)\n\na, b = map(int, input().split())\nf = Fraction(a, b)\nf.simplify()\nprint(f.show())\n",
+    "hint": "math.gcd(a, b) 求最大公约数，分子分母都整除它。",
+    "exp": "考查方法修改实例属性、条件返回不同格式。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-010",
+    "level": 7,
+    "set": "oop",
+    "title": "投票统计 Vote",
+    "desc": "定义投票类 `Vote`：构造方法创建空字典；`vote(name)` 给候选人加 1 票；`result()` 返回按票数从高到低排列的 (姓名, 票数) 列表（票数相同按首次出现的先后）；`winner()` 返回票数最多的人（并列时取先出现者）。输入一行若干个姓名（空格分隔），先按 `姓名:票数` 每行输出一个候选人，最后输出 `当选:姓名`。",
+    "starter": "class Vote:\n    # __init__：self.count = {}\n    # vote(self, name) / result(self) / winner(self)\n    pass\n\nnames = input().split()\n",
+    "tests": [
+     {
+      "stdin": "张 李 张 王 李 张\n",
+      "expected": "张:3\n李:2\n王:1\n当选:张",
+      "check": "check_class(user, 'Vote', methods=['vote', 'result', 'winner'])"
+     },
+     {
+      "stdin": "甲 乙 乙 甲\n",
+      "expected": "甲:2\n乙:2\n当选:甲",
+      "check": "check_class(user, 'Vote', methods=['vote', 'result', 'winner'])"
+     },
+     {
+      "stdin": "赵\n",
+      "expected": "赵:1\n当选:赵",
+      "check": "check_class(user, 'Vote', methods=['vote', 'result', 'winner'])"
+     }
+    ],
+    "ref": "class Vote:\n    def __init__(self):\n        self.count = {}\n\n    def vote(self, name):\n        self.count[name] = self.count.get(name, 0) + 1\n\n    def result(self):\n        return sorted(self.count.items(), key=lambda x: x[1], reverse=True)\n\n    def winner(self):\n        return self.result()[0][0]\n\nv = Vote()\nfor name in input().split():\n    v.vote(name)\nfor name, n in v.result():\n    print(name + ':' + str(n))\nprint('当选:' + v.winner())\n",
+    "hint": "字典按插入顺序保存；sorted 是稳定排序，票数相同时保持原来的先后顺序。",
+    "exp": "考查字典类型的实例属性、sorted 的 key 与稳定性、方法间调用。",
+    "difficulty": 3,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-011",
+    "level": 7,
+    "set": "oop",
+    "title": "密码强度 Password",
+    "desc": "定义密码类 `Password`：构造方法接收密码字符串；`score()` 返回满足条件的条数（长度不少于 8、含数字、含大写字母、含小写字母，每满足一条记 1 分）；`level()` 根据分数返回 `弱`（0~2 分）、`中`（3 分）或 `强`（4 分）。第一行输入密码个数 n，之后 n 行每行一个密码，每个密码输出一行强度。",
+    "starter": "class Password:\n    # __init__(self, pwd)\n    # score(self)：返回 0~4\n    # level(self)：返回 '弱' / '中' / '强'\n    pass\n\nn = int(input())\n",
+    "tests": [
+     {
+      "stdin": "3\nabc\nAbc12345\nabcdefg1\n",
+      "expected": "弱\n强\n中",
+      "check": "check_class(user, 'Password', methods=['score', 'level'])"
+     },
+     {
+      "stdin": "2\nPASSWORD\nPass1\n",
+      "expected": "弱\n中",
+      "check": "check_class(user, 'Password', methods=['score', 'level'])"
+     },
+     {
+      "stdin": "1\naB3\n",
+      "expected": "中",
+      "check": "check_class(user, 'Password', methods=['score', 'level'])"
+     }
+    ],
+    "ref": "class Password:\n    def __init__(self, pwd):\n        self.pwd = pwd\n\n    def score(self):\n        k = 0\n        if len(self.pwd) >= 8:\n            k += 1\n        if any(ch.isdigit() for ch in self.pwd):\n            k += 1\n        if any(ch.isupper() for ch in self.pwd):\n            k += 1\n        if any(ch.islower() for ch in self.pwd):\n            k += 1\n        return k\n\n    def level(self):\n        s = self.score()\n        if s <= 2:\n            return '弱'\n        elif s == 3:\n            return '中'\n        return '强'\n\nn = int(input())\nfor i in range(n):\n    print(Password(input()).level())\n",
+    "hint": "isdigit()/isupper()/islower() 判断字符类型；level() 里调用 self.score()。",
+    "exp": "考查字符串方法与实例方法的结合（对应大纲题型示例“密码强度判断”的面向对象写法）。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-012",
+    "level": 7,
+    "set": "oop",
+    "title": "课程成绩 Course",
+    "desc": "定义课程类 `Course`：构造方法创建空的成绩记录；`add(name, score)` 加入一名学生；`average()` 返回平均分；`top(k)` 返回成绩最高的 k 个学生姓名列表（成绩从高到低，成绩相同按加入顺序）。第一行输入人数 n，之后 n 行每行 `姓名 成绩`，最后一行输入 k。输出两行：`平均分:X`（保留 1 位小数）、前 k 名姓名（空格分隔）。",
+    "starter": "class Course:\n    # __init__ / add(self, name, score) / average(self) / top(self, k)\n    pass\n\nn = int(input())\n",
+    "tests": [
+     {
+      "stdin": "4\n甲 88\n乙 95\n丙 72\n丁 95\n2\n",
+      "expected": "平均分:87.5\n乙 丁",
+      "check": "check_class(user, 'Course', methods=['add', 'average', 'top'])"
+     },
+     {
+      "stdin": "3\nA 60\nB 70\nC 80\n3\n",
+      "expected": "平均分:70.0\nC B A",
+      "check": "check_class(user, 'Course', methods=['add', 'average', 'top'])"
+     },
+     {
+      "stdin": "2\n小王 59\n小李 61\n1\n",
+      "expected": "平均分:60.0\n小李",
+      "check": "check_class(user, 'Course', methods=['add', 'average', 'top'])"
+     }
+    ],
+    "ref": "class Course:\n    def __init__(self):\n        self.records = []\n\n    def add(self, name, score):\n        self.records.append((name, score))\n\n    def average(self):\n        return sum(r[1] for r in self.records) / len(self.records)\n\n    def top(self, k):\n        rs = sorted(self.records, key=lambda r: r[1], reverse=True)\n        return [r[0] for r in rs[:k]]\n\nn = int(input())\nc = Course()\nfor i in range(n):\n    name, score = input().split()\n    c.add(name, int(score))\nk = int(input())\nprint('平均分:{:.1f}'.format(c.average()))\nprint(' '.join(c.top(k)))\n",
+    "hint": "列表保存 (姓名, 成绩)；sorted(..., key=lambda r: r[1], reverse=True) 取前 k 个。",
+    "exp": "考查对象内部用列表管理多条记录、排序与切片。",
+    "difficulty": 3,
+    "tags": [
+     "面向对象"
+    ]
+   },
+   {
+    "id": "code-oop-013",
+    "level": 7,
+    "set": "oop",
+    "title": "【继承】动物叫声",
+    "desc": "（大纲口径补充：基础继承）定义父类 `Animal`：构造方法接收名字 name，`speak()` 返回 `...`。定义子类 `Dog(Animal)` 和 `Cat(Animal)`，分别重写 `speak()` 返回 `汪汪`、`喵喵`。第一行输入 n，之后 n 行每行 `种类 名字`（种类为 dog、cat 或其它）。dog 创建 Dog 对象，cat 创建 Cat 对象，其它创建 Animal 对象，每个对象输出一行 `名字:叫声`。",
+    "starter": "class Animal:\n    # __init__(self, name) / speak(self) 返回 '...'\n    pass\n\n# class Dog(Animal): 重写 speak\n# class Cat(Animal): 重写 speak\n\nn = int(input())\n",
+    "tests": [
+     {
+      "stdin": "3\ndog 小黑\ncat 咪咪\nbird 小鸟\n",
+      "expected": "小黑:汪汪\n咪咪:喵喵\n小鸟:...",
+      "check": "check_class(user, 'Dog', methods=['speak'], base='Animal')\ncheck_class(user, 'Cat', methods=['speak'], base='Animal')"
+     },
+     {
+      "stdin": "2\ncat 花花\ncat 球球\n",
+      "expected": "花花:喵喵\n球球:喵喵",
+      "check": "check_class(user, 'Dog', methods=['speak'], base='Animal')\ncheck_class(user, 'Cat', methods=['speak'], base='Animal')"
+     },
+     {
+      "stdin": "1\nfish 小鱼\n",
+      "expected": "小鱼:...",
+      "check": "check_class(user, 'Dog', methods=['speak'], base='Animal')\ncheck_class(user, 'Cat', methods=['speak'], base='Animal')"
+     }
+    ],
+    "ref": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return '...'\n\nclass Dog(Animal):\n    def speak(self):\n        return '汪汪'\n\nclass Cat(Animal):\n    def speak(self):\n        return '喵喵'\n\nn = int(input())\nfor i in range(n):\n    kind, name = input().split()\n    if kind == 'dog':\n        a = Dog(name)\n    elif kind == 'cat':\n        a = Cat(name)\n    else:\n        a = Animal(name)\n    print(a.name + ':' + a.speak())\n",
+    "hint": "子类括号里写父类名；子类不写 __init__ 时会直接使用父类的构造方法。",
+    "exp": "考查子类定义、方法重写与多态调用。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象",
+     "继承"
+    ]
+   },
+   {
+    "id": "code-oop-014",
+    "level": 7,
+    "set": "oop",
+    "title": "【继承】员工工资",
+    "desc": "（大纲口径补充：基础继承）定义父类 `Employee`：构造方法接收姓名 name、基本工资 base；`salary()` 返回 base。定义子类 `Manager(Employee)`：构造方法多接收奖金 bonus（先调用父类构造方法），重写 `salary()` 返回 base + bonus。第一行输入人数 n，之后 n 行：普通员工 `E 姓名 基本工资`，经理 `M 姓名 基本工资 奖金`。每人输出一行 `姓名 工资`，最后输出 `合计 总工资`。",
+    "starter": "class Employee:\n    # __init__(self, name, base) / salary(self)\n    pass\n\n# class Manager(Employee):\n#     __init__(self, name, base, bonus)：先 super().__init__(name, base)\n#     salary(self)：返回 base + bonus\n\nn = int(input())\n",
+    "tests": [
+     {
+      "stdin": "3\nE 张三 5000\nM 李四 8000 2000\nE 王五 4500\n",
+      "expected": "张三 5000\n李四 10000\n王五 4500\n合计 19500",
+      "check": "check_class(user, 'Manager', methods=['salary'], base='Employee')"
+     },
+     {
+      "stdin": "1\nM 赵六 9000 3000\n",
+      "expected": "赵六 12000\n合计 12000",
+      "check": "check_class(user, 'Manager', methods=['salary'], base='Employee')"
+     },
+     {
+      "stdin": "2\nE 甲 3000\nE 乙 3500\n",
+      "expected": "甲 3000\n乙 3500\n合计 6500",
+      "check": "check_class(user, 'Manager', methods=['salary'], base='Employee')"
+     }
+    ],
+    "ref": "class Employee:\n    def __init__(self, name, base):\n        self.name = name\n        self.base = base\n\n    def salary(self):\n        return self.base\n\nclass Manager(Employee):\n    def __init__(self, name, base, bonus):\n        super().__init__(name, base)\n        self.bonus = bonus\n\n    def salary(self):\n        return self.base + self.bonus\n\nn = int(input())\ntotal = 0\nfor i in range(n):\n    p = input().split()\n    if p[0] == 'M':\n        e = Manager(p[1], int(p[2]), int(p[3]))\n    else:\n        e = Employee(p[1], int(p[2]))\n    print(e.name, e.salary())\n    total += e.salary()\nprint('合计', total)\n",
+    "hint": "子类构造方法第一句 super().__init__(name, base)，再保存 self.bonus。",
+    "exp": "考查子类构造方法调用父类构造方法、方法重写。",
+    "difficulty": 3,
+    "tags": [
+     "面向对象",
+     "继承"
+    ]
+   },
+   {
+    "id": "code-oop-015",
+    "level": 7,
+    "set": "oop",
+    "title": "【继承】图形面积",
+    "desc": "（大纲口径补充：基础继承）定义父类 `Shape`，`area()` 返回 0。定义子类 `Rect(Shape)`（构造方法接收宽、高）和 `Circle(Shape)`（构造方法接收半径，π 取 3.14），各自重写 `area()`。第一行输入 n，之后 n 行：`R 宽 高` 或 `C 半径`（数值可能是小数）。把所有图形放进一个列表，逐个输出面积（保留 2 位小数），最后输出 `总面积:X`（保留 2 位小数）。",
+    "starter": "class Shape:\n    def area(self):\n        return 0\n\n# class Rect(Shape): ...\n# class Circle(Shape): ...\n\nn = int(input())\nshapes = []\n",
+    "tests": [
+     {
+      "stdin": "2\nR 3 4\nC 1\n",
+      "expected": "12.00\n3.14\n总面积:15.14",
+      "check": "check_class(user, 'Rect', methods=['area'], base='Shape')\ncheck_class(user, 'Circle', methods=['area'], base='Shape')"
+     },
+     {
+      "stdin": "3\nC 2\nR 1.5 2\nC 0.5\n",
+      "expected": "12.56\n3.00\n0.79\n总面积:16.34",
+      "check": "check_class(user, 'Rect', methods=['area'], base='Shape')\ncheck_class(user, 'Circle', methods=['area'], base='Shape')"
+     },
+     {
+      "stdin": "1\nR 10 10\n",
+      "expected": "100.00\n总面积:100.00",
+      "check": "check_class(user, 'Rect', methods=['area'], base='Shape')\ncheck_class(user, 'Circle', methods=['area'], base='Shape')"
+     }
+    ],
+    "ref": "class Shape:\n    def area(self):\n        return 0\n\nclass Rect(Shape):\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n\n    def area(self):\n        return self.w * self.h\n\nclass Circle(Shape):\n    def __init__(self, r):\n        self.r = r\n\n    def area(self):\n        return 3.14 * self.r * self.r\n\nn = int(input())\nshapes = []\nfor i in range(n):\n    p = input().split()\n    if p[0] == 'R':\n        shapes.append(Rect(float(p[1]), float(p[2])))\n    else:\n        shapes.append(Circle(float(p[1])))\ntotal = 0\nfor s in shapes:\n    print('{:.2f}'.format(s.area()))\n    total += s.area()\nprint('总面积:{:.2f}'.format(total))\n",
+    "hint": "列表里混放不同子类的对象，统一调用 area() 就是多态。",
+    "exp": "考查子类重写方法与多态：同一句 s.area() 在不同对象上调用各自的实现。",
+    "difficulty": 2,
+    "tags": [
+     "面向对象",
+     "继承"
+    ]
+   }
+  ]
+ },
  "lessons": {
   "1": "本关是整张试卷的**地基**：选择题年年考标识符规则、类型转换细节、`/` 与 `//` 的区别、`-3**2` 的值、`and/or` 的返回值，编程大题的每一行也都建立在本关语法之上。概念多、坑多、分值稳，是性价比最高的抢分关。\n\n### 标识符、关键字与书写格式\n\n- 标识符（变量名）规则：由字母、数字、下划线（和中文）组成，**不能以数字开头**，不能与关键字重名，区分大小写（`Age` 与 `age` 是两个变量）。\n- 关键字是 Python 保留字：`if、for、while、def、return、import、and、or、not、in、is` 等。注意 **`True`、`False`、`None` 首字母必须大写**。\n- 书写格式：一句一行，行尾**不需要分号**；缩进（一般 4 个空格）表示代码层次，同一块必须对齐；`#` 后是注释。\n- 一行写不下可用 `\\` 续行，或写在 `()`、`[]`、`{}` 里自然换行。\n\n```python\nimport keyword\nprint(keyword.kwlist)      # 查看全部关键字\nlong_name = (1 + 2 +\n             3 * 4)        # 括号内可自然换行\n```\n\n| 判定 | 标识符 | 原因 |\n| --- | --- | --- |\n| 合法 | `_score`、`name2`、`姓名` | 下划线/中文合法，数字不在开头 |\n| 非法 | `2nd_name` | 不能以数字开头 |\n| 非法 | `for`、`if` | 与关键字重名 |\n| 非法 | `my-name` | 不能出现连字符 `-` |\n\n### 编程环境与程序运行方式\n\n- Python 是**解释型**语言，源程序是扩展名为 `.py` 的文本文件，由解释器逐行翻译执行。\n- 两种运行方式：**交互式**（IDLE 的 `>>>` 提示符下输入一行执行一行，适合试验）与**文件式**（代码保存为 `.py` 文件整体运行，IDLE 中按 F5）。\n- 区别：交互式中表达式的值会自动回显；文件式中**必须用 `print()`** 才能看到输出。\n- 常见环境：IDLE（考试自带）、PyCharm、Jupyter Notebook。\n\n```python\n# test.py —— 文件式程序，保存后按 F5 运行\nprint('Hello')             # 不写 print 就看不到输出\n3 + 4                      # 文件式中这行没有任何效果\n```\n\n### input()、print() 与 eval()\n\n- `input()`：读入一行，**返回值永远是字符串**；可以带提示语 `input('请输入：')`。\n- `print(值1, 值2, ..., sep=' ', end='\\n')`：`sep` 是多个值之间的**分隔符**（默认空格），`end` 是打印完的**结尾符**（默认换行）。\n- `eval(s)`：**去掉字符串外侧引号**，把内容当 Python 表达式求值，是常用的\"字符串转数值\"手段。\n\n```python\na = input()                # 输入 12，a 是字符串 '12'\nprint(a + '5')             # 125（字符串拼接，不是加法！）\nn = eval(input())          # 输入 12，n 是整数 12\nprint(n + 5)               # 17\nprint(1, 2, sep='*', end='!')\nprint('ok')                # 连成一行：1*2!ok\n```\n\n### 六大基本数据类型\n\n| 类型 | 写法示例 | 要点 |\n| --- | --- | --- |\n| 整型 int | `100`、`-5`、`0x1F`、`0b101`、`0o17` | 位数不限不会溢出；`0x`/`0b`/`0o` 分别是十六/二/八进制 |\n| 浮点型 float | `3.14`、`1e-3`、`2.5e8` | 科学计数法；有精度误差 `0.1+0.2 != 0.3` |\n| 复数 complex | `3+4j` | `.real` 实部、`.imag` 虚部、`abs()` 求模 |\n| 字符串 str | `'abc'`、`\"abc\"`、`'''可跨行'''` | 有序、**不可变**的序列 |\n| 布尔 bool | `True`、`False` | 是 int 的子类：`True + True` 得 `2` |\n| 空值 None | `None` | 表示\"什么都没有\"，不是 0 也不是空串 |\n\n```python\nprint(type(3.14))          # <class 'float'>\nprint((3 + 4j).imag)       # 4.0\nprint(abs(3 + 4j))         # 5.0（复数的模）\nprint(True + True)         # 2\nprint(0.1 + 0.2 == 0.3)    # False\n```\n\n### 变量与多重、链式赋值\n\n- 变量**无需声明类型**，赋什么值就是什么类型，同一变量可随时换成其他类型；用 `type()` 查看类型。\n- **链式赋值**：`a = b = c = 10`，三个名字指向同一个值。\n- **多重赋值（序列解包）**：`a, b = 1, 2`，右边元素个数必须与左边变量个数一致；`a, b = '12'` 合法（`a='1'`、`b='2'`），但 `a, b = '123'` 报错。\n- **交换两个变量**不需要临时变量：`a, b = b, a`。\n\n```python\na = b = c = 10             # 链式赋值\nx, y = 3, 5\nx, y = y, x                # 交换后 x=5，y=3\nm, n = '12'                # m='1'，n='2'\np, q = [1, 2, 3]           # 报错！个数不匹配\n```\n\n### 类型转换细节（最爱考）\n\n| 函数 | 作用 | 考点细节 |\n| --- | --- | --- |\n| `int(x)` | 转整数 | `int(3.9)` 得 `3`（**直接截断，不是四舍五入**）；`int('35')` 合法；**`int('3.5')` 报错 ValueError** |\n| `float(x)` | 转浮点 | `float('3.5')` 得 `3.5`；`float(3)` 得 `3.0` |\n| `str(x)` | 转字符串 | 任何类型都能转：`str(3.0)` 得 `'3.0'` |\n| `eval(s)` | 还原表达式 | `eval('3.5')` 得 `3.5`；`eval('1+2')` 得 `3` |\n| `round(x, n)` | 保留 n 位小数 | **五取偶**：`round(2.5)` 得 `2`，`round(3.5)` 得 `4` |\n| `bool(x)` | 转布尔 | `0`、`0.0`、`''`、`[]`、`None` 都是 `False`，其余为 `True` |\n\n```python\nprint(int(3.9))            # 3（丢掉小数部分）\nprint(int('35') + 1)       # 36\nprint(float('3.5') + 0.5)  # 4.0\nprint(str(3) + '5')        # '35'\nprint(round(3.14159, 2))   # 3.14\n```\n\n### 算术运算符与优先级\n\n| 运算符 | 含义 | 示例 | 注意 |\n| --- | --- | --- | --- |\n| `/` | 除 | `7/2` 得 `3.5`，`6/3` 得 **`2.0`** | 结果**永远是浮点数** |\n| `//` | 整除（向下取整） | `7//2` 得 `3`；`-7//2` 得 **`-4`** | 向数轴**负方向**取整 |\n| `%` | 取余 | `7%3` 得 `1`；`-7%3` 得 **`2`** | 余数符号**跟除数** |\n| `**` | 幂 | `2**3` 得 `8`；`2**0.5` 是平方根 | **右结合**：`2**3**2` 得 `512` |\n| `*`、`+` | 乘、加 | `'ab' * 3` 得 `'ababab'` | 字符串可重复、拼接 |\n\n- 优先级从高到低：`()` → `**` → 一元 `+/-` → `* / // %` → 二元 `+ -` → 比较运算 → `not` → `and` → `or`；记不清就加括号。\n- **`-3**2 = -(3**2) = -9`，`(-3)**2 = 9`**——幂的优先级高于负号，选择题高频。\n- 不同数值类型混合运算**自动向精度高的类型转换**：int 与 float 运算得 float，再与 complex 运算得 complex。\n\n```python\nprint(6 / 3)        # 2.0\nprint(-7 // 2)      # -4\nprint(-7 % 3)       # 2\nprint(-3 ** 2)      # -9\nprint((-3) ** 2)    # 9\nprint(3 + 2.0)      # 5.0（int 自动转 float）\n```\n\n### 比较与逻辑运算：and/or 的返回值\n\n- 比较运算的结果是布尔值，还可以**连写**：`1 < x <= 10` 等价于 `1 < x and x <= 10`。\n- 字符串比较按 Unicode 编码逐位进行：`'abc' < 'abd'` 为 True，`'9' > '100'` 也为 True（逐位比 `'9' > '1'`）。\n- 逻辑运算优先级：`not` > `and` > `or`。\n- **`and`/`or` 返回的是操作数本身，不一定是布尔值**：\n  - `a and b`：a 为假则返回 a（**短路**，b 不再计算）；a 为真则返回 b；\n  - `a or b`：a 为真则返回 a（**短路**）；a 为假则返回 b；\n  - `not` 一定返回 True/False。\n\n```python\nprint(3 and 5)      # 5（都真返回后一个）\nprint(0 and 5)      # 0（短路，直接返回假值）\nprint(3 or 5)       # 3（都真返回前一个）\nprint(0 or 5)       # 5\nprint(not 3)        # False\nprint(3 > 2 == 1)   # False（等价 3>2 and 2==1）\n```\n\n### 必背清单\n\n- 标识符规则：字母/数字/下划线/中文，**不以数字开头**、不与关键字重名、区分大小写。\n- `input()` 返回字符串；`print(sep=分隔符, end=结尾符)`；`eval()` 去引号求值。\n- 六大类型：int、float、complex、str、bool、None；`type()` 查类型；`True/False/None` 首字母大写。\n- `int('3.5')` 报错；`int(3.9)` 截断为 3；`round(2.5)` 得 2、`round(3.5)` 得 4。\n- `6/3` 得 `2.0`；`7//2=3`、`-7//2=-4`；`-7%3=2`；`-3**2=-9`、`(-3)**2=9`、幂右结合。\n- `and` 返回第一个假值或最后一个真值；`or` 返回第一个真值；两者都可能短路。\n- 优先级：`**` > `* / // %` > `+ -` > 比较 > `not` > `and` > `or`。\n- 链式赋值 `a = b = c = 1`；解包赋值 `a, b = 1, 2`；交换 `a, b = b, a`。\n\n### 易错点\n\n- `input()` 拿到的永远是字符串，参与算术运算前必须 `int()`/`float()`/`eval()` 转换。\n- `int('3.5')` 直接报错；含小数点的字符串要先 `float()` 再 `int()`。\n- `/` 的结果一定是浮点数，`6/3` 是 `2.0` 而不是 `2`。\n- `-7//2` 是 `-4` 不是 `-3`（整除向负无穷方向取整）。\n- `-7%3` 是 `2` 不是 `-1`（余数的符号跟除数一致）。\n- `-3**2` 等于 `-9`：幂运算优先级高于负号，想算负数的平方要写 `(-3)**2`。\n- `true`、`false`、`none` 全是错的，必须写 `True`、`False`、`None`。\n- `'a' and 'b'` 的结果是 `'b'` 而不是 True——`and/or` 返回操作数，只有 `not` 保证返回布尔值。\n- `0.1 + 0.2 == 0.3` 为 False，浮点数不能直接用 `==` 判等。\n- 同一缩进块混用 Tab 和空格会报 IndentationError，缩进错误也是语法错误。\n",
   "2": "控制流程是**程序填空题和改错题的主干**：几乎每道大题都是\"输入 → 分支判断 → 循环处理 → 按格式输出\"的骨架，本关的 `range()`、`break/continue`、双层循环缩进是最常见的设错点。本关末尾的经典算法小抄（素数、水仙花数、斐波那契、辗转相除等）务必练到能默写。\n\n### 三种基本结构\n\n- **顺序结构**：语句从上到下依次执行；**分支（选择）结构**：按条件走不同路线；**循环结构**：让某段代码重复执行。\n- 任何算法都由这三种结构组合而成，选择题常考结构识别与流程图对应。\n- Python 靠**缩进**表达\"谁属于谁\"，不用花括号。\n\n```python\nn = int(input())            # 顺序\nif n % 2 == 0:              # 分支\n    print('偶数')\nelse:\n    print('奇数')\n```\n\n### if / elif / else 与嵌套\n\n- 单分支 `if 条件:`；双分支 `if...else`；多分支 `if...elif...else`，**从上往下依次判断，命中一个分支后其余全部跳过**。\n- 条件后必须有冒号 `:`；`else` 与**同缩进的 if** 配对，嵌套分支靠缩进区分层次。\n- 条件表达式（三元运算）：`变量 = 值1 if 条件 else 值2`。\n- 条件可以是任何对象：**非零数值、非空字符串/列表都算 True**，`0`、`''`、`[]`、`None` 都算 False。\n\n```python\nscore = int(input())\nif score >= 90:\n    grade = '优秀'\nelif score >= 80:\n    grade = '良好'\nelif score >= 60:\n    grade = '及格'\nelse:\n    grade = '不及格'\nprint(grade)\nprint('及格' if score >= 60 else '不及格')   # 三元表达式\n```\n\n### while 循环\n\n- `while 条件:` 适合**循环次数不确定**的场合；循环体内必须有让条件趋向结束的语句，否则死循环。\n- 万能套路 `while True:` + `if 结束条件: break`——\"不断读输入直到空行\"的标准写法（填空题高频）。\n\n```python\ni, s = 1, 0\nwhile i <= 100:        # 1 加到 100\n    s += i\n    i += 1             # 忘了这行就是死循环\nprint(s)               # 5050\n\nwhile True:            # 持续读入，空行结束\n    line = input()\n    if line == '':\n        break\n    print('你输入了', line)\n```\n\n### for 与 range() 三参数\n\n- `for 变量 in 序列:` 依次取出序列中的每个元素；配 `range()` 实现指定次数循环。\n- **`range(start, stop, step)` 含头不含尾**，step 省略默认 1，可为负。\n\n| 写法 | 生成的序列 |\n| --- | --- |\n| `range(5)` | 0, 1, 2, 3, 4 |\n| `range(1, 6)` | 1, 2, 3, 4, 5 |\n| `range(1, 10, 2)` | 1, 3, 5, 7, 9 |\n| `range(10, 0, -1)` | 10, 9, 8, ..., 1 |\n| `range(10, 0)` | 空！步长为正却往小走，循环体一次都不执行 |\n\n- `range()` 本身不是列表，`list(range(5))` 才得到 `[0, 1, 2, 3, 4]`。\n- 直接遍历字符串：`for ch in 'Python':`。\n\n```python\ntotal = 0\nfor i in range(1, 101):    # i 取 1..100\n    total += i\nprint(total)               # 5050\nfor ch in 'Python':\n    print(ch, end=' ')     # P y t h o n\n```\n\n### break、continue 与 for-else\n\n- `break`：**立即跳出本层整个循环**；`continue`：**跳过本次剩余语句，直接进入下一次循环**。\n- 两者只对**所在那一层**循环生效，多层嵌套时外层不受影响。\n- `for...else` / `while...else`：循环**没有被 break 打断**、正常跑完时执行 `else` 块——查找、判素数的惯用法。\n\n```python\nfor i in range(5):\n    if i == 3:\n        break\n    print(i, end=' ')      # 0 1 2（3 及以后全没了）\nprint()\nfor i in range(5):\n    if i == 3:\n        continue\n    print(i, end=' ')      # 0 1 2 4（只跳过 3）\nprint()\nfor n in [2, 4, 6, 8]:\n    if n % 2 == 1:\n        break\nelse:\n    print('没有奇数')       # 循环没被 break，else 执行\n```\n\n### 循环嵌套：乘法表与图形打印\n\n- 外层控制**行**、内层控制**列**；外层执行 1 次，内层完整执行一遍。\n- 固定搭配：内层用 `print(x, end='')` 控制不换行，外层循环末尾用 `print()` 换行。\n\n```python\n# 九九乘法表（下三角）\nfor i in range(1, 10):\n    for j in range(1, i + 1):\n        print('{}*{}={}\\t'.format(i, j, i * j), end='')\n    print()\n\n# 星号金字塔：4 行\nn = 4\nfor i in range(1, n + 1):\n    print(' ' * (n - i) + '*' * (2 * i - 1))\n```\n\n### try-except 异常处理【知道】\n\n- 把可能出错的语句放进 `try`，一旦出错程序**不崩溃**，转去执行类型匹配的 `except`；可以写多个 except；`finally` 中的语句**无论是否出错都执行**。\n- 要认识常见异常名：`ZeroDivisionError` 除零、`ValueError` 类型转换失败、`IndexError` 下标越界、`NameError` 变量未定义、`TypeError` 类型错误。\n\n```python\ntry:\n    a = int(input())\n    print(10 / a)\nexcept ZeroDivisionError:\n    print('除数不能为0')\nexcept ValueError:\n    print('输入的不是整数')\nfinally:\n    print('程序结束')\n```\n\n### 经典算法小抄（必须练到默写）\n\n**素数判断**（试除 + for-else，只需试除到平方根）：\n\n```python\nn = int(input())\nfor i in range(2, int(n ** 0.5) + 1):\n    if n % i == 0:\n        print(n, '不是素数')\n        break\nelse:\n    print(n, '是素数')\n```\n\n**水仙花数**（三位数，各位数字立方和等于自身；取位套路通用）：\n\n```python\nfor n in range(100, 1000):\n    a = n // 100          # 百位\n    b = n // 10 % 10      # 十位\n    c = n % 10            # 个位\n    if a ** 3 + b ** 3 + c ** 3 == n:\n        print(n)          # 153 370 371 407\n```\n\n**斐波那契数列**（1 1 2 3 5 8...，双变量同时更新是核心）：\n\n```python\na, b = 1, 1\nfor i in range(20):\n    print(a, end=' ')\n    a, b = b, a + b\n```\n\n**辗转相除求最大公约数**（最小公倍数 = 两数之积 ÷ 最大公约数）：\n\n```python\nm, n = int(input()), int(input())\na, b = m, n\nwhile b != 0:\n    a, b = b, a % b       # 余数不为 0 就继续除\nprint('最大公约数', a, '最小公倍数', m * n // a)\n```\n\n**累加、累乘、计数与最值**（初始化是关键）：\n\n```python\nnums = [3, 7, 2, 9, 4]\ns, t, cnt = 0, 1, 0        # 累加器 0 / 累乘器 1 / 计数器 0\nmx = nums[0]               # 求最值用第一个元素初始化\nfor x in nums:\n    s += x                 # 累加\n    t *= x                 # 累乘\n    if x > mx:             # 打擂台求最大\n        mx = x\n    if x % 2 == 0:         # 满足条件才计数\n        cnt += 1\nprint(s, t, cnt, mx)       # 25 1512 2 9\n```\n\n### 必背清单\n\n- `range(start, stop, step)` 含头不含尾；`range(1,10,2)`、`range(10,0,-1)`、`range(10,0)` 的结果。\n- `while True:` + `if ...: break` 读输入到空行的模板。\n- 九九乘法表双层循环：内层 `end=''`，外层末尾 `print()`。\n- 素数判断：试除 2 到 `int(n**0.5)+1`，配 for-else 或标志变量。\n- 水仙花数取位：`n//100`、`n//10%10`、`n%10`。\n- 斐波那契：`a, b = 1, 1` 与 `a, b = b, a + b`。\n- 辗转相除：`while b != 0: a, b = b, a % b`，最小公倍数 `m*n//a`。\n- 初始化：累加器 `0`、累乘器 `1`、计数器 `0`、最值用首元素。\n\n### 易错点\n\n- `range(1, 10)` 不包含 10，只有 1 到 9。\n- 倒序必须写负步长 `range(10, 0, -1)`；`range(10, 0)` 是空序列，循环体一次都不执行。\n- `break` 只跳出**当前这一层**循环，嵌套时外层循环继续。\n- `continue` 只是跳过本次，循环变量照常更新，不会造成死循环。\n- `for-else` 的 `else` 在循环**未被 break 打断**时执行，与循环体里有没有 if 无关。\n- `while` 循环忘了更新循环变量（如 `i += 1`）就是死循环。\n- `else` 与哪个 `if` 配对完全由缩进决定，缩进错位逻辑全变。\n- 从 `input()` 读到的数字参与比较或计算前忘了 `int()` 转换。\n- 1 和 0 都不是素数，2 是最小的素数；上面的素数模板默认 `n >= 2`。\n- 计数器、累加器必须在循环外初始化，累乘器初值是 1 不是 0。\n",
@@ -7378,4 +8698,4 @@ window.BANK = {
  }
 };
 /* 运行后检查源码（tools/py2check.py 原样打包；浏览器判题装成 py2check 模块） */
-window.PY2CHECK_SRC = "\"\"\"运行后检查（post-run check）—— 浏览器 Pyodide 与本地 harness 共用同一份源码。\n\n为什么需要：绘图题、写文件题光看 print 输出判不出对错（画错了照样能 print）。\n测试点可带 \"check\" 字段（一段 Python），学生代码运行结束后执行，检查：\n  - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）\n  - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]\n  - 写出的文件（read_text / read_bytes / exists）与数据库（db_rows / check_db_rows，新连接只看得到已提交的数据）\n  - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出\n检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。\n\n本文件由 tools/build_data.py 原样打包进 js/data.js（window.PY2CHECK_SRC），\n浏览器端以模块 py2check 载入，与本地校验逐字节一致。\n\"\"\"\nimport math\nimport os\n\n\nclass CheckFail(Exception):\n    pass\n\n\ndef fail(msg):\n    raise CheckFail(str(msg))\n\n\n# ---------------- 颜色 ----------------\n_NAMED = {\n    'red': (255, 0, 0), 'r': (255, 0, 0), 'green': (0, 128, 0), 'g': (0, 128, 0),\n    'lime': (0, 255, 0), 'blue': (0, 0, 255), 'b': (0, 0, 255), 'black': (0, 0, 0),\n    'k': (0, 0, 0), 'white': (255, 255, 255), 'w': (255, 255, 255),\n    'yellow': (255, 255, 0), 'y': (255, 255, 0), 'orange': (255, 165, 0),\n    'purple': (128, 0, 128), 'pink': (255, 192, 203), 'gray': (128, 128, 128),\n    'grey': (128, 128, 128), 'brown': (165, 42, 42), 'cyan': (0, 255, 255),\n    'c': (0, 255, 255), 'magenta': (255, 0, 255), 'm': (255, 0, 255),\n    'darkgreen': (0, 100, 0), 'darkred': (139, 0, 0), 'navy': (0, 0, 128),\n    'tab:red': (214, 39, 40), 'tab:green': (44, 160, 44), 'tab:blue': (31, 119, 180),\n}\n\n\ndef rgb(c):\n    \"\"\"把 'red' / '#ff0000' / (1, 0, 0) / (255, 0, 0) 统一成 0~255 的 (r, g, b)；认不出返回 None。\"\"\"\n    if c is None:\n        return None\n    if isinstance(c, (tuple, list)):\n        v = list(c)[:3]\n        if len(v) < 3:\n            return None\n        try:\n            v = [float(x) for x in v]\n        except (TypeError, ValueError):\n            return None\n        if all(0 <= x <= 1 for x in v):\n            return tuple(int(round(x * 255)) for x in v)\n        return tuple(int(round(x)) for x in v)\n    s = str(c).strip().lower()\n    if s in _NAMED:\n        return _NAMED[s]\n    if s.startswith('#') and len(s) in (4, 7, 9):\n        if len(s) == 4:\n            s = '#' + ''.join(ch * 2 for ch in s[1:])\n        try:\n            return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))\n        except ValueError:\n            return None\n    return None\n\n\ndef is_color(c, name):\n    \"\"\"颜色归类判断（宽松）：'red' 接受 red/#f00/#ff0000/(1,0,0)/'r'/'tab:red' 等。\"\"\"\n    v = rgb(c)\n    if v is None:\n        return False\n    r, g, b = v\n    hi, lo = 120, 110\n    name = name.lower()\n    if name == 'red':\n        return r >= hi and g < lo and b < lo\n    if name == 'green':\n        return g >= hi and r < lo + 20 and b < lo + 20\n    if name == 'blue':\n        return b >= hi and r < lo and g < lo + 60\n    if name == 'black':\n        return max(v) < 60\n    want = rgb(name)\n    return want is not None and all(abs(a - w) <= 40 for a, w in zip(v, want))\n\n\ndef approx(a, b, tol=1e-6):\n    return abs(float(a) - float(b)) <= tol\n\n\n# ---------------- 运行期采集 ----------------\ndef mpl_snapshot():\n    \"\"\"抓取当前所有 matplotlib 图形中的折线 / 线段集合 / 柱子（未导入 matplotlib 时返回 []）。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        return []\n    try:\n        from matplotlib import _pylab_helpers\n        from matplotlib.colors import to_hex\n    except Exception:\n        return []\n    out = []\n    for mgr in _pylab_helpers.Gcf.get_all_fig_managers():\n        fig = mgr.canvas.figure\n        for ax in fig.axes:\n            for ln in ax.get_lines():\n                try:\n                    xs = [float(x) for x in ln.get_xdata()]\n                    ys = [float(y) for y in ln.get_ydata()]\n                except (TypeError, ValueError):\n                    continue\n                item = {'kind': 'line', 'x': xs, 'y': ys,\n                        'color': to_hex(ln.get_color()), 'marker': str(ln.get_marker())}\n                # plt.axhline / axvline：数据坐标只有一维，另一维是 0~1 的轴坐标\n                tr = ln.get_transform()\n                if tr == ax.get_yaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'h', 'at': ys[0], 'color': item['color']}\n                elif tr == ax.get_xaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'v', 'at': xs[0], 'color': item['color']}\n                out.append(item)\n            for coll in ax.collections:\n                get_segments = getattr(coll, 'get_segments', None)\n                if get_segments is None:\n                    continue\n                colors = [to_hex(c) for c in coll.get_colors()] or ['#000000']\n                for i, seg in enumerate(get_segments()):\n                    if len(seg) >= 2:\n                        (x1, y1), (x2, y2) = seg[0], seg[-1]\n                        out.append({'kind': 'seg', 'x': [float(x1), float(x2)], 'y': [float(y1), float(y2)],\n                                    'color': colors[i % len(colors)]})\n            for p in ax.patches:\n                if hasattr(p, 'get_height') and hasattr(p, 'get_x'):\n                    out.append({'kind': 'bar', 'x': float(p.get_x() + p.get_width() / 2),\n                                'h': float(p.get_height()), 'color': to_hex(p.get_facecolor())})\n    return out\n\n\ndef install_mpl_hooks(store):\n    \"\"\"学生代码里的 plt.close() / plt.show() 会清掉或\"消费\"图形：调用前先快照。返回还原函数。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        try:\n            import matplotlib.pyplot  # noqa: F401  （matplotlib 题在 harness 中已预导入）\n        except Exception:\n            return lambda: None\n    plt = sys.modules['matplotlib.pyplot']\n    orig_close, orig_show = plt.close, plt.show\n\n    def close(*a, **k):\n        store.extend(mpl_snapshot())\n        return orig_close(*a, **k)\n\n    def show(*a, **k):\n        store.extend(mpl_snapshot())\n        return None\n\n    plt.close, plt.show = close, show\n\n    def restore():\n        plt.close, plt.show = orig_close, orig_show\n    return restore\n\n\ndef cleanup_files(names):\n    for n in names or []:\n        try:\n            os.remove(n)\n        except OSError:\n            pass\n\n\n# ---------------- 文件 ----------------\ndef exists(name):\n    return os.path.exists(name)\n\n\ndef read_bytes(name):\n    if not os.path.exists(name):\n        fail('没有找到程序应生成的文件 ' + name)\n    with open(name, 'rb') as f:\n        return f.read()\n\n\ndef read_text(name, encoding='utf-8'):\n    data = read_bytes(name)\n    try:\n        return data.decode(encoding)\n    except UnicodeDecodeError:\n        hint = ''\n        if encoding.lower() in ('gbk', 'gb2312', 'gb18030'):\n            try:\n                data.decode('utf-8')\n                hint = '（看起来是按 UTF-8 写的，open 时要写 encoding=\\'gbk\\'）'\n            except UnicodeDecodeError:\n                pass\n        fail('文件 ' + name + ' 不能按 ' + encoding + ' 编码读取' + hint)\n\n\ndef check_lines(name, expected_lines, encoding='utf-8'):\n    \"\"\"文件内容逐行比对（忽略行尾空白与末尾空行）。\"\"\"\n    got = [ln.rstrip() for ln in read_text(name, encoding).replace('\\r\\n', '\\n').split('\\n')]\n    while got and got[-1] == '':\n        got.pop()\n    want = [ln.rstrip() for ln in expected_lines]\n    if got != want:\n        for i in range(max(len(got), len(want))):\n            g = got[i] if i < len(got) else '（缺少这一行）'\n            w = want[i] if i < len(want) else '（多出这一行）'\n            if g != w:\n                fail('文件 {} 第 {} 行不对：应为 {!r}，实际 {!r}'.format(name, i + 1, w, g))\n\n\ndef check_png(name):\n    data = read_bytes(name)\n    if not data.startswith(b'\\x89PNG'):\n        fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')\n\n\n# ---------------- SQLite ----------------\ndef db_rows(name, sql, params=()):\n    \"\"\"用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。\"\"\"\n    if not os.path.exists(name):\n        fail('没有找到数据库文件 ' + name)\n    import sqlite3\n    conn = sqlite3.connect(name, timeout=1)\n    try:\n        return [tuple(r) for r in conn.execute(sql, params).fetchall()]\n    except sqlite3.Error as e:\n        fail('读取数据库 {} 出错：{}'.format(name, e))\n    finally:\n        conn.close()\n\n\ndef check_db_rows(name, sql, expected, hint=''):\n    \"\"\"程序结束后数据库里的查询结果必须等于 expected（行的列表）。\"\"\"\n    got = db_rows(name, sql)\n    want = [tuple(r) for r in expected]\n    if got != want:\n        fail('程序结束后数据库 {} 的内容不对：应为 {}，实际 {}{}'.format(\n            name, want if want else '（无记录）', got if got else '（无记录）', '。' + hint if hint else ''))\n\n\n# ---------------- turtle ----------------\ndef _seglen(s):\n    return math.hypot(s[2] - s[0], s[3] - s[1])\n\n\ndef check_polygon(segs, n, side, color, tol=1.0):\n    \"\"\"画出的同色线段恰好构成一个边长 side 的闭合正 n 边形。\"\"\"\n    mine = [s for s in segs if is_color(s[4], color)]\n    if not mine:\n        fail('画布上没有{}色线条（检查 pencolor/color 的设置）'.format(_CN.get(color, color)))\n    if len(mine) != n:\n        fail('{}色线条应有 {} 条边，实际画了 {} 条'.format(_CN.get(color, color), n, len(mine)))\n    for i, s in enumerate(mine):\n        if abs(_seglen(s) - side) > tol:\n            fail('第 {} 条边长度约为 {:.1f}，应为 {}'.format(i + 1, _seglen(s), side))\n        nxt = mine[(i + 1) % n]\n        if math.hypot(s[2] - nxt[0], s[3] - nxt[1]) > tol:\n            fail('第 {} 条边与下一条边没有首尾相接，图形不闭合'.format(i + 1))\n    for i in range(n):\n        a, b = mine[i], mine[(i + 1) % n]\n        v1 = (a[2] - a[0], a[3] - a[1])\n        v2 = (b[2] - b[0], b[3] - b[1])\n        cosang = (v1[0] * v2[0] + v1[1] * v2[1]) / (side * side)\n        turn = math.degrees(math.acos(max(-1.0, min(1.0, cosang))))\n        if abs(turn - 360.0 / n) > 1.0:\n            fail('第 {} 个转角约 {:.0f}°，正 {} 边形每次应转 {:.0f}°'.format(i + 1, turn, n, 360.0 / n))\n\n\ndef _axis_ok(lines, color, min_len):\n    h = v = False\n    for (x1, y1, x2, y2, c) in lines:\n        if not is_color(c, color):\n            continue\n        if abs(y1) < 2 and abs(y2) < 2 and abs(x2 - x1) >= min_len and min(x1, x2) < 0 < max(x1, x2):\n            h = True\n        if abs(x1) < 2 and abs(x2) < 2 and abs(y2 - y1) >= min_len and min(y1, y2) < 0 < max(y1, y2):\n            v = True\n    return h, v\n\n\ndef _as_lines(segs, mpl):\n    \"\"\"turtle 线段 + matplotlib 线条统一成 (x1, y1, x2, y2, color) 线段列表。\"\"\"\n    out = list(segs)\n    for item in mpl:\n        if item['kind'] in ('line', 'seg'):\n            xs, ys = item['x'], item['y']\n            for i in range(len(xs) - 1):\n                out.append((xs[i], ys[i], xs[i + 1], ys[i + 1], item['color']))\n    return out\n\n\ndef check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1)):\n    \"\"\"函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 向 y 轴的 line_color 色水平线。\n\n    turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。\n    \"\"\"\n    lines = _as_lines(segs, mpl)\n    if not lines:\n        fail('没有检测到任何绘图（turtle 线条或 matplotlib 图形）')\n    mpl_lines = _as_lines([], mpl)\n    expect_n = int(round((x1 - x0) / step)) + 1\n    best = None\n    for k in scales:\n        hits, xs_cov = 0, []\n        for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):\n            if not is_color(c, line_color) or abs(b1 - b2) > 0.05 * k + 0.5:\n                continue\n            if abs(a1) <= 0.05 * k + 0.5:\n                ex, ey = a2, b2\n            elif abs(a2) <= 0.05 * k + 0.5:\n                ex, ey = a1, b1\n            else:\n                continue\n            x = ex / k\n            if x0 - step <= x <= x1 + step and abs(ey / k - f(x)) <= 0.05:\n                hits += 1\n                xs_cov.append(x)\n        if best is None or hits > best[0]:\n            best = (hits, k, xs_cov)\n    hits, k, xs_cov = best\n    if hits < 0.9 * expect_n:\n        fail('{}色水平线与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 y 轴）'\n             .format(_CN.get(line_color, line_color), hits, expect_n, scales[0]))\n    if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:\n        fail('水平线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'\n             .format(x0, x1, min(xs_cov), max(xs_cov)))\n    h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)\n    for item in mpl:\n        if item['kind'] == 'axline' and abs(item['at']) < 1e-9 and is_color(item['color'], axis_color):\n            h = h or item['dir'] == 'h'\n            v = v or item['dir'] == 'v'\n    if not (h and v):\n        missing = '、'.join(n for n, ok in (('横轴', h), ('纵轴', v)) if not ok)\n        fail('缺少{}色坐标轴：{}（应为过原点的实线）'.format(_CN.get(axis_color, axis_color), missing))\n\n\n# ---------------- matplotlib ----------------\ndef check_mpl_line(mpl, xs, ys, marker=None):\n    lines = [m for m in mpl if m['kind'] == 'line']\n    if not lines:\n        fail('没有检测到 matplotlib 折线（是否调用了 plt.plot？）')\n    xs = [float(x) for x in xs]\n    ys = [float(y) for y in ys]\n    for ln in lines:\n        if len(ln['x']) == len(xs) and all(approx(a, b, 1e-6) for a, b in zip(ln['x'], xs)) \\\n                and all(approx(a, b, 1e-6) for a, b in zip(ln['y'], ys)):\n            if marker and ln.get('marker') != marker:\n                fail('折线数据正确，但没有用 {!r} 标记数据点（plot 的格式串要带 o）'.format(marker))\n            return\n    got = lines[0]\n    fail('折线数据不对：应为 x={} y={}，实际画的是 x={} y={}'.format(\n        _short(xs), _short(ys), _short(got['x']), _short(got['y'])))\n\n\ndef _short(v):\n    v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]\n    return str(v if len(v) <= 8 else v[:8] + ['…'])\n\n\n_CN = {'red': '红', 'green': '绿', 'blue': '蓝', 'black': '黑'}\n\n\ndef run_check(src, ns):\n    \"\"\"执行一段检查代码，返回 (ok, msg)。\"\"\"\n    env = {name: globals()[name] for name in (\n        'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',\n        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows')}\n    env['math'] = math\n    env.update(ns)\n    try:\n        exec(compile(src, '<check>', 'exec'), env)\n        return True, ''\n    except CheckFail as e:\n        return False, str(e)\n    except AssertionError as e:\n        return False, str(e) or '绘图/文件检查未通过'\n    except Exception as e:\n        return False, '检查时出错：{}: {}'.format(e.__class__.__name__, e)\n";
+window.PY2CHECK_SRC = "\"\"\"运行后检查（post-run check）—— 浏览器 Pyodide 与本地 harness 共用同一份源码。\n\n为什么需要：绘图题、写文件题光看 print 输出判不出对错（画错了照样能 print）。\n测试点可带 \"check\" 字段（一段 Python），学生代码运行结束后执行，检查：\n  - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）\n  - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]\n  - 写出的文件（read_text / read_bytes / exists）与数据库（db_rows / check_db_rows，新连接只看得到已提交的数据）\n  - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出\n检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。\n\n本文件由 tools/build_data.py 原样打包进 js/data.js（window.PY2CHECK_SRC），\n浏览器端以模块 py2check 载入，与本地校验逐字节一致。\n\"\"\"\nimport math\nimport os\n\n\nclass CheckFail(Exception):\n    pass\n\n\ndef fail(msg):\n    raise CheckFail(str(msg))\n\n\n# ---------------- 颜色 ----------------\n_NAMED = {\n    'red': (255, 0, 0), 'r': (255, 0, 0), 'green': (0, 128, 0), 'g': (0, 128, 0),\n    'lime': (0, 255, 0), 'blue': (0, 0, 255), 'b': (0, 0, 255), 'black': (0, 0, 0),\n    'k': (0, 0, 0), 'white': (255, 255, 255), 'w': (255, 255, 255),\n    'yellow': (255, 255, 0), 'y': (255, 255, 0), 'orange': (255, 165, 0),\n    'purple': (128, 0, 128), 'pink': (255, 192, 203), 'gray': (128, 128, 128),\n    'grey': (128, 128, 128), 'brown': (165, 42, 42), 'cyan': (0, 255, 255),\n    'c': (0, 255, 255), 'magenta': (255, 0, 255), 'm': (255, 0, 255),\n    'darkgreen': (0, 100, 0), 'darkred': (139, 0, 0), 'navy': (0, 0, 128),\n    'tab:red': (214, 39, 40), 'tab:green': (44, 160, 44), 'tab:blue': (31, 119, 180),\n}\n\n\ndef rgb(c):\n    \"\"\"把 'red' / '#ff0000' / (1, 0, 0) / (255, 0, 0) 统一成 0~255 的 (r, g, b)；认不出返回 None。\"\"\"\n    if c is None:\n        return None\n    if isinstance(c, (tuple, list)):\n        v = list(c)[:3]\n        if len(v) < 3:\n            return None\n        try:\n            v = [float(x) for x in v]\n        except (TypeError, ValueError):\n            return None\n        if all(0 <= x <= 1 for x in v):\n            return tuple(int(round(x * 255)) for x in v)\n        return tuple(int(round(x)) for x in v)\n    s = str(c).strip().lower()\n    if s in _NAMED:\n        return _NAMED[s]\n    if s.startswith('#') and len(s) in (4, 7, 9):\n        if len(s) == 4:\n            s = '#' + ''.join(ch * 2 for ch in s[1:])\n        try:\n            return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))\n        except ValueError:\n            return None\n    return None\n\n\ndef is_color(c, name):\n    \"\"\"颜色归类判断（宽松）：'red' 接受 red/#f00/#ff0000/(1,0,0)/'r'/'tab:red' 等。\"\"\"\n    v = rgb(c)\n    if v is None:\n        return False\n    r, g, b = v\n    hi, lo = 120, 110\n    name = name.lower()\n    if name == 'red':\n        return r >= hi and g < lo and b < lo\n    if name == 'green':\n        return g >= hi and r < lo + 20 and b < lo + 20\n    if name == 'blue':\n        return b >= hi and r < lo and g < lo + 60\n    if name == 'black':\n        return max(v) < 60\n    want = rgb(name)\n    return want is not None and all(abs(a - w) <= 40 for a, w in zip(v, want))\n\n\ndef approx(a, b, tol=1e-6):\n    return abs(float(a) - float(b)) <= tol\n\n\n# ---------------- 运行期采集 ----------------\ndef mpl_snapshot():\n    \"\"\"抓取当前所有 matplotlib 图形中的折线 / 线段集合 / 柱子（未导入 matplotlib 时返回 []）。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        return []\n    try:\n        from matplotlib import _pylab_helpers\n        from matplotlib.colors import to_hex\n    except Exception:\n        return []\n    out = []\n    for mgr in _pylab_helpers.Gcf.get_all_fig_managers():\n        fig = mgr.canvas.figure\n        for ax in fig.axes:\n            for ln in ax.get_lines():\n                try:\n                    xs = [float(x) for x in ln.get_xdata()]\n                    ys = [float(y) for y in ln.get_ydata()]\n                except (TypeError, ValueError):\n                    continue\n                item = {'kind': 'line', 'x': xs, 'y': ys,\n                        'color': to_hex(ln.get_color()), 'marker': str(ln.get_marker())}\n                # plt.axhline / axvline：数据坐标只有一维，另一维是 0~1 的轴坐标\n                tr = ln.get_transform()\n                if tr == ax.get_yaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'h', 'at': ys[0], 'color': item['color']}\n                elif tr == ax.get_xaxis_transform():\n                    item = {'kind': 'axline', 'dir': 'v', 'at': xs[0], 'color': item['color']}\n                out.append(item)\n            for coll in ax.collections:\n                get_segments = getattr(coll, 'get_segments', None)\n                if get_segments is None:\n                    continue\n                colors = [to_hex(c) for c in coll.get_colors()] or ['#000000']\n                for i, seg in enumerate(get_segments()):\n                    if len(seg) >= 2:\n                        (x1, y1), (x2, y2) = seg[0], seg[-1]\n                        out.append({'kind': 'seg', 'x': [float(x1), float(x2)], 'y': [float(y1), float(y2)],\n                                    'color': colors[i % len(colors)]})\n            for p in ax.patches:\n                if hasattr(p, 'get_height') and hasattr(p, 'get_x'):\n                    out.append({'kind': 'bar', 'x': float(p.get_x() + p.get_width() / 2),\n                                'h': float(p.get_height()), 'color': to_hex(p.get_facecolor())})\n    return out\n\n\ndef install_mpl_hooks(store):\n    \"\"\"学生代码里的 plt.close() / plt.show() 会清掉或\"消费\"图形：调用前先快照。返回还原函数。\"\"\"\n    import sys\n    if 'matplotlib.pyplot' not in sys.modules:\n        try:\n            import matplotlib.pyplot  # noqa: F401  （matplotlib 题在 harness 中已预导入）\n        except Exception:\n            return lambda: None\n    plt = sys.modules['matplotlib.pyplot']\n    orig_close, orig_show = plt.close, plt.show\n\n    def close(*a, **k):\n        store.extend(mpl_snapshot())\n        return orig_close(*a, **k)\n\n    def show(*a, **k):\n        store.extend(mpl_snapshot())\n        return None\n\n    plt.close, plt.show = close, show\n\n    def restore():\n        plt.close, plt.show = orig_close, orig_show\n    return restore\n\n\ndef cleanup_files(names):\n    for n in names or []:\n        try:\n            os.remove(n)\n        except OSError:\n            pass\n\n\n# ---------------- 文件 ----------------\ndef exists(name):\n    return os.path.exists(name)\n\n\ndef read_bytes(name):\n    if not os.path.exists(name):\n        fail('没有找到程序应生成的文件 ' + name)\n    with open(name, 'rb') as f:\n        return f.read()\n\n\ndef read_text(name, encoding='utf-8'):\n    data = read_bytes(name)\n    try:\n        return data.decode(encoding)\n    except UnicodeDecodeError:\n        hint = ''\n        if encoding.lower() in ('gbk', 'gb2312', 'gb18030'):\n            try:\n                data.decode('utf-8')\n                hint = '（看起来是按 UTF-8 写的，open 时要写 encoding=\\'gbk\\'）'\n            except UnicodeDecodeError:\n                pass\n        fail('文件 ' + name + ' 不能按 ' + encoding + ' 编码读取' + hint)\n\n\ndef check_lines(name, expected_lines, encoding='utf-8'):\n    \"\"\"文件内容逐行比对（忽略行尾空白与末尾空行）。\"\"\"\n    got = [ln.rstrip() for ln in read_text(name, encoding).replace('\\r\\n', '\\n').split('\\n')]\n    while got and got[-1] == '':\n        got.pop()\n    want = [ln.rstrip() for ln in expected_lines]\n    if got != want:\n        for i in range(max(len(got), len(want))):\n            g = got[i] if i < len(got) else '（缺少这一行）'\n            w = want[i] if i < len(want) else '（多出这一行）'\n            if g != w:\n                fail('文件 {} 第 {} 行不对：应为 {!r}，实际 {!r}'.format(name, i + 1, w, g))\n\n\ndef check_png(name):\n    data = read_bytes(name)\n    if not data.startswith(b'\\x89PNG'):\n        fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')\n\n\n# ---------------- 面向对象 ----------------\ndef check_class(user, name, methods=(), base=None):\n    \"\"\"学生程序必须自己定义类 name（有构造方法和指定的实例方法）；base 给出时还必须是 base 的子类，且 methods 在子类中重写。\n\n    防止\"不写类、直接 print 结果\"也能通过编程题。\n    \"\"\"\n    cls = user.get(name)\n    if not isinstance(cls, type):\n        fail('程序里没有定义类 {0}（题目要求用 class {0} 定义）'.format(name))\n    if base is None:\n        if '__init__' not in cls.__dict__:\n            fail('类 {} 没有定义构造方法 __init__'.format(name))\n    else:\n        parent = user.get(base)\n        if not isinstance(parent, type):\n            fail('程序里没有定义父类 {}'.format(base))\n        if cls is parent or not issubclass(cls, parent):\n            fail('类 {} 应继承自 {}（写成 class {}({}):）'.format(name, base, name, base))\n    for m in methods:\n        if not callable(getattr(cls, m, None)):\n            fail('类 {} 缺少实例方法 {}()'.format(name, m))\n        if m not in cls.__dict__:\n            fail(('子类 {} 要重写方法 {}()' if base is not None else '方法 {1}() 要定义在类 {0} 里面（注意缩进）').format(name, m))\n\n\n# ---------------- SQLite ----------------\ndef db_rows(name, sql, params=()):\n    \"\"\"用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。\"\"\"\n    if not os.path.exists(name):\n        fail('没有找到数据库文件 ' + name)\n    import sqlite3\n    conn = sqlite3.connect(name, timeout=1)\n    try:\n        return [tuple(r) for r in conn.execute(sql, params).fetchall()]\n    except sqlite3.Error as e:\n        fail('读取数据库 {} 出错：{}'.format(name, e))\n    finally:\n        conn.close()\n\n\ndef check_db_rows(name, sql, expected, hint=''):\n    \"\"\"程序结束后数据库里的查询结果必须等于 expected（行的列表）。\"\"\"\n    got = db_rows(name, sql)\n    want = [tuple(r) for r in expected]\n    if got != want:\n        fail('程序结束后数据库 {} 的内容不对：应为 {}，实际 {}{}'.format(\n            name, want if want else '（无记录）', got if got else '（无记录）', '。' + hint if hint else ''))\n\n\n# ---------------- turtle ----------------\ndef _seglen(s):\n    return math.hypot(s[2] - s[0], s[3] - s[1])\n\n\ndef check_polygon(segs, n, side, color, tol=1.0):\n    \"\"\"画出的同色线段恰好构成一个边长 side 的闭合正 n 边形。\"\"\"\n    mine = [s for s in segs if is_color(s[4], color)]\n    if not mine:\n        fail('画布上没有{}色线条（检查 pencolor/color 的设置）'.format(_CN.get(color, color)))\n    if len(mine) != n:\n        fail('{}色线条应有 {} 条边，实际画了 {} 条'.format(_CN.get(color, color), n, len(mine)))\n    for i, s in enumerate(mine):\n        if abs(_seglen(s) - side) > tol:\n            fail('第 {} 条边长度约为 {:.1f}，应为 {}'.format(i + 1, _seglen(s), side))\n        nxt = mine[(i + 1) % n]\n        if math.hypot(s[2] - nxt[0], s[3] - nxt[1]) > tol:\n            fail('第 {} 条边与下一条边没有首尾相接，图形不闭合'.format(i + 1))\n    for i in range(n):\n        a, b = mine[i], mine[(i + 1) % n]\n        v1 = (a[2] - a[0], a[3] - a[1])\n        v2 = (b[2] - b[0], b[3] - b[1])\n        cosang = (v1[0] * v2[0] + v1[1] * v2[1]) / (side * side)\n        turn = math.degrees(math.acos(max(-1.0, min(1.0, cosang))))\n        if abs(turn - 360.0 / n) > 1.0:\n            fail('第 {} 个转角约 {:.0f}°，正 {} 边形每次应转 {:.0f}°'.format(i + 1, turn, n, 360.0 / n))\n\n\ndef _axis_ok(lines, color, min_len):\n    h = v = False\n    for (x1, y1, x2, y2, c) in lines:\n        if not is_color(c, color):\n            continue\n        if abs(y1) < 2 and abs(y2) < 2 and abs(x2 - x1) >= min_len and min(x1, x2) < 0 < max(x1, x2):\n            h = True\n        if abs(x1) < 2 and abs(x2) < 2 and abs(y2 - y1) >= min_len and min(y1, y2) < 0 < max(y1, y2):\n            v = True\n    return h, v\n\n\ndef _as_lines(segs, mpl):\n    \"\"\"turtle 线段 + matplotlib 线条统一成 (x1, y1, x2, y2, color) 线段列表。\"\"\"\n    out = list(segs)\n    for item in mpl:\n        if item['kind'] in ('line', 'seg'):\n            xs, ys = item['x'], item['y']\n            for i in range(len(xs) - 1):\n                out.append((xs[i], ys[i], xs[i + 1], ys[i + 1], item['color']))\n    return out\n\n\ndef check_function_hlines(segs, mpl, f, x0, x1, step, axis_color='green', line_color='red', scales=(30, 1)):\n    \"\"\"函数图像题：axis_color 色坐标轴（过原点的横、纵两条）+ 每个采样点 (x, f(x)) 向 y 轴的 line_color 色水平线。\n\n    turtle 画法（像素坐标）必须按 scales[0] 倍放大；matplotlib 坐标轴会自动缩放，放大或不放大（scales 内任一）都接受。\n    \"\"\"\n    lines = _as_lines(segs, mpl)\n    if not lines:\n        fail('没有检测到任何绘图（turtle 线条或 matplotlib 图形）')\n    mpl_lines = _as_lines([], mpl)\n    expect_n = int(round((x1 - x0) / step)) + 1\n    best = None\n    for k in scales:\n        hits, xs_cov = 0, []\n        for (a1, b1, a2, b2, c) in (lines if k == scales[0] else mpl_lines):\n            if not is_color(c, line_color) or abs(b1 - b2) > 0.05 * k + 0.5:\n                continue\n            if abs(a1) <= 0.05 * k + 0.5:\n                ex, ey = a2, b2\n            elif abs(a2) <= 0.05 * k + 0.5:\n                ex, ey = a1, b1\n            else:\n                continue\n            x = ex / k\n            if x0 - step <= x <= x1 + step and abs(ey / k - f(x)) <= 0.05:\n                hits += 1\n                xs_cov.append(x)\n        if best is None or hits > best[0]:\n            best = (hits, k, xs_cov)\n    hits, k, xs_cov = best\n    if hits < 0.9 * expect_n:\n        fail('{}色水平线与函数数据点对得上的只有 {} 条，应约 {} 条（检查 x 的范围与步长、横纵坐标是否都放大 {} 倍、是否从数据点画到 y 轴）'\n             .format(_CN.get(line_color, line_color), hits, expect_n, scales[0]))\n    if min(xs_cov) > x0 + 3 * step or max(xs_cov) < x1 - 3 * step:\n        fail('水平线没有覆盖整个 x 范围（应为 {:.2f} ~ {:.2f}，实际 {:.2f} ~ {:.2f}）'\n             .format(x0, x1, min(xs_cov), max(xs_cov)))\n    h, v = _axis_ok(lines, axis_color, min_len=2 * 2.5 * k)\n    for item in mpl:\n        if item['kind'] == 'axline' and abs(item['at']) < 1e-9 and is_color(item['color'], axis_color):\n            h = h or item['dir'] == 'h'\n            v = v or item['dir'] == 'v'\n    if not (h and v):\n        missing = '、'.join(n for n, ok in (('横轴', h), ('纵轴', v)) if not ok)\n        fail('缺少{}色坐标轴：{}（应为过原点的实线）'.format(_CN.get(axis_color, axis_color), missing))\n\n\n# ---------------- matplotlib ----------------\ndef check_mpl_line(mpl, xs, ys, marker=None):\n    lines = [m for m in mpl if m['kind'] == 'line']\n    if not lines:\n        fail('没有检测到 matplotlib 折线（是否调用了 plt.plot？）')\n    xs = [float(x) for x in xs]\n    ys = [float(y) for y in ys]\n    for ln in lines:\n        if len(ln['x']) == len(xs) and all(approx(a, b, 1e-6) for a, b in zip(ln['x'], xs)) \\\n                and all(approx(a, b, 1e-6) for a, b in zip(ln['y'], ys)):\n            if marker and ln.get('marker') != marker:\n                fail('折线数据正确，但没有用 {!r} 标记数据点（plot 的格式串要带 o）'.format(marker))\n            return\n    got = lines[0]\n    fail('折线数据不对：应为 x={} y={}，实际画的是 x={} y={}'.format(\n        _short(xs), _short(ys), _short(got['x']), _short(got['y'])))\n\n\ndef _short(v):\n    v = [int(x) if float(x).is_integer() else round(x, 3) for x in v]\n    return str(v if len(v) <= 8 else v[:8] + ['…'])\n\n\n_CN = {'red': '红', 'green': '绿', 'blue': '蓝', 'black': '黑'}\n\n\ndef run_check(src, ns):\n    \"\"\"执行一段检查代码，返回 (ok, msg)。\"\"\"\n    env = {name: globals()[name] for name in (\n        'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',\n        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows',\n        'check_class')}\n    env['math'] = math\n    env.update(ns)\n    try:\n        exec(compile(src, '<check>', 'exec'), env)\n        return True, ''\n    except CheckFail as e:\n        return False, str(e)\n    except AssertionError as e:\n        return False, str(e) or '绘图/文件检查未通过'\n    except Exception as e:\n        return False, '检查时出错：{}: {}'.format(e.__class__.__name__, e)\n";

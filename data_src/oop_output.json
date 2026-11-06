@@ -1,0 +1,271 @@
+{
+ "kind": "output",
+ "items": [
+  {
+   "id": "out-oop-001",
+   "level": 7,
+   "set": "oop",
+   "title": "矩形的面积与周长",
+   "code": "class Rect:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def area(self):\n        return self.w * self.h\n    def perimeter(self):\n        return 2 * (self.w + self.h)\nr = Rect(4, 6)\nprint(r.area())\nprint(r.perimeter())\n",
+   "expected": "24\n20",
+   "exp": "area 返回 4×6=24，perimeter 返回 2×(4+6)=20。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-002",
+   "level": 7,
+   "set": "oop",
+   "title": "计数器步进",
+   "code": "class Counter:\n    def __init__(self, start):\n        self.value = start\n    def step(self, k):\n        self.value += k\n        return self.value\nc = Counter(10)\nprint(c.step(3))\nprint(c.step(-5))\nprint(c.value)\n",
+   "expected": "13\n8\n8",
+   "exp": "初值 10，+3 得 13，再 -5 得 8；value 保存的就是最后的 8。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-003",
+   "level": 7,
+   "set": "oop",
+   "title": "两盏灯的开关",
+   "code": "class Lamp:\n    def __init__(self):\n        self.on = False\n    def press(self):\n        self.on = not self.on\na = Lamp()\nb = Lamp()\na.press()\na.press()\nb.press()\nprint(a.on, b.on)\n",
+   "expected": "False True",
+   "exp": "a 按了两次：False→True→False；b 按一次变 True。两个对象各自保存状态。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-004",
+   "level": 7,
+   "set": "oop",
+   "title": "学生平均分",
+   "code": "class Student:\n    def __init__(self, name, scores):\n        self.name = name\n        self.scores = scores\n    def avg(self):\n        return sum(self.scores) / len(self.scores)\ns = Student('小明', [80, 90, 85])\nprint(s.name, '{:.1f}'.format(s.avg()))\n",
+   "expected": "小明 85.0",
+   "exp": "(80+90+85)/3=85.0，格式化保留 1 位小数。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-005",
+   "level": 7,
+   "set": "oop",
+   "title": "筛选对象列表",
+   "code": "class Book:\n    def __init__(self, title, price):\n        self.title = title\n        self.price = price\nbooks = [Book('Python', 59), Book('C语言', 39), Book('数据库', 45)]\nfor b in books:\n    if b.price < 50:\n        print(b.title)\n",
+   "expected": "C语言\n数据库",
+   "exp": "只有 C语言(39) 和 数据库(45) 价格低于 50，按列表顺序输出。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-006",
+   "level": 7,
+   "set": "oop",
+   "title": "方法里调用方法",
+   "code": "class Temp:\n    def __init__(self, c):\n        self.c = c\n    def to_f(self):\n        return self.c * 9 / 5 + 32\n    def report(self):\n        return str(self.c) + '℃=' + str(self.to_f()) + '℉'\nprint(Temp(25).report())\n",
+   "expected": "25℃=77.0℉",
+   "exp": "25×9/5+32=77.0（用了 / 除法，结果是浮点数），report 通过 self.to_f() 调用另一个方法。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-007",
+   "level": 7,
+   "set": "oop",
+   "title": "引用与新对象",
+   "code": "class Box:\n    def __init__(self, n):\n        self.n = n\nx = Box(1)\ny = x\nz = Box(1)\ny.n = 3\nprint(x.n, z.n)\n",
+   "expected": "3 1",
+   "exp": "y 与 x 是同一个对象，改 y.n 就是改 x.n；z 是另外创建的对象，仍是 1。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-008",
+   "level": 7,
+   "set": "oop",
+   "title": "钱包记账",
+   "code": "class Wallet:\n    def __init__(self):\n        self.money = 0\n        self.log = []\n    def income(self, x):\n        self.money += x\n        self.log.append('+' + str(x))\n    def spend(self, x):\n        if x <= self.money:\n            self.money -= x\n            self.log.append('-' + str(x))\nw = Wallet()\nw.income(50)\nw.spend(80)\nw.spend(20)\nw.income(10)\nprint(w.money)\nprint(','.join(w.log))\n",
+   "expected": "40\n+50,-20,+10",
+   "exp": "50 进账；花 80 超过余额，什么都不做也不记账；花 20 剩 30；再进 10 得 40。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-009",
+   "level": 7,
+   "set": "oop",
+   "title": "构造时打印",
+   "code": "class Order:\n    def __init__(self, no):\n        self.no = no\n        print('订单', no, '已创建')\no1 = Order(101)\no2 = Order(102)\nprint(o2.no - o1.no)\n",
+   "expected": "订单 101 已创建\n订单 102 已创建\n1",
+   "exp": "每创建一个对象就执行一次 __init__ 里的 print；最后 102-101=1。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-010",
+   "level": 7,
+   "set": "oop",
+   "title": "没有返回值的方法",
+   "code": "class Greeter:\n    def __init__(self, name):\n        self.name = name\n    def hello(self):\n        print('你好,' + self.name)\ng = Greeter('小红')\nr = g.hello()\nprint(r)\n",
+   "expected": "你好,小红\nNone",
+   "exp": "hello() 在方法内部打印问候语，没有 return，所以 r 是 None。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-011",
+   "level": 7,
+   "set": "oop",
+   "title": "最长的单词",
+   "code": "class Text:\n    def __init__(self, s):\n        self.s = s\n    def words(self):\n        return self.s.split()\n    def longest(self):\n        best = ''\n        for w in self.words():\n            if len(w) > len(best):\n                best = w\n        return best\nt = Text('I love Python programming')\nprint(len(t.words()), t.longest())\n",
+   "expected": "4 programming",
+   "exp": "split() 按空白切成 4 个单词；最长的是 programming（11 个字母）。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-012",
+   "level": 7,
+   "set": "oop",
+   "title": "字典类型的属性",
+   "code": "class Stock:\n    def __init__(self):\n        self.d = {}\n    def add(self, name, n):\n        self.d[name] = self.d.get(name, 0) + n\ns = Stock()\ns.add('苹果', 3)\ns.add('香蕉', 2)\ns.add('苹果', 4)\nprint(s.d)\n",
+   "expected": "{'苹果': 7, '香蕉': 2}",
+   "exp": "get(name, 0) 取不到时按 0 算：苹果 3+4=7，香蕉 2；字典按插入顺序输出。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-013",
+   "level": 7,
+   "set": "oop",
+   "title": "形参与属性同名",
+   "code": "class P:\n    def __init__(self, x):\n        self.x = x\n    def move(self, x):\n        self.x = self.x + x\n        x = 0\n        return x\np = P(5)\nprint(p.move(2), p.x)\n",
+   "expected": "0 7",
+   "exp": "self.x 是实例属性（5+2=7），x 是形参，最后被赋为 0 并返回；两者互不影响。",
+   "difficulty": 3,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-014",
+   "level": 7,
+   "set": "oop",
+   "title": "修改属性后重新计算",
+   "code": "class Circle:\n    def __init__(self, r):\n        self.r = r\n    def area(self):\n        return round(3.14 * self.r * self.r, 2)\nc = Circle(1)\nprint(c.area())\nc.r = 2\nprint(c.area())\n",
+   "expected": "3.14\n12.56",
+   "exp": "方法每次调用都按当前的 self.r 计算：3.14×1×1=3.14，3.14×2×2=12.56。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-015",
+   "level": 7,
+   "set": "oop",
+   "title": "按属性排序",
+   "code": "class Emp:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\nes = [Emp('赵', 30), Emp('钱', 25), Emp('孙', 35)]\nes.sort(key=lambda e: e.age)\nfor e in es:\n    print(e.name, e.age)\n",
+   "expected": "钱 25\n赵 30\n孙 35",
+   "exp": "key 取每个对象的 age，按年龄升序：钱 25、赵 30、孙 35。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-016",
+   "level": 7,
+   "set": "oop",
+   "title": "队列",
+   "code": "class Queue:\n    def __init__(self):\n        self.data = []\n    def push(self, x):\n        self.data.append(x)\n    def pop(self):\n        return self.data.pop(0)\n    def size(self):\n        return len(self.data)\nq = Queue()\nfor i in range(1, 5):\n    q.push(i * 10)\nprint(q.pop(), q.pop())\nprint(q.size())\n",
+   "expected": "10 20\n2",
+   "exp": "依次放入 10、20、30、40；pop(0) 从队头取，先取 10 再取 20，剩 2 个。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-017",
+   "level": 7,
+   "set": "oop",
+   "title": "成绩等级",
+   "code": "class Score:\n    def __init__(self, v):\n        self.v = v\n    def level(self):\n        if self.v >= 90:\n            return '优'\n        elif self.v >= 75:\n            return '良'\n        elif self.v >= 60:\n            return '中'\n        return '差'\nfor v in [95, 60, 74, 30]:\n    print(Score(v).level(), end=' ')\n",
+   "expected": "优 中 中 差 ",
+   "exp": "95→优，60→中（≥60 但 <75），74→中，30→差；end=' ' 让结果输出在同一行。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "out-oop-018",
+   "level": 7,
+   "set": "oop",
+   "title": "子类重写方法",
+   "code": "class Animal:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        return '...'\nclass Dog(Animal):\n    def speak(self):\n        return '汪汪'\na = Animal('动物')\nd = Dog('小黑')\nprint(a.name, a.speak())\nprint(d.name, d.speak())\n",
+   "expected": "动物 ...\n小黑 汪汪",
+   "exp": "Dog 没写 __init__，沿用父类的，所以有 name；Dog 重写了 speak，调用时用子类自己的版本。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象",
+    "继承"
+   ],
+   "note": "大纲口径补充：基础继承"
+  },
+  {
+   "id": "out-oop-019",
+   "level": 7,
+   "set": "oop",
+   "title": "子类调用父类构造方法",
+   "code": "class Person:\n    def __init__(self, name):\n        self.name = name\n    def intro(self):\n        return '我是' + self.name\nclass Student(Person):\n    def __init__(self, name, school):\n        super().__init__(name)\n        self.school = school\n    def intro(self):\n        return Person.intro(self) + '，就读于' + self.school\ns = Student('小李', '海大')\nprint(s.intro())\n",
+   "expected": "我是小李，就读于海大",
+   "exp": "super().__init__(name) 让父类设置 name；子类的 intro 先调用父类 intro 得到“我是小李”，再拼接学校。",
+   "difficulty": 3,
+   "tags": [
+    "面向对象",
+    "继承"
+   ],
+   "note": "大纲口径补充：基础继承"
+  },
+  {
+   "id": "out-oop-020",
+   "level": 7,
+   "set": "oop",
+   "title": "多态：同名方法不同结果",
+   "code": "class Shape:\n    def area(self):\n        return 0\nclass Square(Shape):\n    def __init__(self, a):\n        self.a = a\n    def area(self):\n        return self.a * self.a\nclass Tri(Shape):\n    def __init__(self, b, h):\n        self.b = b\n        self.h = h\n    def area(self):\n        return self.b * self.h / 2\nfor s in [Square(3), Tri(4, 5), Shape()]:\n    print(s.area())\n",
+   "expected": "9\n10.0\n0",
+   "exp": "同样调用 area()，各对象用自己类的版本：3×3=9，4×5/2=10.0（/ 除法得浮点数），Shape 返回 0。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象",
+    "继承"
+   ],
+   "note": "大纲口径补充：基础继承"
+  }
+ ]
+}

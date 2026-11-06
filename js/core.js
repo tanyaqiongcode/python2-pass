@@ -167,7 +167,7 @@
     var out = JSON.parse(JSON.stringify(local || {}));
     var imp = imported || {};
     var counts = { questions: 0, mocks: 0 };
-    var kinds = ['mcq', 'blank', 'fix', 'coding', 'parsons'];
+    var kinds = ['mcq', 'blank', 'fix', 'coding', 'parsons', 'output'];
     kinds.forEach(function (k) {
       var src = imp[k] || {};
       out[k] = out[k] || {};
@@ -377,6 +377,26 @@
     return { totalDays: D, longPlan: false, days: days };
   }
 
+  /** 读程序写运行结果：逐行严格比对（只忽略行尾空格和末尾空行；不像编程题那样剔除提示行）。
+   *  返回 { ok, line, want, got }：line 为第一处不同的行号（1 起），ok 时为 0 */
+  function judgeOutputAnswer(answer, expected) {
+    var norm = function (s) {
+      var lines = String(s || '').replace(/\r\n?/g, '\n').split('\n').map(function (l) { return l.replace(/\s+$/, ''); });
+      while (lines.length && lines[lines.length - 1] === '') lines.pop();
+      while (lines.length && lines[0] === '') lines.shift();
+      return lines;
+    };
+    var a = norm(answer);
+    var e = norm(expected);
+    var n = Math.max(a.length, e.length);
+    for (var i = 0; i < n; i++) {
+      if (a[i] !== e[i]) {
+        return { ok: false, line: i + 1, want: e[i] === undefined ? null : e[i], got: a[i] === undefined ? null : a[i] };
+      }
+    }
+    return { ok: true, line: 0, want: null, got: null };
+  }
+
   /** 一道题在模拟考中"浏览器判不了"的分值（如 whl 安装截图），不计入得分与满分 */
   function unjudgedPoints(q) {
     var u = q && q.unjudged;
@@ -404,6 +424,7 @@
     gradeMcq: gradeMcq,
     judgeTest: judgeTest,
     unjudgedPoints: unjudgedPoints,
+    judgeOutputAnswer: judgeOutputAnswer,
     buildCountdownPlan: buildCountdownPlan,
     ymd: ymd
   };

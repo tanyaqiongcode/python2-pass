@@ -201,6 +201,41 @@ def validate_fix(q, fname):
     return n
 
 
+def run_mcq_code(q):
+    """带 code 的单选（代码阅读题）：真实运行，正确选项必须对应运行结果（run_expected）或报错类型（run_error）。"""
+    if not q.get("code"):
+        return 0
+    r = _run(q["code"], "", q)
+    if q.get("run_error"):
+        if r["ok"] or q["run_error"] not in (r["error"] or ""):
+            return err(f"{q['id']}: 应抛出 {q['run_error']}，实际 {r['error'] or '正常运行'}")
+        return 0
+    want = q.get("run_expected", q["opts"][q["ans"]] if q.get("opts") else "")
+    if not r["ok"] or norm(r["stdout"]) != norm(want):
+        return err(f"{q['id']}: 代码阅读题的运行结果与正确答案不符" + _why(r, want))
+    return 0
+
+
+def validate_output(q, fname):
+    """读程序写运行结果题。"""
+    n = 0
+    for f in ("id", "level", "title", "code", "expected", "exp"):
+        if f not in q:
+            n += err(f"{fname}: {q.get('id', '?')} 缺字段 {f}")
+    if q.get("level") not in LEVEL_RANGE:
+        n += err(f"{fname}: {q.get('id')} level 非法")
+    if "input(" in q.get("code", ""):
+        n += err(f"{fname}: {q.get('id')} 读程序题不应有 input()")
+    return n
+
+
+def run_output(q):
+    r = _run(q["code"], "", q)
+    if not r["ok"] or norm(r["stdout"]) != norm(q["expected"]):
+        return err(f"{q['id']}: 读程序题 expected 与真实运行结果不符" + _why(r, q["expected"]))
+    return 0
+
+
 def validate_parsons(q, fname):
     n = 0
     for f in ("id", "level", "title", "desc", "lines", "tests", "exp"):
@@ -280,6 +315,8 @@ def main():
         sys.exit(1)
 
     mcq, blanks, fixes, codings = [], [], [], []
+    # OOP 专项题（set="oop"）单独成池：不进关卡通关条件、不进模拟考抽题
+    oop_mcq, oop_coding, outputs = [], [], []
     lessons = {}
     resources = []
     parsons = []
@@ -300,7 +337,11 @@ def main():
         if kind == "mcq":
             for q in items:
                 nerr += validate_mcq(q, fname)
-                mcq.append(q)
+                (oop_mcq if q.get("set") == "oop" else mcq).append(q)
+        elif kind == "output":
+            for q in items:
+                nerr += validate_output(q, fname)
+                outputs.append(q)
         elif kind == "blank":
             for q in items:
                 nerr += validate_blank(q, fname)
@@ -315,7 +356,7 @@ def main():
             for q in items:
                 nerr += validate_coding(q, fname)
                 nerr += check_files(q, fname, 0)
-                codings.append(q)
+                (oop_coding if q.get("set") == "oop" else codings).append(q)
         elif kind == "lesson":
             lv = str(data.get("level"))
             if lv not in ALLOWED_LESSON_KEYS or not data.get("md"):
@@ -363,6 +404,10 @@ def main():
         (blanks, "blank"),
         (fixes, "fix"),
         (codings, "coding"),
+        (parsons, "parsons"),
+        (oop_mcq, "oop mcq"),
+        (oop_coding, "oop coding"),
+        (outputs, "output"),
     ]:
         for q in lst:
             if q["id"] in seen_ids:
@@ -383,12 +428,20 @@ def main():
             nrun += run_coding(q)
         for q in parsons:
             nrun += run_parsons(q)
+        print(f"== OOP 专项（单选 {len(oop_mcq)} / 读程序 {len(outputs)} / 编程 {len(oop_coding)}）==")
+        for q in mcq + oop_mcq:
+            nrun += run_mcq_code(q)
+        for q in outputs:
+            nrun += run_output(q)
+        for q in oop_coding:
+            nrun += run_coding(q)
 
     nerr += nrun
     print("\n== 汇总 ==")
     print(
         f"选择题 {len(mcq)} | 填空 {len(blanks)} | 改错 {len(fixes)} | 编程 {len(codings)} | 拼程序 {len(parsons)} | 课程 {len(lessons)} | 资源 {len(resources)}"
     )
+    print(f"OOP 专项：单选 {len(oop_mcq)} | 读程序写结果 {len(outputs)} | 编程 {len(oop_coding)}")
     print(f"错误 {nerr}")
     if nerr:
         sys.exit(1)
@@ -400,6 +453,7 @@ def main():
         "fixes": fixes,
         "coding": codings,
         "parsons": parsons,
+        "oop": {"mcq": oop_mcq, "output": outputs, "coding": oop_coding},
         "lessons": {str(k): v for k, v in sorted(lessons.items())},
         "resources": resources,
     }
