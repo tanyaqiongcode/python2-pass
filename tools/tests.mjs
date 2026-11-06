@@ -296,3 +296,10 @@ test('pickFiveCats：按官方五类各 1 道、官方原题不参与、顺序�
   assert.notDeepEqual(Array.from(C.pickFiveCats(coding, 1), q => q.id), Array.from(C.pickFiveCats(coding, 2), q => q.id), '换 seed 换题');
   assert.equal(['data', 'calc', 'draw', 'db', 'text'].reduce((a, c) => a + C.catScore(c), 0), 75);
 });
+
+test('sampleStdin：知识点示例按 input() 次数给默认输入，取注释里的值，空行结束的循环补空行', () => {
+  assert.equal(C.sampleStdin("print(1)"), null);
+  assert.equal(C.sampleStdin("a = input()   # 输入 12，a 是字符串\nprint(a + '5')\nn = eval(input())  # 输入 7，n 是整数"), '12\n7\n');
+  assert.equal(C.sampleStdin("m, n = int(input()), int(input())"), '12\n12\n');
+  assert.equal(C.sampleStdin("while True:\n    line = input()\n    if line == '':\n        break"), '12\n\n');
+});

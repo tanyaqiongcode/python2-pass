@@ -121,6 +121,22 @@
   ];
 
   /** 把 Python 报错翻译成中文提示；无匹配返回 null */
+  /** 知识点示例的默认输入：每次 input() 调用一行。优先用注释里写的"输入 X"，否则填 12；
+   *  以空串作结束标志的 while True 循环再补一个空行。不调用 input() 返回 null。 */
+  function sampleStdin(code) {
+    const lines = [];
+    let sentinel = false;
+    String(code).split('\n').forEach(ln => {
+      const n = (ln.match(/\binput\s*\(/g) || []).length;
+      if (!n) return;
+      const m = ln.match(/#.*?输入\s*([^\s，,。；;）)]+)/);
+      for (let i = 0; i < n; i++) lines.push(m ? m[1] : '12');
+    });
+    if (!lines.length) return null;
+    if (/while\s+True/.test(code) && /==\s*(''|"")/.test(code)) sentinel = true;
+    return lines.join('\n') + (sentinel ? '\n\n' : '\n');
+  }
+
   function friendlyError(err) {
     var text = String(err || '');
     for (var i = 0; i < FRIENDLY_ERRORS.length; i++) {
@@ -497,6 +513,7 @@
     mockExpired: mockExpired,
     mergeProgress: mergeProgress,
     friendlyError: friendlyError,
+    sampleStdin: sampleStdin,
     srsNext: srsNext,
     srsDue: srsDue,
     SRS_LADDER: SRS_LADDER,
