@@ -113,6 +113,18 @@ k9 = item("coding_l5.json", "code-l5-009")
 expect("参考答案通过", k9, k9["ref"], True, k9["tests"][0])
 expect("只 print 不写 out.txt 判错", k9, k9["ref"].replace("out.write(res + '\\n')", "pass"), False, k9["tests"][0])
 
+print("== 27A 编程4：SQLite 新增必须真正提交 ==")
+c4 = item("official27A.json", "p27-c4")
+for t in c4["tests"]:
+    expect("参考答案通过 stdin=" + repr(t["stdin"]), c4, c4["ref"], True, t)
+expect("忘了 conn.commit() 判错（同一连接里查得到、库里没保存）", c4,
+       c4["ref"].replace("            conn.commit()\n", ""), False, c4["tests"][0], msg_has="commit")
+expect("楼层/容量写错判错", c4, c4["ref"].replace("(n, n[0] + '楼', 30, 0)", "(n, '1楼', 0, 0)"), False,
+       c4["tests"][0], msg_has="2楼")
+expect("不管回答什么都新增判错", c4, c4["ref"].replace("        if ans.strip().lower() == 'y':\n", "        if True:\n"),
+       False, c4["tests"][2], msg_has="不应新增")
+expect("最后不 close 但已 commit 仍通过", c4, c4["ref"].replace("conn.close()", "pass"), True, c4["tests"][0])
+
 print("== 旧输出文件不能冒充本次结果（cleanup） ==")
 with run_dir(k9):
     run_user(k9["ref"], "")  # 第一次：正确程序写出 out.txt
