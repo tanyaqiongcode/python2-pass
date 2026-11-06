@@ -380,6 +380,7 @@ def main():
     # OOP 专项题（set="oop"）单独成池：不进关卡通关条件、不进模拟考抽题
     oop_mcq, oop_coding, outputs = [], [], []
     lessons = {}
+    lesson_files = {}
     resources = []
     parsons = []
     official_meta = None
@@ -425,6 +426,8 @@ def main():
                 nerr += err(f"{fname}: lesson 需要 level(1-7) 与 md")
             else:
                 lessons[int(lv)] = data["md"]
+                if data.get("example_files"):
+                    lesson_files[int(lv)] = data["example_files"]
         elif kind == "parsons":
             for q in items:
                 nerr += validate_parsons(q, fname)
@@ -517,6 +520,7 @@ def main():
         "parsons": parsons,
         "oop": {"mcq": oop_mcq, "output": outputs, "coding": oop_coding},
         "lessons": {str(k): v for k, v in sorted(lessons.items())},
+        "lessonFiles": {str(k): v for k, v in sorted(lesson_files.items())},
         "resources": resources,
     }
     if official_meta:
