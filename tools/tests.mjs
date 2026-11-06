@@ -249,3 +249,17 @@ test('buildCountdownPlan：天数少时合并关卡、天数为 0 或过多', ()
   assert.equal(plan(0, 't3p', 1).days.length, 0);
   assert.equal(plan(50, 't3p', 1).longPlan, true);
 });
+
+test('judgeOutputAnswer：读程序写结果逐行严格比对', () => {
+  assert.equal(C.judgeOutputAnswer('24\n20', '24\n20').ok, true);
+  assert.equal(C.judgeOutputAnswer('24  \r\n20\n\n', '24\n20').ok, true, '行尾空格、\\r\\n、末尾空行忽略');
+  assert.equal(C.judgeOutputAnswer('优 中 中 差', '优 中 中 差 ').ok, true, 'end=" " 留下的行尾空格忽略');
+  const wrong = C.judgeOutputAnswer('24\n21', '24\n20');
+  assert.equal(wrong.ok, false);
+  assert.equal(wrong.line, 2);
+  assert.equal(C.judgeOutputAnswer('20\n24', '24\n20').ok, false, '顺序必须一致');
+  assert.equal(C.judgeOutputAnswer('24', '24\n20').got, null, '少写一行');
+  assert.equal(C.judgeOutputAnswer('24\n20\nNone', '24\n20').want, null, '多写一行');
+  assert.equal(C.judgeOutputAnswer('结果:24', '24').ok, false, '不剔除提示行（与编程题不同）');
+  assert.equal(C.judgeOutputAnswer('3 1', '3  1').ok, false, '行内空格要一致');
+});

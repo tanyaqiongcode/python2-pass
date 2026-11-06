@@ -1,0 +1,488 @@
+{
+ "kind": "coding",
+ "items": [
+  {
+   "id": "code-oop-001",
+   "level": 7,
+   "set": "oop",
+   "title": "矩形类 Rectangle",
+   "desc": "定义矩形类 `Rectangle`：构造方法接收宽 w、高 h 并保存为实例属性；实例方法 `area()` 返回面积，`perimeter()` 返回周长。主程序输入一行两个整数（宽 高，空格分隔），创建对象后输出两行：`面积:X`、`周长:Y`。",
+   "starter": "class Rectangle:\n    # 1. __init__(self, w, h)：保存宽和高\n    # 2. area(self)：返回面积\n    # 3. perimeter(self)：返回周长\n    pass\n\nw, h = map(int, input().split())\n# 创建 Rectangle 对象，按格式输出面积和周长\n",
+   "tests": [
+    {
+     "stdin": "3 4\n",
+     "expected": "面积:12\n周长:14",
+     "check": "check_class(user, 'Rectangle', methods=['area', 'perimeter'])"
+    },
+    {
+     "stdin": "10 2\n",
+     "expected": "面积:20\n周长:24",
+     "check": "check_class(user, 'Rectangle', methods=['area', 'perimeter'])"
+    },
+    {
+     "stdin": "7 7\n",
+     "expected": "面积:49\n周长:28",
+     "check": "check_class(user, 'Rectangle', methods=['area', 'perimeter'])"
+    }
+   ],
+   "ref": "class Rectangle:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n\n    def area(self):\n        return self.w * self.h\n\n    def perimeter(self):\n        return 2 * (self.w + self.h)\n\nw, h = map(int, input().split())\nr = Rectangle(w, h)\nprint('面积:' + str(r.area()))\nprint('周长:' + str(r.perimeter()))\n",
+   "hint": "构造方法里写 self.w = w、self.h = h；方法里用 self.w、self.h 计算。",
+   "exp": "考查类的定义、构造方法保存实例属性、实例方法返回计算结果。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-002",
+   "level": 7,
+   "set": "oop",
+   "title": "圆类 Circle",
+   "desc": "定义圆类 `Circle`：构造方法接收半径 r；`area()` 返回面积，`circumference()` 返回周长（圆周率用 `math.pi`）。输入一个半径（可能是小数），输出两行：`面积:X`、`周长:Y`，都保留 2 位小数。",
+   "starter": "import math\n\nclass Circle:\n    # __init__ 保存半径；area() 返回面积；circumference() 返回周长\n    pass\n\nr = float(input())\n",
+   "tests": [
+    {
+     "stdin": "1\n",
+     "expected": "面积:3.14\n周长:6.28",
+     "check": "check_class(user, 'Circle', methods=['area', 'circumference'])"
+    },
+    {
+     "stdin": "2.5\n",
+     "expected": "面积:19.63\n周长:15.71",
+     "check": "check_class(user, 'Circle', methods=['area', 'circumference'])"
+    },
+    {
+     "stdin": "10\n",
+     "expected": "面积:314.16\n周长:62.83",
+     "check": "check_class(user, 'Circle', methods=['area', 'circumference'])"
+    }
+   ],
+   "ref": "import math\n\nclass Circle:\n    def __init__(self, r):\n        self.r = r\n\n    def area(self):\n        return math.pi * self.r * self.r\n\n    def circumference(self):\n        return 2 * math.pi * self.r\n\nr = float(input())\nc = Circle(r)\nprint('面积:{:.2f}'.format(c.area()))\nprint('周长:{:.2f}'.format(c.circumference()))\n",
+   "hint": "面积 πr²，周长 2πr；输出用 '{:.2f}'.format(...)。",
+   "exp": "考查构造方法、实例方法与 math 模块、格式化输出。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-003",
+   "level": 7,
+   "set": "oop",
+   "title": "计数器 Counter",
+   "desc": "定义计数器类 `Counter`：构造方法把计数值设为 0；`add(n)` 让计数增加 n；`reset()` 把计数清零；`get()` 返回当前计数。第一行输入命令条数 m，之后 m 行每行一条命令：`add 整数` 或 `reset`。每执行完一条命令，输出一行当前计数。",
+   "starter": "class Counter:\n    # __init__：计数值设为 0\n    # add(self, n) / reset(self) / get(self)\n    pass\n\nm = int(input())\nc = Counter()\nfor i in range(m):\n    cmd = input().split()\n    # 按命令调用对应方法，然后输出 c.get()\n",
+   "tests": [
+    {
+     "stdin": "3\nadd 5\nadd 3\nreset\n",
+     "expected": "5\n8\n0",
+     "check": "check_class(user, 'Counter', methods=['add', 'reset', 'get'])"
+    },
+    {
+     "stdin": "4\nadd 10\nadd -4\nadd 1\nadd 2\n",
+     "expected": "10\n6\n7\n9",
+     "check": "check_class(user, 'Counter', methods=['add', 'reset', 'get'])"
+    },
+    {
+     "stdin": "5\nreset\nadd 7\nreset\nadd 1\nadd 1\n",
+     "expected": "0\n7\n0\n1\n2",
+     "check": "check_class(user, 'Counter', methods=['add', 'reset', 'get'])"
+    }
+   ],
+   "ref": "class Counter:\n    def __init__(self):\n        self.value = 0\n\n    def add(self, n):\n        self.value += n\n\n    def reset(self):\n        self.value = 0\n\n    def get(self):\n        return self.value\n\nm = int(input())\nc = Counter()\nfor i in range(m):\n    cmd = input().split()\n    if cmd[0] == 'add':\n        c.add(int(cmd[1]))\n    else:\n        c.reset()\n    print(c.get())\n",
+   "hint": "split() 后 cmd[0] 是命令名，add 时 cmd[1] 要转成 int。",
+   "exp": "考查构造方法初始化、多个实例方法共同操作同一个实例属性。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-004",
+   "level": 7,
+   "set": "oop",
+   "title": "学生成绩 Student",
+   "desc": "定义学生类 `Student`：构造方法接收姓名 name 和成绩列表 scores；`total()` 返回总分，`average()` 返回平均分，`is_pass()` 在平均分 ≥60 时返回 True，否则返回 False。第一行输入姓名，第二行输入若干个整数成绩（空格分隔）。输出一行：`姓名 总分 平均分 及格/不及格`，平均分保留 1 位小数。",
+   "starter": "class Student:\n    # __init__(self, name, scores)\n    # total(self) / average(self) / is_pass(self)\n    pass\n\nname = input()\nscores = list(map(int, input().split()))\n",
+   "tests": [
+    {
+     "stdin": "张三\n80 90 70\n",
+     "expected": "张三 240 80.0 及格",
+     "check": "check_class(user, 'Student', methods=['total', 'average', 'is_pass'])"
+    },
+    {
+     "stdin": "李四\n50 60 65\n",
+     "expected": "李四 175 58.3 不及格",
+     "check": "check_class(user, 'Student', methods=['total', 'average', 'is_pass'])"
+    },
+    {
+     "stdin": "王五\n59 61\n",
+     "expected": "王五 120 60.0 及格",
+     "check": "check_class(user, 'Student', methods=['total', 'average', 'is_pass'])"
+    }
+   ],
+   "ref": "class Student:\n    def __init__(self, name, scores):\n        self.name = name\n        self.scores = scores\n\n    def total(self):\n        return sum(self.scores)\n\n    def average(self):\n        return self.total() / len(self.scores)\n\n    def is_pass(self):\n        return self.average() >= 60\n\nname = input()\nscores = list(map(int, input().split()))\ns = Student(name, scores)\nprint(s.name, s.total(), '{:.1f}'.format(s.average()), '及格' if s.is_pass() else '不及格')\n",
+   "hint": "average() 可以直接调用 self.total()；三目表达式 '及格' if 条件 else '不及格'。",
+   "exp": "考查列表类型的实例属性、方法之间用 self 互相调用、布尔返回值。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-005",
+   "level": 7,
+   "set": "oop",
+   "title": "图书借还 Book",
+   "desc": "定义图书类 `Book`：构造方法接收书名 title 和库存 stock；`borrow()` 在库存大于 0 时库存减 1 并返回 True，否则返回 False；`give_back()` 库存加 1。第一行输入书名和库存（空格分隔），第二行输入一串操作字符，B 表示借、R 表示还。逐个处理操作：借成功输出 `借出成功`，借不到输出 `库存不足`，还书输出 `已归还`；最后输出 `《书名》剩余N本`。",
+   "starter": "class Book:\n    # __init__(self, title, stock)\n    # borrow(self)：成功返回 True，库存不足返回 False\n    # give_back(self)\n    pass\n\ntitle, stock = input().split()\nops = input()\n",
+   "tests": [
+    {
+     "stdin": "Python 2\nBBB\n",
+     "expected": "借出成功\n借出成功\n库存不足\n《Python》剩余0本",
+     "check": "check_class(user, 'Book', methods=['borrow', 'give_back'])"
+    },
+    {
+     "stdin": "数据库 1\nBRBB\n",
+     "expected": "借出成功\n已归还\n借出成功\n库存不足\n《数据库》剩余0本",
+     "check": "check_class(user, 'Book', methods=['borrow', 'give_back'])"
+    },
+    {
+     "stdin": "算法 0\nRBB\n",
+     "expected": "已归还\n借出成功\n库存不足\n《算法》剩余0本",
+     "check": "check_class(user, 'Book', methods=['borrow', 'give_back'])"
+    }
+   ],
+   "ref": "class Book:\n    def __init__(self, title, stock):\n        self.title = title\n        self.stock = stock\n\n    def borrow(self):\n        if self.stock > 0:\n            self.stock -= 1\n            return True\n        return False\n\n    def give_back(self):\n        self.stock += 1\n\ntitle, stock = input().split()\nb = Book(title, int(stock))\nfor op in input():\n    if op == 'B':\n        print('借出成功' if b.borrow() else '库存不足')\n    elif op == 'R':\n        b.give_back()\n        print('已归还')\nprint('《' + b.title + '》剩余' + str(b.stock) + '本')\n",
+   "hint": "库存要转成 int 再传给构造方法；遍历字符串就能逐个取出操作字符。",
+   "exp": "考查实例方法修改对象状态、带返回值的判断方法。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-006",
+   "level": 7,
+   "set": "oop",
+   "title": "购物车 Cart",
+   "desc": "定义购物车类 `Cart`：构造方法创建空的商品列表；`add(name, price, qty)` 加入一种商品；`count()` 返回商品总件数（数量之和）；`total()` 返回总金额（单价×数量之和）。第一行输入商品种数 n，之后 n 行每行 `名称 单价 数量`（单价可能是小数，数量是整数）。输出一行 `共N件 合计X元`，金额保留 2 位小数。",
+   "starter": "class Cart:\n    # __init__：self.items = []\n    # add(self, name, price, qty) / count(self) / total(self)\n    pass\n\nn = int(input())\ncart = Cart()\n",
+   "tests": [
+    {
+     "stdin": "2\n笔 2.5 4\n本子 6 3\n",
+     "expected": "共7件 合计28.00元",
+     "check": "check_class(user, 'Cart', methods=['add', 'count', 'total'])"
+    },
+    {
+     "stdin": "1\n书包 129.9 1\n",
+     "expected": "共1件 合计129.90元",
+     "check": "check_class(user, 'Cart', methods=['add', 'count', 'total'])"
+    },
+    {
+     "stdin": "3\n苹果 3.2 5\n香蕉 2.8 2\n牛奶 4.5 6\n",
+     "expected": "共13件 合计48.60元",
+     "check": "check_class(user, 'Cart', methods=['add', 'count', 'total'])"
+    }
+   ],
+   "ref": "class Cart:\n    def __init__(self):\n        self.items = []\n\n    def add(self, name, price, qty):\n        self.items.append((name, price, qty))\n\n    def count(self):\n        k = 0\n        for it in self.items:\n            k += it[2]\n        return k\n\n    def total(self):\n        s = 0\n        for it in self.items:\n            s += it[1] * it[2]\n        return s\n\nn = int(input())\ncart = Cart()\nfor i in range(n):\n    name, price, qty = input().split()\n    cart.add(name, float(price), int(qty))\nprint('共{}件 合计{:.2f}元'.format(cart.count(), cart.total()))\n",
+   "hint": "列表里存元组 (名称, 单价, 数量)；price 转 float、qty 转 int。",
+   "exp": "考查在实例属性中保存多条数据、遍历累加。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-007",
+   "level": 7,
+   "set": "oop",
+   "title": "气温记录 Thermometer",
+   "desc": "定义类 `Thermometer`：构造方法创建空的温度列表；`record(t)` 记录一个温度；`highest()`、`lowest()`、`average()` 分别返回最高、最低、平均温度。输入一行若干个整数温度（空格分隔），逐个 record 后输出一行：`最高X 最低Y 平均Z`，平均值保留 1 位小数。",
+   "starter": "class Thermometer:\n    # __init__ / record(self, t) / highest(self) / lowest(self) / average(self)\n    pass\n\ntemps = list(map(int, input().split()))\n",
+   "tests": [
+    {
+     "stdin": "12 18 25 9 16\n",
+     "expected": "最高25 最低9 平均16.0",
+     "check": "check_class(user, 'Thermometer', methods=['record', 'highest', 'lowest', 'average'])"
+    },
+    {
+     "stdin": "-3 -8 0 1\n",
+     "expected": "最高1 最低-8 平均-2.5",
+     "check": "check_class(user, 'Thermometer', methods=['record', 'highest', 'lowest', 'average'])"
+    },
+    {
+     "stdin": "30\n",
+     "expected": "最高30 最低30 平均30.0",
+     "check": "check_class(user, 'Thermometer', methods=['record', 'highest', 'lowest', 'average'])"
+    }
+   ],
+   "ref": "class Thermometer:\n    def __init__(self):\n        self.data = []\n\n    def record(self, t):\n        self.data.append(t)\n\n    def highest(self):\n        return max(self.data)\n\n    def lowest(self):\n        return min(self.data)\n\n    def average(self):\n        return sum(self.data) / len(self.data)\n\nth = Thermometer()\nfor t in map(int, input().split()):\n    th.record(t)\nprint('最高{} 最低{} 平均{:.1f}'.format(th.highest(), th.lowest(), th.average()))\n",
+   "hint": "max()、min()、sum()/len() 都可以直接作用在列表上。",
+   "exp": "考查实例属性保存数据、多个查询方法。",
+   "difficulty": 1,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-008",
+   "level": 7,
+   "set": "oop",
+   "title": "时钟 Clock",
+   "desc": "定义时钟类 `Clock`：构造方法接收时、分、秒；`tick(n)` 让时间前进 n 秒（要正确进位，超过 23:59:59 回到 00:00:00）；`show()` 返回 `HH:MM:SS` 格式的字符串（不足两位补 0）。第一行输入时 分 秒（空格分隔），第二行输入秒数 n。输出两行：前进前的时间、前进 n 秒后的时间。",
+   "starter": "class Clock:\n    # __init__(self, h, m, s)\n    # tick(self, n)：前进 n 秒，注意进位\n    # show(self)：返回 'HH:MM:SS'\n    pass\n\nh, m, s = map(int, input().split())\nn = int(input())\n",
+   "tests": [
+    {
+     "stdin": "9 59 50\n15\n",
+     "expected": "09:59:50\n10:00:05",
+     "check": "check_class(user, 'Clock', methods=['tick', 'show'])"
+    },
+    {
+     "stdin": "23 59 59\n1\n",
+     "expected": "23:59:59\n00:00:00",
+     "check": "check_class(user, 'Clock', methods=['tick', 'show'])"
+    },
+    {
+     "stdin": "0 0 0\n3725\n",
+     "expected": "00:00:00\n01:02:05",
+     "check": "check_class(user, 'Clock', methods=['tick', 'show'])"
+    }
+   ],
+   "ref": "class Clock:\n    def __init__(self, h, m, s):\n        self.h = h\n        self.m = m\n        self.s = s\n\n    def tick(self, n):\n        total = (self.h * 3600 + self.m * 60 + self.s + n) % 86400\n        self.h = total // 3600\n        self.m = total % 3600 // 60\n        self.s = total % 60\n\n    def show(self):\n        return '{:02d}:{:02d}:{:02d}'.format(self.h, self.m, self.s)\n\nh, m, s = map(int, input().split())\nn = int(input())\nc = Clock(h, m, s)\nprint(c.show())\nc.tick(n)\nprint(c.show())\n",
+   "hint": "先换算成总秒数再 % 86400，最后用 // 和 % 拆回时分秒；'{:02d}' 补 0。",
+   "exp": "考查实例方法修改多个属性、整除与取余的综合运用、格式化输出。",
+   "difficulty": 3,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-009",
+   "level": 7,
+   "set": "oop",
+   "title": "分数化简 Fraction",
+   "desc": "定义分数类 `Fraction`：构造方法接收分子 a、分母 b（b 为正整数）；`simplify()` 把分数化成最简形式；`show()` 返回字符串：分母为 1 时只返回分子，否则返回 `分子/分母`。输入一行两个整数 a b，输出化简后的结果。",
+   "starter": "import math\n\nclass Fraction:\n    # __init__(self, a, b)\n    # simplify(self)：用 math.gcd 约分\n    # show(self)\n    pass\n\na, b = map(int, input().split())\n",
+   "tests": [
+    {
+     "stdin": "6 8\n",
+     "expected": "3/4",
+     "check": "check_class(user, 'Fraction', methods=['simplify', 'show'])"
+    },
+    {
+     "stdin": "12 4\n",
+     "expected": "3",
+     "check": "check_class(user, 'Fraction', methods=['simplify', 'show'])"
+    },
+    {
+     "stdin": "7 9\n",
+     "expected": "7/9",
+     "check": "check_class(user, 'Fraction', methods=['simplify', 'show'])"
+    }
+   ],
+   "ref": "import math\n\nclass Fraction:\n    def __init__(self, a, b):\n        self.a = a\n        self.b = b\n\n    def simplify(self):\n        g = math.gcd(self.a, self.b)\n        self.a = self.a // g\n        self.b = self.b // g\n\n    def show(self):\n        if self.b == 1:\n            return str(self.a)\n        return str(self.a) + '/' + str(self.b)\n\na, b = map(int, input().split())\nf = Fraction(a, b)\nf.simplify()\nprint(f.show())\n",
+   "hint": "math.gcd(a, b) 求最大公约数，分子分母都整除它。",
+   "exp": "考查方法修改实例属性、条件返回不同格式。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-010",
+   "level": 7,
+   "set": "oop",
+   "title": "投票统计 Vote",
+   "desc": "定义投票类 `Vote`：构造方法创建空字典；`vote(name)` 给候选人加 1 票；`result()` 返回按票数从高到低排列的 (姓名, 票数) 列表（票数相同按首次出现的先后）；`winner()` 返回票数最多的人（并列时取先出现者）。输入一行若干个姓名（空格分隔），先按 `姓名:票数` 每行输出一个候选人，最后输出 `当选:姓名`。",
+   "starter": "class Vote:\n    # __init__：self.count = {}\n    # vote(self, name) / result(self) / winner(self)\n    pass\n\nnames = input().split()\n",
+   "tests": [
+    {
+     "stdin": "张 李 张 王 李 张\n",
+     "expected": "张:3\n李:2\n王:1\n当选:张",
+     "check": "check_class(user, 'Vote', methods=['vote', 'result', 'winner'])"
+    },
+    {
+     "stdin": "甲 乙 乙 甲\n",
+     "expected": "甲:2\n乙:2\n当选:甲",
+     "check": "check_class(user, 'Vote', methods=['vote', 'result', 'winner'])"
+    },
+    {
+     "stdin": "赵\n",
+     "expected": "赵:1\n当选:赵",
+     "check": "check_class(user, 'Vote', methods=['vote', 'result', 'winner'])"
+    }
+   ],
+   "ref": "class Vote:\n    def __init__(self):\n        self.count = {}\n\n    def vote(self, name):\n        self.count[name] = self.count.get(name, 0) + 1\n\n    def result(self):\n        return sorted(self.count.items(), key=lambda x: x[1], reverse=True)\n\n    def winner(self):\n        return self.result()[0][0]\n\nv = Vote()\nfor name in input().split():\n    v.vote(name)\nfor name, n in v.result():\n    print(name + ':' + str(n))\nprint('当选:' + v.winner())\n",
+   "hint": "字典按插入顺序保存；sorted 是稳定排序，票数相同时保持原来的先后顺序。",
+   "exp": "考查字典类型的实例属性、sorted 的 key 与稳定性、方法间调用。",
+   "difficulty": 3,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-011",
+   "level": 7,
+   "set": "oop",
+   "title": "密码强度 Password",
+   "desc": "定义密码类 `Password`：构造方法接收密码字符串；`score()` 返回满足条件的条数（长度不少于 8、含数字、含大写字母、含小写字母，每满足一条记 1 分）；`level()` 根据分数返回 `弱`（0~2 分）、`中`（3 分）或 `强`（4 分）。第一行输入密码个数 n，之后 n 行每行一个密码，每个密码输出一行强度。",
+   "starter": "class Password:\n    # __init__(self, pwd)\n    # score(self)：返回 0~4\n    # level(self)：返回 '弱' / '中' / '强'\n    pass\n\nn = int(input())\n",
+   "tests": [
+    {
+     "stdin": "3\nabc\nAbc12345\nabcdefg1\n",
+     "expected": "弱\n强\n中",
+     "check": "check_class(user, 'Password', methods=['score', 'level'])"
+    },
+    {
+     "stdin": "2\nPASSWORD\nPass1\n",
+     "expected": "弱\n中",
+     "check": "check_class(user, 'Password', methods=['score', 'level'])"
+    },
+    {
+     "stdin": "1\naB3\n",
+     "expected": "中",
+     "check": "check_class(user, 'Password', methods=['score', 'level'])"
+    }
+   ],
+   "ref": "class Password:\n    def __init__(self, pwd):\n        self.pwd = pwd\n\n    def score(self):\n        k = 0\n        if len(self.pwd) >= 8:\n            k += 1\n        if any(ch.isdigit() for ch in self.pwd):\n            k += 1\n        if any(ch.isupper() for ch in self.pwd):\n            k += 1\n        if any(ch.islower() for ch in self.pwd):\n            k += 1\n        return k\n\n    def level(self):\n        s = self.score()\n        if s <= 2:\n            return '弱'\n        elif s == 3:\n            return '中'\n        return '强'\n\nn = int(input())\nfor i in range(n):\n    print(Password(input()).level())\n",
+   "hint": "isdigit()/isupper()/islower() 判断字符类型；level() 里调用 self.score()。",
+   "exp": "考查字符串方法与实例方法的结合（对应大纲题型示例“密码强度判断”的面向对象写法）。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-012",
+   "level": 7,
+   "set": "oop",
+   "title": "课程成绩 Course",
+   "desc": "定义课程类 `Course`：构造方法创建空的成绩记录；`add(name, score)` 加入一名学生；`average()` 返回平均分；`top(k)` 返回成绩最高的 k 个学生姓名列表（成绩从高到低，成绩相同按加入顺序）。第一行输入人数 n，之后 n 行每行 `姓名 成绩`，最后一行输入 k。输出两行：`平均分:X`（保留 1 位小数）、前 k 名姓名（空格分隔）。",
+   "starter": "class Course:\n    # __init__ / add(self, name, score) / average(self) / top(self, k)\n    pass\n\nn = int(input())\n",
+   "tests": [
+    {
+     "stdin": "4\n甲 88\n乙 95\n丙 72\n丁 95\n2\n",
+     "expected": "平均分:87.5\n乙 丁",
+     "check": "check_class(user, 'Course', methods=['add', 'average', 'top'])"
+    },
+    {
+     "stdin": "3\nA 60\nB 70\nC 80\n3\n",
+     "expected": "平均分:70.0\nC B A",
+     "check": "check_class(user, 'Course', methods=['add', 'average', 'top'])"
+    },
+    {
+     "stdin": "2\n小王 59\n小李 61\n1\n",
+     "expected": "平均分:60.0\n小李",
+     "check": "check_class(user, 'Course', methods=['add', 'average', 'top'])"
+    }
+   ],
+   "ref": "class Course:\n    def __init__(self):\n        self.records = []\n\n    def add(self, name, score):\n        self.records.append((name, score))\n\n    def average(self):\n        return sum(r[1] for r in self.records) / len(self.records)\n\n    def top(self, k):\n        rs = sorted(self.records, key=lambda r: r[1], reverse=True)\n        return [r[0] for r in rs[:k]]\n\nn = int(input())\nc = Course()\nfor i in range(n):\n    name, score = input().split()\n    c.add(name, int(score))\nk = int(input())\nprint('平均分:{:.1f}'.format(c.average()))\nprint(' '.join(c.top(k)))\n",
+   "hint": "列表保存 (姓名, 成绩)；sorted(..., key=lambda r: r[1], reverse=True) 取前 k 个。",
+   "exp": "考查对象内部用列表管理多条记录、排序与切片。",
+   "difficulty": 3,
+   "tags": [
+    "面向对象"
+   ]
+  },
+  {
+   "id": "code-oop-013",
+   "level": 7,
+   "set": "oop",
+   "title": "【继承】动物叫声",
+   "desc": "（大纲口径补充：基础继承）定义父类 `Animal`：构造方法接收名字 name，`speak()` 返回 `...`。定义子类 `Dog(Animal)` 和 `Cat(Animal)`，分别重写 `speak()` 返回 `汪汪`、`喵喵`。第一行输入 n，之后 n 行每行 `种类 名字`（种类为 dog、cat 或其它）。dog 创建 Dog 对象，cat 创建 Cat 对象，其它创建 Animal 对象，每个对象输出一行 `名字:叫声`。",
+   "starter": "class Animal:\n    # __init__(self, name) / speak(self) 返回 '...'\n    pass\n\n# class Dog(Animal): 重写 speak\n# class Cat(Animal): 重写 speak\n\nn = int(input())\n",
+   "tests": [
+    {
+     "stdin": "3\ndog 小黑\ncat 咪咪\nbird 小鸟\n",
+     "expected": "小黑:汪汪\n咪咪:喵喵\n小鸟:...",
+     "check": "check_class(user, 'Dog', methods=['speak'], base='Animal')\ncheck_class(user, 'Cat', methods=['speak'], base='Animal')"
+    },
+    {
+     "stdin": "2\ncat 花花\ncat 球球\n",
+     "expected": "花花:喵喵\n球球:喵喵",
+     "check": "check_class(user, 'Dog', methods=['speak'], base='Animal')\ncheck_class(user, 'Cat', methods=['speak'], base='Animal')"
+    },
+    {
+     "stdin": "1\nfish 小鱼\n",
+     "expected": "小鱼:...",
+     "check": "check_class(user, 'Dog', methods=['speak'], base='Animal')\ncheck_class(user, 'Cat', methods=['speak'], base='Animal')"
+    }
+   ],
+   "ref": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        return '...'\n\nclass Dog(Animal):\n    def speak(self):\n        return '汪汪'\n\nclass Cat(Animal):\n    def speak(self):\n        return '喵喵'\n\nn = int(input())\nfor i in range(n):\n    kind, name = input().split()\n    if kind == 'dog':\n        a = Dog(name)\n    elif kind == 'cat':\n        a = Cat(name)\n    else:\n        a = Animal(name)\n    print(a.name + ':' + a.speak())\n",
+   "hint": "子类括号里写父类名；子类不写 __init__ 时会直接使用父类的构造方法。",
+   "exp": "考查子类定义、方法重写与多态调用。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象",
+    "继承"
+   ]
+  },
+  {
+   "id": "code-oop-014",
+   "level": 7,
+   "set": "oop",
+   "title": "【继承】员工工资",
+   "desc": "（大纲口径补充：基础继承）定义父类 `Employee`：构造方法接收姓名 name、基本工资 base；`salary()` 返回 base。定义子类 `Manager(Employee)`：构造方法多接收奖金 bonus（先调用父类构造方法），重写 `salary()` 返回 base + bonus。第一行输入人数 n，之后 n 行：普通员工 `E 姓名 基本工资`，经理 `M 姓名 基本工资 奖金`。每人输出一行 `姓名 工资`，最后输出 `合计 总工资`。",
+   "starter": "class Employee:\n    # __init__(self, name, base) / salary(self)\n    pass\n\n# class Manager(Employee):\n#     __init__(self, name, base, bonus)：先 super().__init__(name, base)\n#     salary(self)：返回 base + bonus\n\nn = int(input())\n",
+   "tests": [
+    {
+     "stdin": "3\nE 张三 5000\nM 李四 8000 2000\nE 王五 4500\n",
+     "expected": "张三 5000\n李四 10000\n王五 4500\n合计 19500",
+     "check": "check_class(user, 'Manager', methods=['salary'], base='Employee')"
+    },
+    {
+     "stdin": "1\nM 赵六 9000 3000\n",
+     "expected": "赵六 12000\n合计 12000",
+     "check": "check_class(user, 'Manager', methods=['salary'], base='Employee')"
+    },
+    {
+     "stdin": "2\nE 甲 3000\nE 乙 3500\n",
+     "expected": "甲 3000\n乙 3500\n合计 6500",
+     "check": "check_class(user, 'Manager', methods=['salary'], base='Employee')"
+    }
+   ],
+   "ref": "class Employee:\n    def __init__(self, name, base):\n        self.name = name\n        self.base = base\n\n    def salary(self):\n        return self.base\n\nclass Manager(Employee):\n    def __init__(self, name, base, bonus):\n        super().__init__(name, base)\n        self.bonus = bonus\n\n    def salary(self):\n        return self.base + self.bonus\n\nn = int(input())\ntotal = 0\nfor i in range(n):\n    p = input().split()\n    if p[0] == 'M':\n        e = Manager(p[1], int(p[2]), int(p[3]))\n    else:\n        e = Employee(p[1], int(p[2]))\n    print(e.name, e.salary())\n    total += e.salary()\nprint('合计', total)\n",
+   "hint": "子类构造方法第一句 super().__init__(name, base)，再保存 self.bonus。",
+   "exp": "考查子类构造方法调用父类构造方法、方法重写。",
+   "difficulty": 3,
+   "tags": [
+    "面向对象",
+    "继承"
+   ]
+  },
+  {
+   "id": "code-oop-015",
+   "level": 7,
+   "set": "oop",
+   "title": "【继承】图形面积",
+   "desc": "（大纲口径补充：基础继承）定义父类 `Shape`，`area()` 返回 0。定义子类 `Rect(Shape)`（构造方法接收宽、高）和 `Circle(Shape)`（构造方法接收半径，π 取 3.14），各自重写 `area()`。第一行输入 n，之后 n 行：`R 宽 高` 或 `C 半径`（数值可能是小数）。把所有图形放进一个列表，逐个输出面积（保留 2 位小数），最后输出 `总面积:X`（保留 2 位小数）。",
+   "starter": "class Shape:\n    def area(self):\n        return 0\n\n# class Rect(Shape): ...\n# class Circle(Shape): ...\n\nn = int(input())\nshapes = []\n",
+   "tests": [
+    {
+     "stdin": "2\nR 3 4\nC 1\n",
+     "expected": "12.00\n3.14\n总面积:15.14",
+     "check": "check_class(user, 'Rect', methods=['area'], base='Shape')\ncheck_class(user, 'Circle', methods=['area'], base='Shape')"
+    },
+    {
+     "stdin": "3\nC 2\nR 1.5 2\nC 0.5\n",
+     "expected": "12.56\n3.00\n0.79\n总面积:16.34",
+     "check": "check_class(user, 'Rect', methods=['area'], base='Shape')\ncheck_class(user, 'Circle', methods=['area'], base='Shape')"
+    },
+    {
+     "stdin": "1\nR 10 10\n",
+     "expected": "100.00\n总面积:100.00",
+     "check": "check_class(user, 'Rect', methods=['area'], base='Shape')\ncheck_class(user, 'Circle', methods=['area'], base='Shape')"
+    }
+   ],
+   "ref": "class Shape:\n    def area(self):\n        return 0\n\nclass Rect(Shape):\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n\n    def area(self):\n        return self.w * self.h\n\nclass Circle(Shape):\n    def __init__(self, r):\n        self.r = r\n\n    def area(self):\n        return 3.14 * self.r * self.r\n\nn = int(input())\nshapes = []\nfor i in range(n):\n    p = input().split()\n    if p[0] == 'R':\n        shapes.append(Rect(float(p[1]), float(p[2])))\n    else:\n        shapes.append(Circle(float(p[1])))\ntotal = 0\nfor s in shapes:\n    print('{:.2f}'.format(s.area()))\n    total += s.area()\nprint('总面积:{:.2f}'.format(total))\n",
+   "hint": "列表里混放不同子类的对象，统一调用 area() 就是多态。",
+   "exp": "考查子类重写方法与多态：同一句 s.area() 在不同对象上调用各自的实现。",
+   "difficulty": 2,
+   "tags": [
+    "面向对象",
+    "继承"
+   ]
+  }
+ ]
+}

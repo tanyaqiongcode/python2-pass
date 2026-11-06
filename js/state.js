@@ -17,6 +17,7 @@ const State = {
       settings: { examDate: null, target: 't3p' }, // 考试日期覆盖 + 目标等第
       drafts: {},     // 代码草稿 kind:qid -> code
       parsons: {},    // 拼程序记录 qid -> {tries, passed}
+      output: {},     // 读程序写结果记录 qid -> {tries, passed}（OOP 专项）
       srs: {},        // 复习卡 qid -> {kind, interval, streak, due, last}
       diagnosis: null // 入学诊断结果 {ts, perLevel, startLevel}
     };
@@ -192,11 +193,13 @@ const State = {
   wrongItems() {
     const B = window.BANK;
     const out = [];
-    for (const q of B.mcq) {
+    const oop = B.oop || { mcq: [], output: [], coding: [] };
+    for (const q of B.mcq.concat(oop.mcq)) {
       const st = this.mcqStat(q.id);
       if (st && !st.correct) out.push({ kind: 'mcq', q });
     }
-    for (const [kind, arr] of [['blank', B.blanks], ['fix', B.fixes], ['coding', B.coding], ['parsons', B.parsons || []]]) {
+    for (const [kind, arr] of [['blank', B.blanks], ['fix', B.fixes], ['coding', B.coding.concat(oop.coding)],
+      ['parsons', B.parsons || []], ['output', oop.output]]) {
       for (const q of arr) {
         const st = this.codeStat(kind, q.id);
         if (st && st.tries > 0 && !st.passed) out.push({ kind, q });
