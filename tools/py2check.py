@@ -4,7 +4,7 @@
 测试点可带 "check" 字段（一段 Python），学生代码运行结束后执行，检查：
   - segs   ：turtle 实际画出的线段 [(x1, y1, x2, y2, color), ...]（turtle 坐标系）
   - mpl    ：matplotlib 图形快照 [{'kind': 'line'|'seg'|'bar', ...}, ...]
-  - 写出的文件（read_text / read_bytes / exists）
+  - 写出的文件（read_text / read_bytes / exists）与数据库（db_rows / check_db_rows，新连接只看得到已提交的数据）
   - user   ：学生程序的全局变量；stdin / stdout：本测试点的输入与输出
 检查不通过时调用 fail('中文原因')（或 assert 失败），判题显示该原因。
 
@@ -217,6 +217,30 @@ def check_png(name):
         fail('文件 ' + name + ' 不是有效的 PNG 图片（savefig 的文件名要以 .png 结尾）')
 
 
+# ---------------- SQLite ----------------
+def db_rows(name, sql, params=()):
+    """用一个新连接读数据库：只能看到已经 commit 的数据（学生程序忘了 commit 时，新增的行在这里看不到）。"""
+    if not os.path.exists(name):
+        fail('没有找到数据库文件 ' + name)
+    import sqlite3
+    conn = sqlite3.connect(name, timeout=1)
+    try:
+        return [tuple(r) for r in conn.execute(sql, params).fetchall()]
+    except sqlite3.Error as e:
+        fail('读取数据库 {} 出错：{}'.format(name, e))
+    finally:
+        conn.close()
+
+
+def check_db_rows(name, sql, expected, hint=''):
+    """程序结束后数据库里的查询结果必须等于 expected（行的列表）。"""
+    got = db_rows(name, sql)
+    want = [tuple(r) for r in expected]
+    if got != want:
+        fail('程序结束后数据库 {} 的内容不对：应为 {}，实际 {}{}'.format(
+            name, want if want else '（无记录）', got if got else '（无记录）', '。' + hint if hint else ''))
+
+
 # ---------------- turtle ----------------
 def _seglen(s):
     return math.hypot(s[2] - s[0], s[3] - s[1])
@@ -343,7 +367,7 @@ def run_check(src, ns):
     """执行一段检查代码，返回 (ok, msg)。"""
     env = {name: globals()[name] for name in (
         'fail', 'is_color', 'rgb', 'approx', 'exists', 'read_text', 'read_bytes', 'check_lines',
-        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line')}
+        'check_png', 'check_polygon', 'check_function_hlines', 'check_mpl_line', 'db_rows', 'check_db_rows')}
     env['math'] = math
     env.update(ns)
     try:

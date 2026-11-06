@@ -456,7 +456,7 @@
    "id": "p27-c4",
    "level": 7,
    "title": "编程4：数据库应用——教室管理（12分）",
-   "desc": "classroom.db（SQLite，本站已提供）中有表 manage：number（教室号，TEXT 主键，如 '205'）、floor（楼层 TEXT，如 '2楼'）、capacity（容量 INTEGER）、in_use（在用状态 INTEGER，1 在用 0 空闲）。编程：循环输入三位教室号（输入 0 退出）：若存在，输出“{号}教室为在用状态”或“{号}教室为空闲状态”；若不存在，输出“{号}教室不存在，要新增吗？（Y/N）”，再输入一行，为 y/Y 则插入该教室（楼层取教室号首字符+'楼'，容量默认 30，空闲）并输出“新增成功！”。",
+   "desc": "classroom.db（SQLite，本站已提供）中有表 manage：number（教室号，TEXT 主键，如 '205'）、floor（楼层 TEXT，如 '2楼'）、capacity（容量 INTEGER）、in_use（在用状态 INTEGER，1 在用 0 空闲）。编程：循环输入三位教室号（输入 0 退出）：若存在，输出“{号}教室为在用状态”或“{号}教室为空闲状态”；若不存在，输出“{号}教室不存在，要新增吗？（Y/N）”，再输入一行，为 y/Y 则插入该教室（楼层取教室号首字符+'楼'，容量默认 30，空闲）并输出“新增成功！”。判题在程序结束后重新打开 classroom.db 检查：新增的教室必须已提交（commit）且楼层、容量、状态正确。",
    "files": [
     {
      "name": "classroom.db",
@@ -468,11 +468,18 @@
    "tests": [
     {
      "stdin": "303\n208\ny\n208\n0\n",
-     "expected": "303教室为在用状态\n208教室不存在，要新增吗？（Y/N）\n新增成功！\n208教室为空闲状态"
+     "expected": "303教室为在用状态\n208教室不存在，要新增吗？（Y/N）\n新增成功！\n208教室为空闲状态",
+     "check": "check_db_rows('classroom.db', \"SELECT number, floor, capacity, in_use FROM manage WHERE number='208'\", [('208', '2楼', 30, 0)], hint=\"新增的教室要真正写进数据库：INSERT 之后要调用 conn.commit()；楼层取教室号首字符+'楼'，容量默认 30，空闲为 0\")\ncheck_db_rows('classroom.db', 'SELECT COUNT(*) FROM manage', [(9,)], hint='原有 8 间教室加上新增的 208，共 9 间')"
     },
     {
      "stdin": "105\n205\n405\n0\n",
-     "expected": "105教室为在用状态\n205教室为空闲状态\n405教室为空闲状态"
+     "expected": "105教室为在用状态\n205教室为空闲状态\n405教室为空闲状态",
+     "check": "check_db_rows('classroom.db', 'SELECT COUNT(*) FROM manage', [(8,)], hint='本测试点没有选择新增，不应增删任何教室')"
+    },
+    {
+     "stdin": "606\nn\n208\nN\n105\n0\n",
+     "expected": "606教室不存在，要新增吗？（Y/N）\n208教室不存在，要新增吗？（Y/N）\n105教室为在用状态",
+     "check": "check_db_rows('classroom.db', 'SELECT COUNT(*) FROM manage', [(8,)], hint='回答 N（或 n）时不应新增教室')"
     }
    ],
    "ref": "import sqlite3\n\nconn = sqlite3.connect('classroom.db')\ncur = conn.cursor()\nn = input()\nwhile n != '0':\n    cur.execute('SELECT * FROM manage WHERE number=?', (n,))\n    row = cur.fetchone()\n    if row is not None:\n        if row[3] == 1:\n            print(n + '教室为在用状态')\n        else:\n            print(n + '教室为空闲状态')\n    else:\n        print(n + '教室不存在，要新增吗？（Y/N）')\n        ans = input()\n        if ans.strip().lower() == 'y':\n            cur.execute('INSERT INTO manage VALUES (?, ?, ?, ?)', (n, n[0] + '楼', 30, 0))\n            conn.commit()\n            print('新增成功！')\n    n = input()\nconn.close()",
