@@ -7317,7 +7317,7 @@ window.BANK = {
      "expected": "外角 72.0\n位置 0.0 0.0"
     }
    ],
-   "ref": "import turtle\n\nt = turtle.Turtle()\nfor i in range(5):\n    t.forward(100)\n    t.right(72)\nprint('外角', 360 / 5)\nprint('位置', round(t.xcor(), 1), round(t.ycor(), 1))",
+   "ref": "import turtle\n\nt = turtle.Turtle()\nfor i in range(5):\n    t.forward(100)\n    t.right(72)\nprint('外角', 360 / 5)\nprint('位置', round(t.xcor(), 1) + 0, round(t.ycor(), 1) + 0)",
    "exp": "考查 turtle 循环绘图与正多边形外角计算（360/n）；round 保留小数。",
    "tags": [
     "turtle",
