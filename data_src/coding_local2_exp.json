@@ -1,0 +1,100 @@
+{
+ "kind": "coding",
+ "items": [
+  {
+   "id": "code-l1-005",
+   "level": 1,
+   "cat": "calc",
+   "title": "公里换算米（循环版）",
+   "desc": "先输入一个整数 n，再输入 n 行公里数（每行一个数），把每行换算成米输出，格式：'{:.2f} 公里 = {:.1f} 米'。建议在本地 IDE 完成：保存后运行验证，或下载本站实操包在考场同款目录结构中练习。",
+   "starter": "n = int(input())\nfor i in range(n):\n    # 读入一行公里数并换算输出\n    pass\n",
+   "tests": [
+    {
+     "stdin": "2\n1.5\n0.08\n",
+     "expected": "1.50 公里 = 1500.0 米\n0.08 公里 = 80.0 米"
+    },
+    {
+     "stdin": "1\n12.345\n",
+     "expected": "12.35 公里 = 12345.0 米"
+    }
+   ],
+   "ref": "n = int(input())\nfor i in range(n):\n    km = float(input())\n    print('{:.2f} 公里 = {:.1f} 米'.format(km, km * 1000))",
+   "exp": "考查 float() 转换、for 循环、format 保留位数。",
+   "tags": [
+    "循环",
+    "格式化"
+   ]
+  },
+  {
+   "id": "code-l2-010",
+   "level": 2,
+   "cat": "calc",
+   "title": "各位数之和与逆序数",
+   "desc": "输入一个正整数（当字符串处理即可），输出两行：第一行「各位和 N」，第二行「逆序 M」（把数字倒过来，保留前导 0 按字符串处理）。建议在本地 IDE 完成：保存后运行验证，或下载本站实操包练习。",
+   "starter": "n = input()\n# 提示：字符串可以按字符遍历，[::-1] 可以逆序\n",
+   "tests": [
+    {
+     "stdin": "12345\n",
+     "expected": "各位和 15\n逆序 54321"
+    },
+    {
+     "stdin": "900\n",
+     "expected": "各位和 9\n逆序 009"
+    }
+   ],
+   "ref": "n = input()\ntotal = 0\nfor c in n:\n    total += int(c)\nprint('各位和', total)\nprint('逆序', n[::-1])",
+   "exp": "考查字符串遍历、int() 转换、切片逆序。",
+   "tags": [
+    "字符串",
+    "循环"
+   ]
+  },
+  {
+   "id": "code-l5-011",
+   "level": 5,
+   "cat": "data",
+   "title": "成绩文件读写综合（CSV）",
+   "desc": "students.csv（UTF-8，标题行：姓名,语文,数学,英语，当前目录下）。读入每个学生的三科成绩，输出每人「姓名 平均分」（保留 1 位小数），并把结果写入 result.csv（标题行：姓名,平均分，平均分保留 1 位小数）。本题涉及真实文件读写，建议务必在本地 IDE 完成：保存后运行验证，或下载本站实操包在考场同款目录结构中练习。",
+   "files": [
+    {
+     "name": "students.csv",
+     "content": "姓名,语文,数学,英语\n张伟,85,92,78\n李娜,90,88,95\n王强,72,64,80\n赵敏,66,75,70\n"
+    }
+   ],
+   "starter": "f = open('students.csv', 'r', encoding='utf-8')\nnext(f)  # 跳过标题行\n# 逐行 split(',') 处理，最后写入 result.csv\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "张伟 85.0\n李娜 91.0\n王强 72.0\n赵敏 70.3"
+    }
+   ],
+   "ref": "f = open('students.csv', 'r', encoding='utf-8')\nnext(f)\nlines = []\nfor line in f:\n    p = line.strip().split(',')\n    avg = (int(p[1]) + int(p[2]) + int(p[3])) / 3\n    lines.append(p[0] + ' {:.1f}'.format(avg))\nf.close()\nw = open('result.csv', 'w', encoding='utf-8')\nw.write('姓名,平均分\\n')\nfor x in lines:\n    w.write(x.replace(' ', ',') + '\\n')\n    print(x)\nw.close()",
+   "exp": "综合考查文件读、next 跳标题、split、平均值计算与文件写——大题模板。",
+   "tags": [
+    "文件",
+    "CSV",
+    "综合"
+   ]
+  },
+  {
+   "id": "code-l6-007",
+   "level": 6,
+   "cat": "draw",
+   "title": "turtle 画正五边形（含状态输出）",
+   "desc": "用 turtle 画边长 100 的正五边形：每次 forward(100) 后 right(72)（外角 72 度）。画完后输出两行：「外角 72.0」和「位置 x y」（x、y 保留 1 位小数，画笔回到起点后坐标为 0.0 0.0）。本站判题环境内置 turtle 画布，可直接运行；本地 IDE 运行会弹出画布窗口。",
+   "starter": "import turtle\n\nt = turtle.Turtle()\n# 循环 5 次：forward(100) + right(72)\n",
+   "tests": [
+    {
+     "stdin": "",
+     "expected": "外角 72.0\n位置 0.0 0.0"
+    }
+   ],
+   "ref": "import turtle\n\nt = turtle.Turtle()\nfor i in range(5):\n    t.forward(100)\n    t.right(72)\nprint('外角', 360 / 5)\nprint('位置', round(t.xcor(), 1), round(t.ycor(), 1))",
+   "exp": "考查 turtle 循环绘图与正多边形外角计算（360/n）；round 保留小数。",
+   "tags": [
+    "turtle",
+    "循环"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,157 @@
+{
+ "kind": "fix",
+ "items": [
+  {
+   "id": "fix-l1-002",
+   "level": 1,
+   "title": "拼程序：自我介绍输出",
+   "desc": "程序功能：输出问候语和考试科目、分数三行信息。程序中有 3 处错误（类型：语法错——运行直接报错），请只改错误行，不增删语句。",
+   "buggy": "name = 'Python'\nprint('Hello, ' + name)\nprint('考试科目：Python)\nscore = 95\nprint('分数：' + score)",
+   "stdin": "",
+   "expected": "Hello, Python\n考试科目：Python\n分数：95",
+   "errors": [
+    {
+     "line": 3,
+     "hint": "字符串的引号没有成对闭合"
+    },
+    {
+     "line": 5,
+     "hint": "整数不能和字符串直接相加，需要类型转换"
+    },
+    {
+     "line": 4,
+     "hint": "中文冒号「：」不能出现在代码里，检查所有标点"
+    }
+   ],
+   "ref": "name = 'Python'\nprint('Hello, ' + name)\nprint('考试科目：Python')\nscore = 95\nprint('分数：' + str(score))",
+   "exp": "考查字符串引号成对、str() 类型转换、中文标点陷阱。"
+  },
+  {
+   "id": "fix-l2-010",
+   "level": 2,
+   "title": "拼程序：奇偶判断",
+   "desc": "程序功能：输入一个整数，判断并输出「偶数」或「奇数」，最后输出输入的数。程序中有 3 处错误（类型：语法错），请只改错误行，不增删语句。",
+   "buggy": "n = int(input())\nif n % 2 == 0\n    print('偶数')\n  else:\n    print('奇数')\nprint('输入的数是', n)",
+   "stdin": "8\n",
+   "expected": "偶数\n输入的数是 8",
+   "errors": [
+    {
+     "line": 2,
+     "hint": "if 语句行末缺少冒号"
+    },
+    {
+     "line": 4,
+     "hint": "else 的缩进与 if 不一致"
+    },
+    {
+     "line": 6,
+     "hint": "print 的括号没有闭合"
+    }
+   ],
+   "ref": "n = int(input())\nif n % 2 == 0:\n    print('偶数')\nelse:\n    print('奇数')\nprint('输入的数是', n)",
+   "exp": "考查 if 语句冒号、缩进一致性、括号配对。"
+  },
+  {
+   "id": "fix-l4-008",
+   "level": 4,
+   "title": "拼程序：平均值函数",
+   "desc": "程序功能：定义函数 avg(a, b) 返回两数的平均值，调用并输出。程序中有 2 处错误（类型：语法错），请只改错误行，不增删语句。",
+   "buggy": "def avg(a, b)\n    return (a + b) / 2\n\nx = avg(3, 5)\nprint('平均值:', x)",
+   "stdin": "",
+   "expected": "平均值: 4.0",
+   "errors": [
+    {
+     "line": 1,
+     "hint": "def 语句行末缺少冒号"
+    },
+    {
+     "line": 2,
+     "hint": "函数体内的 return 需要比 def 缩进一层"
+    }
+   ],
+   "ref": "def avg(a, b):\n    return (a + b) / 2\n\nx = avg(3, 5)\nprint('平均值:', x)",
+   "exp": "考查函数定义语法：def 冒号、函数体缩进。"
+  },
+  {
+   "id": "fix-l2-011",
+   "level": 2,
+   "title": "拼程序：1 到 5 求和",
+   "desc": "程序功能：计算 1+2+3+4+5 并只输出一行「1到5的和是 15」。程序能运行但结果不对，共 3 处错误（类型：逻辑错），请只改错误行，不增删语句。",
+   "buggy": "total = 1\nfor i in range(1, 6):\n    total += i\n    print('当前累计', total)\nprint('1到5的和是', total)",
+   "stdin": "",
+   "expected": "1到5的和是 15",
+   "errors": [
+    {
+     "line": 1,
+     "hint": "求和的累加器初值应该是 0"
+    },
+    {
+     "line": 4,
+     "hint": "循环内的 print 会让每一步都输出——题目只要最终结果"
+    },
+    {
+     "line": 5,
+     "hint": "对照运行示例检查缩进层级"
+    }
+   ],
+   "ref": "total = 0\nfor i in range(1, 6):\n    total += i\nprint('1到5的和是', total)",
+   "exp": "考查累加器初值、range 范围、print 缩进位置——循环逻辑错三件套。"
+  },
+  {
+   "id": "fix-l5-004",
+   "level": 5,
+   "title": "拼程序：找出重复报名的名字",
+   "desc": "names.txt（UTF-8）每行一个名字。程序找出出现不止一次的名字并输出「重复: 名字」。程序能运行但结果不对，共 3 处错误（类型：逻辑错），请只改错误行。",
+   "buggy": "f = open('names.txt', 'r')\nlines = f.readlines()\nf.close()\ncnt = {}\nfor line in lines:\n    name = line\n    cnt[name] = cnt.get(name, 0) + 1\nfor k in cnt:\n    if cnt[k] > 1:\n        print('重复:', k)",
+   "stdin": "",
+   "files": [
+    {
+     "name": "names.txt",
+     "content": "张三\n李四\n张三\n王五\n李四\n"
+    }
+   ],
+   "expected": "重复: 张三\n重复: 李四",
+   "errors": [
+    {
+     "line": 1,
+     "hint": "文件含中文，打开时应指定编码，否则可能乱码或报错"
+    },
+    {
+     "line": 6,
+     "hint": "readlines 的每行末尾带换行符，统计前要去掉"
+    },
+    {
+     "line": 7,
+     "hint": "注意 strip 的对象是 line 本身"
+    }
+   ],
+   "ref": "f = open('names.txt', 'r', encoding='utf-8')\nlines = f.readlines()\nf.close()\ncnt = {}\nfor line in lines:\n    name = line.strip()\n    cnt[name] = cnt.get(name, 0) + 1\nfor k in cnt:\n    if cnt[k] > 1:\n        print('重复:', k)",
+   "exp": "考查 encoding 参数、strip() 去行尾换行、字典计数——文件统计三件套。"
+  },
+  {
+   "id": "fix-l7-007",
+   "level": 7,
+   "title": "拼程序：提取全部手机号",
+   "desc": "程序功能：从文本中提取全部 11 位手机号并逐行输出。程序能运行但结果不对，共 3 处错误（类型：逻辑错），请只改错误行。",
+   "buggy": "import re\ntext = '电话13812345678，备用15987654321'\npattern = r'1[35-8]d{9}'\nphones = re.match(pattern, text)\nfor p in phones:\n    print(p)",
+   "stdin": "",
+   "expected": "13812345678\n15987654321",
+   "errors": [
+    {
+     "line": 3,
+     "hint": "\\d 里的反斜杠写丢了；号码第二位是 3/5/7/8/9"
+    },
+    {
+     "line": 4,
+     "hint": "match 只从头匹配且只返回一个结果，要提取「全部」应换函数"
+    },
+    {
+     "line": 5,
+     "hint": "改成 findall 后返回列表，遍历变量即可"
+    }
+   ],
+   "ref": "import re\ntext = '电话13812345678，备用15987654321'\npattern = r'1[35789]\\d{9}'\nphones = re.findall(pattern, text)\nfor p in phones:\n    print(p)",
+   "exp": "考查 re.match vs findall、\\d 转义、手机号模式。"
+  }
+ ]
+}
