@@ -349,8 +349,17 @@ const App = {
     app.innerHTML = '';
     const today = new Date();
     const ymd = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-    // 每日一题
-    const seed = Number(ymd(today));
+    // 考场做题策略（150 分钟时间分配）
+    app.append(h('div', { class: 'card' },
+      h('h2', null, '🎯 考场做题策略（150 分钟）'),
+      h('table', { class: 'testtable' },
+        h('tr', null, h('th', null, '题型'), h('th', null, '策略'), h('th', null, '时间')),
+        h('tr', null, h('td', null, '单选 15 分'), h('td', null, '读题判断即可，拿不准的标记跳过'), h('td', null, '≤15 分钟')),
+        h('tr', null, h('td', null, '填空 30 分'), h('td', null, '肉眼判断为主；涉及 //、切片、sort()、and/or 的坑题，放进 IDLE 跑一遍验证（可分段 print 中间变量）'), h('td', null, '≤35 分钟')),
+        h('tr', null, h('td', null, '改错 30 分'), h('td', null, '拿到题第一时间运行：语法错看报错直接定位；逻辑错打印中间变量对比样例。只改错误行、不增删语句，改完行尾加 ####'), h('td', null, '≤30 分钟')),
+        h('tr', null, h('td', null, '编程 75 分'), h('td', null, '先做有把握的题；数据文件在 c:/素材，程序存 c:/ks；每题写完立刻运行验证，别攒到最后'), h('td', null, '≥90 分钟'))),
+      h('p', { class: 'muted small', style: 'margin:8px 0 0' },
+        '一句话：填空可选跑（疑难必跑）；改错一定要跑——那是找 bug 最快的方式。')));
     const pool = window.BANK.mcq.filter(q => q.level <= 6);
     const dq = pool[seed % pool.length];
     const letters = ['A', 'B', 'C', 'D'];

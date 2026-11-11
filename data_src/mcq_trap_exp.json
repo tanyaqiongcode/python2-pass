@@ -1,0 +1,125 @@
+{
+  "kind": "mcq",
+  "items": [
+    {
+      "id": "mcq-l1-027",
+      "level": 1,
+      "topic": "幂运算与负号优先级",
+      "q": "有如下程序：\nprint(-3 ** 2)\nprint((-3) ** 2)\n运行结果是____。",
+      "opts": ["-9 和 9", "9 和 9", "-9 和 -9", "9 和 -9"],
+      "ans": 0,
+      "exp": "幂运算 ** 的优先级高于负号：-3**2 先算 3**2 得 9，再取负号得 -9；加括号后 (-3)**2 才表示 -3 的平方，得 9。所以两行依次输出 -9 和 9。上机验证：把两个表达式分别放进 print() 里单独跑一遍即可看到结果。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l1-028",
+      "level": 1,
+      "topic": "整除 // 的向下取整",
+      "q": "print(17 // 5) 与 print(-17 // 5) 的输出分别是____。",
+      "opts": ["3 和 -3", "3 和 -4", "3.4 和 -3.4", "2 和 -4"],
+      "ans": 1,
+      "exp": "// 是整除，结果向下（数轴负方向）取整：17//5 得 3；-17/5 的真实商是 -3.4，向下取整是 -4 而不是 -3，这是最高频的坑。// 的结果永远是整数。上机验证：在 IDLE 里分别输入 17//5 与 -17//5 回车即可验证。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l1-029",
+      "level": 1,
+      "topic": "and/or 返回操作数",
+      "q": "有如下程序：\nprint(0 or 'x', 3 and 5, 0 and 5)\n输出是____。",
+      "opts": ["x 5 0", "True True False", "x 5 5", "0 5 0"],
+      "ans": 0,
+      "exp": "and/or 返回的是操作数本身，不一定是布尔值：0 为假，0 or 'x' 短路返回 'x'；3 和 5 都为真，3 and 5 返回后一个 5；0 为假，0 and 5 短路直接返回 0，三个值用逗号输出为 x 5 0。上机验证：把这三个表达式放进同一个 print 单独跑一遍。",
+      "difficulty": 3
+    },
+    {
+      "id": "mcq-l1-030",
+      "level": 1,
+      "topic": "is 与 == 的区别",
+      "q": "在 IDLE 交互式环境下逐行执行以下语句：\n>>> a = 500\n>>> b = 500\n>>> a == b\n>>> a is b\n两条查询语句的输出分别是____。",
+      "opts": ["True 和 True", "True 和 False", "False 和 True", "False 和 False"],
+      "ans": 1,
+      "exp": "== 比较值是否相等，a、b 的值都是 500，输出 True；is 比较是否为同一个对象，交互式下两次赋值各自创建了新的整数对象，而 500 超出小整数缓存范围（-5~256），两个对象不是同一个，is 输出 False。上机验证：在 IDLE 里逐行输入这四条语句，再看把 500 换成 100 后 is 的输出（命中缓存会变 True）。",
+      "difficulty": 3
+    },
+    {
+      "id": "mcq-l1-031",
+      "level": 1,
+      "topic": "input() 返回字符串",
+      "q": "程序运行时从键盘输入 6：\nx = input()\nprint(x * 2)\n输出是____。",
+      "opts": ["12", "66", "报错：TypeError", "6 6"],
+      "ans": 1,
+      "exp": "input() 的返回值永远是字符串：x 是 '6'，x * 2 是字符串重复得到 '66'，而不是算术乘法 12；想算数必须先写 x = int(input())。上机验证：把这两行存成 .py 运行并输入 6，或在 IDLE 里直接执行 '6' * 2。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l1-032",
+      "level": 1,
+      "topic": "not 与 == 的优先级",
+      "q": "有如下程序：\nprint(not 1 == 2)\n输出是____。",
+      "opts": ["True", "False", "1", "报错：not 后面必须是布尔值"],
+      "ans": 0,
+      "exp": "比较运算 == 的优先级高于 not：先算 1 == 2 得 False，再 not False 得 True；not 不会只作用于 1。上机验证：在 IDLE 里执行 not 1 == 2，再执行 not (1 == 2)，两者结果一致即可确认优先级。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l2-027",
+      "level": 2,
+      "topic": "range 步长与遍历次数",
+      "q": "有如下程序：\ncount = 0\nfor i in range(3, 10, 2):\n    count = count + 1\nprint(count)\n输出是____。",
+      "opts": ["3", "4", "5", "7"],
+      "ans": 1,
+      "exp": "range(3, 10, 2) 生成 3、5、7、9 共 4 个数：终点 10 取不到（左闭右开），步长 2 每次跳 2。循环体执行 4 次，count 为 4。上机验证：执行 print(list(range(3, 10, 2))) 单独跑一遍，数一数元素个数。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l3-027",
+      "level": 3,
+      "topic": "切片的左闭右开区间",
+      "q": "有如下程序：\ns = 'Python'\nprint(s[1:-1])\n输出是____。",
+      "opts": ["Python", "ytho", "ython", "Pytho"],
+      "ans": 1,
+      "exp": "切片 s[1:-1] 遵循左闭右开：从下标 1（字符 y）开始，取到下标 -1（最后一个字符 n）之前为止，得 'ytho'；切片的终点下标永远取不到。上机验证：执行 print(s[1:-1])，再用 print(s[1:])、print(s[:-1]) 对比两端的行为。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l3-028",
+      "level": 3,
+      "topic": "sort() 原地排序返回 None",
+      "q": "有如下程序：\nlst = [3, 1, 2]\nlst = lst.sort()\nprint(lst)\n输出是____。",
+      "opts": ["[1, 2, 3]", "None", "[3, 1, 2]", "报错：'NoneType' object has no attribute 'sort'"],
+      "ans": 1,
+      "exp": "sort() 是原地排序，直接修改列表自身，返回值是 None。lst.sort() 确实把列表排好了，但 lst = lst.sort() 又把 None 赋回给 lst，打印出来就是 None。上机验证：拆成两行写 lst.sort() 和 print(lst) 再跑一遍，对比输出差异。",
+      "difficulty": 3
+    },
+    {
+      "id": "mcq-l3-029",
+      "level": 3,
+      "topic": "字符串的不可变性",
+      "q": "有如下程序：\ns = 'hello'\ns[0] = 'H'\nprint(s)\n运行结果是____。",
+      "opts": ["Hello", "hello", "报错：TypeError，字符串不支持按下标修改", "Hhello"],
+      "ans": 2,
+      "exp": "字符串是不可变类型，不能对某个下标位置赋值：执行到 s[0] = 'H' 时抛出 TypeError: 'str' object does not support item assignment。要得到 'Hello' 只能重新构造字符串，如 s = 'H' + s[1:]。上机验证：把这三行存成 .py 运行，观察红色 TypeError 报错信息。",
+      "difficulty": 2
+    },
+    {
+      "id": "mcq-l3-030",
+      "level": 3,
+      "topic": "赋值引用与切片拷贝",
+      "q": "有如下程序：\na = [1, 2, 3]\nb = a\nb[0] = 99\nprint(a)\n输出是____。",
+      "opts": ["[1, 2, 3]", "[99, 2, 3]", "[1, 99, 3]", "报错：列表不能这样赋值"],
+      "ans": 1,
+      "exp": "b = a 只是给同一个列表对象起了两个名字（引用赋值），b[0] = 99 修改的就是 a 看到的那个列表，所以输出 [99, 2, 3]；想互不影响要建立副本，如 b = a[:] 或 b = list(a)。上机验证：把 b = a 改成 b = a[:] 再运行一遍，对比输出结果。",
+      "difficulty": 3
+    },
+    {
+      "id": "mcq-l4-029",
+      "level": 4,
+      "topic": "可变默认参数",
+      "q": "有如下程序：\ndef add(x, lst=[]):\n    lst.append(x)\n    return lst\nprint(add(1))\nprint(add(2))\n输出是____。",
+      "opts": ["[1] 和 [2]", "[1] 和 [1, 2]", "[1] 和 [2, 2]", "报错：默认参数不能是列表"],
+      "ans": 1,
+      "exp": "默认参数 lst=[] 只在函数定义时创建一次，之后所有调用共享同一个列表：第一次调用得 [1]，第二次调用在同一列表上继续 append 得 [1, 2]。这是 Python 最著名的坑之一，规范写法是默认值用 None，函数体内再新建列表。上机验证：在函数体第一行加 print(id(lst)) 运行两次调用，能看到两次打印的地址相同。",
+      "difficulty": 3
+    }
+  ]
+}
