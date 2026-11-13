@@ -2051,14 +2051,19 @@ const Mock = {
     }
 
     score = Math.round(score * 10) / 10;
-    const grade = estimateGrade(score, 150 - unjudged, t3Score, t3Full);
+    const fullTotal = detail.reduce((a, d) => a + d.full, 0);
+    const grade = estimateGrade(score, fullTotal, t3Score, t3Full);
     const byLevel = {};
     detail.forEach(d => {
       const lv = byLevel[d.level] = byLevel[d.level] || { got: 0, full: 0 };
       lv.got += d.score; lv.full += d.full;
     });
-    const run = { ts: Date.now(), score, grade, variant: this.variant, t3Score: Math.round(t3Score * 10) / 10, t3Full: Math.round(t3Full * 10) / 10, byLevel, detail,
+    const run = { ts: Date.now(), score, grade, variant: this.variant, full: fullTotal, t3Score: Math.round(t3Score * 10) / 10, t3Full: Math.round(t3Full * 10) / 10, byLevel, detail,
       unjudged, unjudgedNotes };
+    if (isBlind) {
+      State.data.blindTaken = { ts: run.ts, score };
+      State.save();
+    }
     const saved = State.addMockRun(run);   // 显式保存
     if (saved) {
       localStorage.removeItem(this.KEY);  // 成绩落盘成功 → 此后才清理答卷草稿
@@ -2094,10 +2099,11 @@ const Mock = {
     app.innerHTML = '';
     const vName = { standard: '标准卷', tier3: '三级冲刺卷', official: '官方 A 卷', blind: '盲测小卷' }[r.variant || 'standard'];
     const rFull = r.full || 150;
+    const blindRetake = r.variant === 'blind' && State.data.blindTaken && r.ts > State.data.blindTaken.ts;
     const t3r = r.t3Full ? Math.round(r.t3Score / r.t3Full * 100) : null;
     app.append(
       h('div', { class: 'card score-hero' },
-        h('div', { class: 'muted' }, vName + ' · ' + new Date(r.ts).toLocaleString('zh-CN')),
+        h('div', { class: 'muted' }, vName + ' · ' + new Date(r.ts).toLocaleString('zh-CN') + (r.variant === 'blind' && blindRetake ? ' · 复测' : '')),
         h('div', { class: 'big' }, String(r.score)),
         h('div', { class: 'muted' }, '/ ' + rFull + ' 分'),
         r.unjudged ? h('div', { class: 'muted small' },

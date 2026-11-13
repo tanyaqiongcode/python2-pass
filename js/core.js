@@ -48,13 +48,21 @@
   function codeNorm(x) {
     var st = String(x).trim();
     var out = '';
+    var q = null;
     for (var i = 0; i < st.length; i++) {
       var c = st[i];
+      var esc = i > 0 && st[i - 1] === '\\';
+      if (q) {
+        out += c;
+        if (c === q && !esc) q = null;
+        continue;
+      }
+      if ((c === "'" || c === '"') && !esc) { q = c; out += c; continue; }
       if (c === ' ' || c === '\t') {
         var pv = i > 0 ? st[i - 1] : '';
-        var nx = i + 1 < st.length ? st[i + 1] : '';
-        var pp = pv && pv !== ' ' && pv !== '\t' && !/\w/.test(pv);
-        var np = nx && nx !== ' ' && nx !== '\t' && !/\w/.test(nx);
+        var nx = i + 1 < st.length ? st[i + 1] : "";
+        var pp = pv && !/[\w\s'\"]/.test(pv);
+        var np = nx && !/[\w\s'\"]/.test(nx);
         if (pp || np) continue;
       }
       out += c;

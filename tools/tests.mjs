@@ -36,13 +36,15 @@ test('substituteBlanks / matchBlank', () => {
   assert.equal(C.matchBlank({ n: 1, answers: ['len(s)'] }, 'len( s )').ok, true);
   assert.equal(C.matchBlank({ n: 1, answers: ['break'] }, 'continue').ok, false);
   assert.equal(C.matchBlank({ n: 2, answers: ['a, b'] }, 'a,b').ok, true);
-  // 评审回归：词间空格是内容，不同数量的空格或缺失空格都不匹配
+  // 评审回归：字符串字面量内部空白是内容，不同空格数不匹配
   assert.equal(C.matchBlank({ n: 1, answers: ['hello world'] }, 'helloworld').ok, false);
   assert.equal(C.matchBlank({ n: 1, answers: ['hello world'] }, 'hello  world').ok, false);
   assert.equal(C.matchBlank({ n: 1, answers: ['hello world'] }, 'hello world').ok, true);
   assert.equal(C.matchBlank({ n: 1, answers: ["'hello world'"] }, "'hello world'").ok, true);
   assert.equal(C.matchBlank({ n: 1, answers: ["'hello world'"] }, "'helloworld'").ok, false);
   assert.equal(C.matchBlank({ n: 1, answers: ["'hello world'"] }, "'hello  world'").ok, false);
+  // 代码宽松仍生效
+  assert.equal(C.matchBlank({ n: 1, answers: ['a, b'] }, 'a,b').ok, true);
   // 代码风格宽松仍生效
   assert.equal(C.matchBlank({ n: 1, answers: ["print('重复:', k)"] }, "print('重复:',k)").ok, true);
 });
