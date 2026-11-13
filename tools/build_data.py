@@ -383,6 +383,7 @@ def main():
     lesson_files = {}
     resources = []
     parsons = []
+    blind = []
     official_meta = None
     nerr = 0
     seen_ids = set()
@@ -428,7 +429,27 @@ def main():
                 lessons[int(lv)] = data["md"]
                 if data.get("example_files"):
                     lesson_files[int(lv)] = data["example_files"]
-        elif kind == "parsons":
+        elif kind == "blind":
+            for q in items:
+                qt = q.get("type")
+                if qt == "mcq":
+                    nerr += validate_mcq(q, fname)
+                    blind.append(q)
+                elif qt == "blank":
+                    nerr += validate_blank(q, fname)
+                    nerr += check_files(q, fname, 0)
+                    blind.append(q)
+                elif qt == "fix":
+                    nerr += validate_fix(q, fname)
+                    nerr += check_files(q, fname, 0)
+                    blind.append(q)
+                elif qt == "coding":
+                    nerr += validate_coding(q, fname)
+                    nerr += check_files(q, fname, 0)
+                    blind.append(q)
+                else:
+                    nerr += err(f"{fname}: {q.get('id', '?')} 未知 type {qt}")
+        elif kind == "official":
             for q in items:
                 nerr += validate_parsons(q, fname)
                 nerr += check_files(q, fname, 0)
@@ -493,6 +514,14 @@ def main():
             nrun += run_coding(q)
         for q in parsons:
             nrun += run_parsons(q)
+        for q in blind:
+            qt = q.get("type")
+            if qt == "blank":
+                nrun += run_blank(q)
+            elif qt == "fix":
+                nrun += run_fix(q)
+            elif qt == "coding":
+                nrun += run_coding(q)
         print(f"== OOP 专项（单选 {len(oop_mcq)} / 读程序 {len(outputs)} / 编程 {len(oop_coding)}）==")
         for q in mcq + oop_mcq:
             nrun += run_mcq_code(q)
@@ -504,7 +533,7 @@ def main():
     nerr += nrun
     print("\n== 汇总 ==")
     print(
-        f"选择题 {len(mcq)} | 填空 {len(blanks)} | 改错 {len(fixes)} | 编程 {len(codings)} | 拼程序 {len(parsons)} | 课程 {len(lessons)} | 资源 {len(resources)}"
+        f"选择题 {len(mcq)} | 填空 {len(blanks)} | 改错 {len(fixes)} | 编程 {len(codings)} | 拼程序 {len(parsons)} | 盲测 {len(blind)} | 课程 {len(lessons)} | 资源 {len(resources)}"
     )
     print(f"OOP 专项：单选 {len(oop_mcq)} | 读程序写结果 {len(outputs)} | 编程 {len(oop_coding)}")
     print(f"错误 {nerr}")

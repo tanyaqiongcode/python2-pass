@@ -1269,7 +1269,7 @@ const App = {
         h('tr', null, h('th', null, '时间'), h('th', null, '卷型'), h('th', null, '得分'), h('th', null, '三级题得分率'), h('th', null, '预估等第')),
         runs.map(r => h('tr', null,
           h('td', null, new Date(r.ts).toLocaleString('zh-CN')),
-          h('td', null, { standard: '标准卷', tier3: '三级冲刺卷', official: '官方A卷' }[r.variant || 'standard']),
+          h('td', null, { standard: '标准卷', tier3: '三级冲刺卷', official: '官方A卷', blind: '盲测小卷' }[r.variant || 'standard']),
           h('td', null, String(r.score)),
           h('td', null, r.t3Full ? Math.round(r.t3Score / r.t3Full * 100) + '%' : '—'),
           h('td', null, r.grade)
@@ -1279,7 +1279,8 @@ const App = {
     const variants = [
       { key: 'standard', name: '标准卷', desc: '按关卡比例均衡抽题，适合每周例行检查' },
       { key: 'tier3', name: '三级冲刺卷', desc: '60%+ 名额来自三级重点题（递归/正则/SQLite/可视化/OOP），冲刺三级的首选' },
-      { key: 'official', name: '官方 A 卷（27A）', desc: '2026 年官方模拟卷整卷还原（含 SQLite 数据库题、图形绘制题）。分值同官方；绘图题检查实际画出的坐标轴与函数线，写文件题检查文件内容与编码；whl 安装截图浏览器判不了，不计分' }
+      { key: 'official', name: '官方 A 卷（27A）', desc: '2026 年官方模拟卷整卷还原（含 SQLite 数据库题、图形绘制题）。分值同官方；绘图题检查实际画出的坐标轴与函数线，写文件题检查文件内容与编码；whl 安装截图浏览器判不了，不计分' },
+      { key: 'blind', name: '盲测小卷（13 题未见题）', desc: '13 道从未在站内出现的全新题（6 单选+2 填空+2 改错+3 编程，94 分制）——检验真实未见题能力，建议考前 10 天和 3 天各做一次，成绩不计入学习进度' }
     ];
     const picker = h('div', { class: 'card' },
       h('h2', null, '选择卷型'),
@@ -1863,7 +1864,7 @@ const Mock = {
   /* ---- 渲染进行中的考试 ---- */
   renderRunning(app) {
     const s = window.CONFIG.mockStructure;
-    const vName = { standard: '标准卷', tier3: '三级冲刺卷', official: '官方 A 卷' }[this.variant];
+    const vName = { standard: '标准卷', tier3: '三级冲刺卷', official: '官方 A 卷', blind: '盲测小卷' }[this.variant];
     app.innerHTML = '';
     const secOf = { mcq: '一、单选题', blank: '二、程序填空题', fix: '三、调试改错题', coding: '四、编程题' };
     app.append(h('div', { class: 'mock-timer', id: 'mock-timer' },
@@ -2019,17 +2020,18 @@ const Mock = {
 
     // 改错（输出比对）
     for (const q of this.qs.fix) {
+      const fixFull = official ? 10 : (isBlind ? 10 : s.fix.perScore);
       const code = this.answers.fix[q.id] !== undefined ? this.answers.fix[q.id] : q.buggy;
-      const { got } = await judgeCode('fix', q, code, official ? 10 : s.fix.perScore, official ? 10 : s.fix.perScore);
+      const { got } = await judgeCode('fix', q, code, fixFull, fixFull);
       score += got;
-      if (isTier3(q)) { t3Score += got; t3Full += official ? 10 : s.fix.perScore; }
-      detail.push({ kind: '改错', level: q.level, tier3: isTier3(q), title: q.title || '', score: got, full: official ? 10 : s.fix.perScore });
+      if (isTier3(q)) { t3Score += got; t3Full += fixFull; }
+      detail.push({ kind: '改错', level: q.level, tier3: isTier3(q), title: q.title || '', score: got, full: fixFull });
     }
 
     // 编程（按测试点比例，官方卷按题分值）
     for (const q of this.qs.coding) {
       // 分值同官方卷：官方卷用题目自带分值，随机卷按类别（数据分析 17 / 运算 18 / 绘图 15 / 数据库 12 / 文本 13）
-      const fullRaw = official ? (q.score || 15) : (PY2CORE.catScore(q.cat) || s.coding.perScore);
+      const fullRaw = official ? (q.score || 15) : (isBlind ? 15 : (PY2CORE.catScore(q.cat) || s.coding.perScore));
       // 浏览器判不了的部分（如 whl 安装截图）既不给分也不计入满分，等第按可判分折算
       const unj = Math.min(PY2CORE.unjudgedPoints(q), fullRaw);
       const full = fullRaw - unj;
@@ -2084,13 +2086,14 @@ const Mock = {
   /* ---- 结果页 ---- */
   renderResult(app, r) {
     app.innerHTML = '';
-    const vName = { standard: '标准卷', tier3: '三级冲刺卷', official: '官方 A 卷' }[r.variant || 'standard'];
+    const vName = { standard: '标准卷', tier3: '三级冲刺卷', official: '官方 A 卷', blind: '盲测小卷' }[r.variant || 'standard'];
+    const rFull = r.full || 150;
     const t3r = r.t3Full ? Math.round(r.t3Score / r.t3Full * 100) : null;
     app.append(
       h('div', { class: 'card score-hero' },
         h('div', { class: 'muted' }, vName + ' · ' + new Date(r.ts).toLocaleString('zh-CN')),
         h('div', { class: 'big' }, String(r.score)),
-        h('div', { class: 'muted' }, '/ 150 分'),
+        h('div', { class: 'muted' }, '/ ' + rFull + ' 分'),
         r.unjudged ? h('div', { class: 'muted small' },
           `其中 ${r.unjudged} 分浏览器无法判分、未计入（${(r.unjudgedNotes || []).join('；')}）。等第按可判的 ${150 - r.unjudged} 分折算，考场上这部分请在本机练熟。`) : null,
         h('div', null, h('span', { class: 'grade-tag ' + (r.grade.startsWith('不合格') ? 'fail' : 'pass') }, r.grade)),
@@ -2104,7 +2107,7 @@ const Mock = {
       h('div', { class: 'card' },
         h('h2', null, '分关卡得分'),
         h('table', { class: 'testtable' },
-          h('tr', null, h('th', null, '关卡'), h('th', null, '得分'), h('th', null, '满分'), h('th', null, '得分率'), h('th', null, '')),
+          h('tr', null, h('th', null, '题型/关卡'), h('th', null, '得分'), h('th', null, '满分'), h('th', null, '得分率'), h('th', null, '')),
           Object.entries(r.byLevel || {}).sort((a, b) => a[0] - b[0]).map(([lv, v]) => {
             const pct = v.full ? Math.round(v.got / v.full * 100) : 0;
             return h('tr', null,
