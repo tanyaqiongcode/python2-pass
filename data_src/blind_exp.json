@@ -1,0 +1,210 @@
+{
+  "kind": "blind",
+  "items": [
+    {
+      "type": "mcq",
+      "id": "bld-m1",
+      "level": 1,
+      "topic": "int() 的截断方向与嵌套转换",
+      "q": "有如下程序：\nprint(int(-3.8), int(float('3.5')))\n输出是____。",
+      "opts": ["-4 4", "-3 3", "-3 4", "程序报错：int() 不能转换字符串"],
+      "ans": 1,
+      "exp": "int() 作用于浮点数时是向零取整（直接丢弃小数部分），int(-3.8) 得 -3 而不是 -4（向数轴负方向取整的是 //）；int() 不能直接转换 '3.5'，但先用 float('3.5') 转成 3.5 后再 int() 就能得到 3。上机验证：在 IDLE 里分别执行 int(-3.8) 与 int(float('3.5'))。",
+      "difficulty": 2
+    },
+    {
+      "type": "mcq",
+      "id": "bld-m2",
+      "level": 2,
+      "topic": "range 负步长与累加",
+      "q": "有如下程序：\ntotal = 0\nfor i in range(10, 0, -3):\n    total += i\nprint(total)\n输出是____。",
+      "opts": ["22", "12", "21", "程序报错：步长不能为负"],
+      "ans": 0,
+      "exp": "range(10, 0, -3) 步长为负时从起点往回取，生成 10、7、4、1，终点 0 取不到，累加和为 22。步长为负是合法的；真正会让循环一次都不执行的是 range(10, 0) 这种步长为正却往小走的写法。上机验证：执行 print(list(range(10, 0, -3))) 再求和。",
+      "difficulty": 1
+    },
+    {
+      "type": "mcq",
+      "id": "bld-m3",
+      "level": 3,
+      "topic": "集合的交并差运算",
+      "q": "有如下程序：\na = {1, 2, 3, 4}\nb = {3, 4, 5}\nprint(len(a & b), len(a | b), len(a - b))\n输出是____。",
+      "opts": ["2 7 1", "3 5 2", "2 5 2", "3 7 1"],
+      "ans": 2,
+      "exp": "& 是交集 {3,4}，共 2 个；| 是并集 {1,2,3,4,5}，重复元素只算一次，共 5 个而不是 7；a-b 是差集，取在 a 中但不在 b 中的 {1,2}，共 2 个。上机验证：把三个集合表达式分别用 print(list(...)) 展开。",
+      "difficulty": 2
+    },
+    {
+      "type": "mcq",
+      "id": "bld-m4",
+      "level": 4,
+      "topic": "默认参数在定义时求值",
+      "q": "有如下程序：\nk = 5\ndef calc(v=k):\n    return v * 2\nk = 100\nprint(calc())\n输出是____。",
+      "opts": ["200", "100", "程序报错", "10"],
+      "ans": 3,
+      "exp": "默认参数的值在执行 def 定义语句时就求值并固定下来：定义时 k 是 5，默认值 v=5 被记住，此后把 k 改成 100 不影响它，calc() 相当于 calc(5)，输出 10。想让默认值跟随调用时的 k，应调用时显式传参。上机验证：把 k = 100 移到 def 之前再运行，对比输出差异。",
+      "difficulty": 3
+    },
+    {
+      "type": "mcq",
+      "id": "bld-m5",
+      "level": 5,
+      "topic": "a+ 模式与文件指针",
+      "q": "已知文件 t.txt 的内容为 abc（无换行符）。有如下程序：\nf = open('t.txt', 'a+')\nf.write('de')\nf.seek(0)\nprint(f.read())\nf.close()\n程序执行后，输出是____。",
+      "opts": ["abcde", "abc", "de", "程序报错：a+ 模式打开的文件不能读取"],
+      "ans": 0,
+      "exp": "a+ 以追加方式打开且可读：无论指针在哪，write('de') 都写到文件末尾，文件变为 abcde；写入后指针停在末尾，seek(0) 把指针移回开头，read() 才能读到完整的 abcde。a+ 允许读取，不会报错。上机验证：先建立内容为 abc 的 t.txt 再运行这五行。",
+      "difficulty": 2
+    },
+    {
+      "type": "mcq",
+      "id": "bld-m6",
+      "level": 7,
+      "topic": "正则分组与 group()",
+      "q": "有如下程序：\nimport re\nm = re.search(r'(\\d{3})-(\\d{4})', '电话:010-1234，备用:020-5678')\nprint(m.group(0), m.group(1), m.group(2))\n输出是____。",
+      "opts": ["['010', '1234']", "010-1234 010-1234 1234", "010-1234 010 1234", "020-5678 020 5678"],
+      "ans": 2,
+      "exp": "search() 只返回第一个匹配对象（010-1234），020-5678 不会被匹配；group(0) 是整个正则匹配到的内容 010-1234，group(1)、group(2) 才是第 1、2 个括号分组捕获的 010 和 1234。上机验证：分别打印 m.group(0)、m.group(1)、m.group(2)。",
+      "difficulty": 2
+    },
+    {
+      "type": "blank",
+      "id": "bld-b1",
+      "level": 3,
+      "title": "哨兵循环与最值统计",
+      "desc": "逐行输入若干个整数，以 -1 结束输入（-1 本身不计入，-1 之前至少有一个数据）。程序先把数据存入列表 nums 并输出该列表；再用打擂台法找出其中的最大值与最小值，在同一行以空格分隔输出；最后输出平均值（保留 1 位小数）。",
+      "code": "nums = []\nwhile True:\n    x = int(input())\n    if x == -1:\n        ___(1)___\n    nums.___(2)___(x)\nmx = nums[0]\nmn = nums[0]\nfor v in ___(3)___:\n    if v > mx:\n        mx = v\n    if v < mn:\n        mn = v\nprint(nums)\nprint(mx, mn)\nprint('平均: %.1f' % (___(4)___))",
+      "blanks": [
+        {"n": 1, "answers": ["break"], "hint": "读到 -1 时退出无限循环"},
+        {"n": 2, "answers": ["append"], "hint": "把数据追加到列表末尾"},
+        {"n": 3, "answers": ["nums"], "hint": "遍历列表中的每个元素"},
+        {"n": 4, "answers": ["sum(nums)/len(nums)"], "hint": "平均值 = 元素总和除以元素个数"}
+      ],
+      "stdin": "80\n92\n70\n60\n-1\n",
+      "expected": "[80, 92, 70, 60]\n92 60\n平均: 75.5",
+      "ref": "nums = []\nwhile True:\n    x = int(input())\n    if x == -1:\n        break\n    nums.append(x)\nmx = nums[0]\nmn = nums[0]\nfor v in nums:\n    if v > mx:\n        mx = v\n    if v < mn:\n        mn = v\nprint(nums)\nprint(mx, mn)\nprint('平均: %.1f' % (sum(nums)/len(nums)))",
+      "hint": "while True 配 break 构成哨兵循环；最大值与最小值都要在遍历中与当前元素比较更新。",
+      "exp": "考查 while True + break 哨兵循环、列表 append、打擂台求最值、sum/len 求平均值与 %.1f 保留 1 位小数输出。",
+      "difficulty": 2
+    },
+    {
+      "type": "blank",
+      "id": "bld-b2",
+      "level": 5,
+      "title": "单词出现行号统计",
+      "desc": "scan.txt（UTF-8 编码）存放若干行英文小写句子（单词之间以空格分隔）。程序输入一个英文单词，统计该单词（作为独立单词）出现的行号与总次数：第一行输出出现该单词的行号列表（行号从 1 开始，按 Python 列表格式输出；没有则输出 []）；第二行输出\"共出现 N 次\"。",
+      "code": "w = input()\nf = open('scan.txt', 'r', encoding='utf-8')\nrows = []\ntimes = 0\nfor i, line in ___(1)___:\n    words = line.strip().split()\n    if ___(2)___:\n        times = times + words.count(w)\n        rows.___(3)___(i + 1)\nf.close()\nprint('出现行:', rows)\nprint('共出现', times, '次')",
+      "blanks": [
+        {"n": 1, "answers": ["enumerate(f)"], "hint": "同时取行下标（从 0 开始）与行内容"},
+        {"n": 2, "answers": ["w in words"], "hint": "判断单词列表中是否包含输入的单词"},
+        {"n": 3, "answers": ["append"], "hint": "把行号（下标加 1）追加到 rows"}
+      ],
+      "files": [
+        {"name": "scan.txt", "content": "the quick brown fox\na quick brown cat\nover the lazy dog the end\n"}
+      ],
+      "stdin": "the\n",
+      "expected": "出现行: [1, 3]\n共出现 3 次",
+      "ref": "w = input()\nf = open('scan.txt', 'r', encoding='utf-8')\nrows = []\ntimes = 0\nfor i, line in enumerate(f):\n    words = line.strip().split()\n    if w in words:\n        times = times + words.count(w)\n        rows.append(i + 1)\nf.close()\nprint('出现行:', rows)\nprint('共出现', times, '次')",
+      "hint": "enumerate 从 0 开始计数，行号要加 1；words.count(w) 统计一行里该单词出现的次数。",
+      "exp": "考查 enumerate 同时取下标与行内容、split 分词后用 in 判断成员、count 计数与列表 append 收集结果。",
+      "difficulty": 2
+    },
+    {
+      "type": "fix",
+      "id": "bld-f1",
+      "level": 2,
+      "title": "统计高于平均值的个数",
+      "desc": "输入一行用空格分隔的整数（至少 1 个），统计其中高于平均值的数的个数并输出。程序中有 3 处错误（类型：逻辑错——涉及类型转换、比较方向、计数方式），请只改错误行，不增删语句。",
+      "buggy": "nums = []\nfor x in input().split():\n    nums.append(x)\navg = sum(nums) / len(nums)\ncount = 0\nfor x in nums:\n    if x < avg:\n        count = 1\nprint(count)",
+      "stdin": "70 85 90 60 65\n",
+      "expected": "2",
+      "errors": [
+        {"line": 3, "hint": "（逻辑错）input().split() 得到的是字符串，存入列表前要用 int(x) 转换，否则 sum() 会报 TypeError"},
+        {"line": 7, "hint": "（逻辑错）题目要求统计高于平均值的数，比较方向写反了，应为 x > avg"},
+        {"line": 8, "hint": "（逻辑错）count 是计数器，每遇到一个符合条件的数应加 1，写 count = 1 会把之前统计的个数覆盖掉"}
+      ],
+      "ref": "nums = []\nfor x in input().split():\n    nums.append(int(x))\navg = sum(nums) / len(nums)\ncount = 0\nfor x in nums:\n    if x > avg:\n        count += 1\nprint(count)",
+      "exp": "考查字符串转整数、比较方向与计数器累加：三处都是\"程序能运行但结果不对\"的逻辑错。",
+      "difficulty": 2
+    },
+    {
+      "type": "fix",
+      "id": "bld-f2",
+      "level": 5,
+      "title": "通讯录电话查询",
+      "desc": "tel.txt（UTF-8 编码）每行存放一条通讯录：姓名,电话（如：王小红,13912345678）。程序输入一个电话号码，在文件中查找该号码：找到则输出\"姓名 电话\"（空格分隔），同时把这一行结果写入 result.txt（UTF-8 编码）；找不到则输出\"未找到\"。程序中有 3 处错误（类型：逻辑错——涉及文件编码、打开模式、换行符处理），请只改错误行，不增删语句。",
+      "buggy": "target = input()\nfin = open('tel.txt', 'r', encoding='gbk')\nfout = open('result.txt', 'r')\nfound = False\nfor line in fin:\n    parts = line.split(',')\n    if parts[1] == target:\n        found = True\n        print(parts[0], parts[1])\n        fout.write(parts[0] + ' ' + parts[1])\nfin.close()\nfout.close()\nif not found:\n    print('未找到')",
+      "files": [
+        {"name": "tel.txt", "content": "王小红,13912345678\n李大明,13800138000\n张建国,15012349876\n"}
+      ],
+      "stdin": "13800138000\n",
+      "expected": "李大明 13800138000",
+      "errors": [
+        {"line": 2, "hint": "（逻辑错）tel.txt 是 UTF-8 编码，用 gbk 读取中文会解码失败或出现乱码，应改为 encoding='utf-8'"},
+        {"line": 3, "hint": "（逻辑错）result.txt 用来写入查询结果，应该用 'w' 模式打开，'r' 模式不可写"},
+        {"line": 6, "hint": "（逻辑错）split 前没有 strip()，行尾换行符留在电话字段里，导致 parts[1] 与输入永远不相等"}
+      ],
+      "ref": "target = input()\nfin = open('tel.txt', 'r', encoding='utf-8')\nfout = open('result.txt', 'w', encoding='utf-8')\nfound = False\nfor line in fin:\n    parts = line.strip().split(',')\n    if parts[1] == target:\n        found = True\n        print(parts[0], parts[1])\n        fout.write(parts[0] + ' ' + parts[1])\nfin.close()\nfout.close()\nif not found:\n    print('未找到')",
+      "exp": "考查文件打开的编码参数与模式选择、strip 去除行尾换行符，以及\"找到/未找到\"标志变量的用法。",
+      "difficulty": 2
+    },
+    {
+      "type": "coding",
+      "id": "bld-c1",
+      "cat": "calc",
+      "level": 2,
+      "title": "阶梯水价计算",
+      "desc": "某市居民用水实行阶梯水价：年用水量 180 立方米（含）以内的部分每立方米 5 元；超过 180 至 260 立方米（含）的部分每立方米 7 元；超过 260 立方米的部分每立方米 9 元。输入一个年用水量（整数，单位立方米），计算并输出应缴水费，保留 2 位小数。",
+      "starter": "# 读入年用水量，按三档阶梯计算水费\n",
+      "tests": [
+        {"stdin": "180\n", "expected": "900.00"},
+        {"stdin": "200\n", "expected": "1040.00"},
+        {"stdin": "300\n", "expected": "1820.00"}
+      ],
+      "ref": "n = int(input())\nif n <= 180:\n    fee = n * 5\nelif n <= 260:\n    fee = 180 * 5 + (n - 180) * 7\nelse:\n    fee = 180 * 5 + 80 * 7 + (n - 260) * 9\nprint('%.2f' % fee)",
+      "hint": "分段计费要弄清每一段的边界（含与不含）和单价；中间档的基数是前一段的满额费用。",
+      "exp": "考查 if-elif-else 多分支分段计费、边界条件判断与 %.2f 保留两位小数输出。",
+      "tags": ["分支", "分段计费", "格式化"],
+      "difficulty": 2
+    },
+    {
+      "type": "coding",
+      "id": "bld-c2",
+      "cat": "data",
+      "level": 4,
+      "title": "挑出 3 的倍数并平方排序",
+      "desc": "输入一行以逗号分隔的整数（可能为负数，至少 1 个）。要求定义函数 pick(nums)：返回 nums 中所有 3 的倍数的平方组成的列表，并按从大到小排序。主程序读入这行整数（转换为 int 列表），调用 pick 函数并输出返回的列表（按 Python 列表格式输出）。",
+      "starter": "def pick(nums):\n    # 返回所有 3 的倍数的平方，从大到小排序\n    pass\n\nnums = list(map(int, input().split(',')))\n",
+      "tests": [
+        {"stdin": "12,-3,7,9,4,6\n", "expected": "[144, 81, 36, 9]"},
+        {"stdin": "1,2,3,5,10,15\n", "expected": "[225, 9]"},
+        {"stdin": "4,8,11\n", "expected": "[]"}
+      ],
+      "ref": "def pick(nums):\n    lst = [x * x for x in nums if x % 3 == 0]\n    lst.sort(reverse=True)\n    return lst\n\nnums = list(map(int, input().split(',')))\nprint(pick(nums))",
+      "hint": "x % 3 == 0 判断 3 的倍数（负数同样成立，如 -3）；列表解析式过滤并求平方，再用 sort(reverse=True) 降序。",
+      "exp": "考查函数定义与返回值、列表解析式的过滤与映射、sort(reverse=True) 降序排序。",
+      "tags": ["函数", "列表", "排序"],
+      "difficulty": 3
+    },
+    {
+      "type": "coding",
+      "id": "bld-c3",
+      "cat": "data",
+      "level": 5,
+      "title": "商品销售额统计",
+      "desc": "当前目录下有 goods.csv（UTF-8 编码，无标题行），每行存放一条商品记录：商品,单价,数量（单价最多 1 位小数，数量为整数）。程序逐行读取并计算每件商品的销售额（单价×数量）：第一行输出所有商品销售额的平均值（保留 2 位小数）；第二行输出销售额最高的商品名称和它的销售额，用空格分隔，销售额保留 2 位小数（若并列，输出文件中先出现的商品）。",
+      "files": [
+        {"name": "goods.csv", "content": "键盘,129.5,8\n鼠标,79.9,15\n显示器,999,3\n耳机,199,6\n鼠标垫,25,20\nU盘,65.8,12\n"}
+      ],
+      "starter": "# 逐行读取 goods.csv，计算销售额：平均 + 最高\n",
+      "tests": [
+        {"stdin": "", "expected": "1285.85\n显示器 2997.00"}
+      ],
+      "ref": "f = open('goods.csv', 'r', encoding='utf-8')\ntotal = 0\nn = 0\nbest_name = ''\nbest_sale = -1\nfor line in f:\n    parts = line.strip().split(',')\n    sale = float(parts[1]) * int(parts[2])\n    total = total + sale\n    n = n + 1\n    if sale > best_sale:\n        best_sale = sale\n        best_name = parts[0]\nf.close()\nprint('%.2f' % (total / n))\nprint(best_name, '%.2f' % best_sale)",
+      "hint": "单价要转 float、数量要转 int；求最值用打擂台法，初值设为很小的数。",
+      "exp": "综合考查 CSV 逐行处理、strip 与 split、数值类型转换、累加求平均与打擂台求最值、格式化输出。",
+      "tags": ["文件", "CSV", "统计"],
+      "difficulty": 2
+    }
+  ]
+}

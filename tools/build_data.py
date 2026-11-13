@@ -547,6 +547,7 @@ def main():
         "fixes": fixes,
         "coding": codings,
         "parsons": parsons,
+        "blind": blind,
         "oop": {"mcq": oop_mcq, "output": outputs, "coding": oop_coding},
         "lessons": {str(k): v for k, v in sorted(lessons.items())},
         "lessonFiles": {str(k): v for k, v in sorted(lesson_files.items())},
