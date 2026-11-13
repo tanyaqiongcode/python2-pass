@@ -1962,6 +1962,7 @@ const Mock = {
     // 判题中途崩溃/关页可由 resume() 恢复过期草稿重新评分
     const s = window.CONFIG.mockStructure;
     const official = this.variant === 'official';
+    const isBlind = this.variant === 'blind';
     const app = document.getElementById('app');
     app.innerHTML = '';
     app.append(h('h1', { class: 'page-title' }, '正在评分…'),
@@ -1999,7 +2000,7 @@ const Mock = {
       const right = a === q.ans;
       if (right) { score += mcqPer; if (isTier3(q)) t3Score += mcqPer; }
       if (isTier3(q)) t3Full += mcqPer;
-      State.answerMcq(q.id, a === undefined ? -1 : a, right);
+      if (!isBlind) State.answerMcq(q.id, a === undefined ? -1 : a, right); // 盲测不写入学习进度
       detail.push({ kind: '单选', level: q.level, tier3: isTier3(q), title: (q.topic || '') + ' ' + q.q.slice(0, 18), score: right ? mcqPer : 0, full: mcqPer });
     }
 
