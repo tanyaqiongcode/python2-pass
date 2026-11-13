@@ -1753,6 +1753,11 @@ const Mock = {
         coding: byId(B.coding, O.coding_ids || [])
       };
     }
+    if (variant === 'blind') {
+      const bl = B.blind || [];
+      const byType = t => bl.filter(q => q.type === t);
+      return { mcq: byType('mcq'), blank: byType('blank'), fix: byType('fix'), coding: byType('coding') };
+    }
     if (variant === 'tier3') {
       const [mt3, mo] = split(B.mcq);
       const [bt3, bo] = split(B.blanks);
