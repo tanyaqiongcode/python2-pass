@@ -449,7 +449,7 @@ def main():
                     blind.append(q)
                 else:
                     nerr += err(f"{fname}: {q.get('id', '?')} 未知 type {qt}")
-        elif kind == "official":
+        elif kind == "parsons":
             for q in items:
                 nerr += validate_parsons(q, fname)
                 nerr += check_files(q, fname, 0)
