@@ -36,6 +36,12 @@ test('substituteBlanks / matchBlank', () => {
   assert.equal(C.matchBlank({ n: 1, answers: ['len(s)'] }, 'len( s )').ok, true);
   assert.equal(C.matchBlank({ n: 1, answers: ['break'] }, 'continue').ok, false);
   assert.equal(C.matchBlank({ n: 2, answers: ['a, b'] }, 'a,b').ok, true);
+  // 评审回归：词间空格是内容，'helloworld' ≠ 'hello world'（结构归一化只删紧邻标点的空格）
+  assert.equal(C.matchBlank({ n: 1, answers: ['hello world'] }, 'helloworld').ok, false);
+  assert.equal(C.matchBlank({ n: 1, answers: ["'hello world'"] }, "'hello world'").ok, true);
+  assert.equal(C.matchBlank({ n: 1, answers: ["'hello world'"] }, "'helloworld'").ok, false);
+  // 代码风格宽松仍生效
+  assert.equal(C.matchBlank({ n: 1, answers: ["print('重复:', k)"] }, "print('重复:',k)").ok, true);
 });
 
 test('isTier3：L7 恒为三级题；关键词命中', () => {

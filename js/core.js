@@ -42,13 +42,19 @@
     return String(s).replace(/\s+/g, ' ').trim();
   }
 
-  /** 代码答案比较：先按空白折叠比较，再按"去掉全部空格"比较（'len( s )' ≈ 'len(s)'） */
+  /** 代码答案的结构归一化：只删除紧邻标点/符号（非字母数字）的空格。
+   *  'len( s )' ≈ 'len(s)'、'a, b' ≈ 'a,b'；而 'hello world' 的词间空格
+   *  会被保留——文本答案不会被误合并为 'helloworld'。 */
+  function codeNorm(x) {
+    return String(x).replace(/[ \t]+/g, ' ').trim().replace(/ ?([^ \w]) ?/g, '$1');
+  }
+
   function matchBlank(blank, answer) {
     var norm = normAnswer(answer);
-    var squeeze = function (x) { return String(x).replace(/\s+/g, ''); };
-    var ans = squeeze(answer);
+    var ansCode = codeNorm(answer);
     var ok = (blank.answers || []).some(function (a) {
-      return normAnswer(a) === norm || squeeze(a) === ans;
+      if (normAnswer(a) === norm) return true;
+      return codeNorm(a) === ansCode;
     });
     return { n: blank.n, ok: ok };
   }
