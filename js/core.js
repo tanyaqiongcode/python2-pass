@@ -46,14 +46,25 @@
    *  'len( s )' ≈ 'len(s)'、'a, b' ≈ 'a,b'；而 'hello world' 的词间空格
    *  会被保留——文本答案不会被误合并为 'helloworld'。 */
   function codeNorm(x) {
-    return String(x).replace(/[ \t]+/g, ' ').trim().replace(/ ?([^ \w]) ?/g, '$1');
+    var st = String(x).trim();
+    var out = '';
+    for (var i = 0; i < st.length; i++) {
+      var c = st[i];
+      if (c === ' ' || c === '\t') {
+        var pv = i > 0 ? st[i - 1] : '';
+        var nx = i + 1 < st.length ? st[i + 1] : '';
+        var pp = pv && pv !== ' ' && pv !== '\t' && !/\w/.test(pv);
+        var np = nx && nx !== ' ' && nx !== '\t' && !/\w/.test(nx);
+        if (pp || np) continue;
+      }
+      out += c;
+    }
+    return out;
   }
 
   function matchBlank(blank, answer) {
-    var norm = normAnswer(answer);
     var ansCode = codeNorm(answer);
     var ok = (blank.answers || []).some(function (a) {
-      if (normAnswer(a) === norm) return true;
       return codeNorm(a) === ansCode;
     });
     return { n: blank.n, ok: ok };
