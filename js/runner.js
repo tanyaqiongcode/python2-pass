@@ -725,7 +725,8 @@ const Engine = {
       let worker;
       let src;
       try {
-        src = buildWorkerSource(window.CONFIG.pyodideCDNs, window.CONFIG.packagePins || {}, window.PY2CHECK_SRC || '');
+        // Blob Worker 必须使用绝对地址；LOCAL 需与主线程一样先解析。
+        src = buildWorkerSource(this._resolveCDNs(), window.CONFIG.packagePins || {}, window.PY2CHECK_SRC || '');
         worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'application/javascript' })), { type: 'module' });
       } catch (e) { finish(false); return; }
       const initTimer = setTimeout(() => { finish(false); worker.terminate(); }, 180000);

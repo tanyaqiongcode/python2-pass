@@ -84,6 +84,48 @@ test('gradeMcq / judgeTest', () => {
 
 console.log('PY2CORE tests done');
 
+test('Worker 初始化：LOCAL 解析为同源绝对地址，离线外部 CDN 不影响本地启动', async () => {
+  const runnerSrc = fs.readFileSync(new URL('../js/runner.js', import.meta.url), 'utf8');
+  let source, worker, timer, cleared = false;
+  class FakeBlob { constructor(parts) { source = parts.join(''); } }
+  class FakeWorker {
+    constructor(url, options) { worker = this; assert.equal(options.type, 'module'); }
+    postMessage(msg) { assert.equal(msg.type, 'init'); }
+    terminate() { this.terminated = true; }
+  }
+  class TestURL extends URL { static createObjectURL() { return 'blob:test'; } }
+  const ctx = {
+    window: { CONFIG: { pyodideCDNs: ['LOCAL', 'https://example.invalid/pyodide/'] } },
+    document: { baseURI: 'https://example.org/python2-pass/' },
+    Worker: FakeWorker, Blob: FakeBlob, URL: TestURL,
+    setTimeout(fn) { timer = fn; return 1; }, clearTimeout() { cleared = true; }, console
+  };
+  vm.createContext(ctx);
+  const engine = vm.runInContext(runnerSrc + '\nEngine;', ctx);
+  const pending = engine._loadWorker();
+  const bases = JSON.parse(source.match(/const CDNS = (.*);/)[1]);
+  assert.deepEqual(bases, ['https://example.org/python2-pass/vendor/pyodide/', 'https://example.invalid/pyodide/']);
+  // 验证实际生成的 Worker 初始化代码：外部源不可用，本地源仍应启动成功。
+  const imports = [], messages = [];
+  const py = { runPython() {}, globals: { set() {} }, version: 'test' };
+  const workerCtx = { self: {}, postMessage(msg) { messages.push(msg); },
+    async importModule(url) {
+      imports.push(url);
+      assert.equal(url, bases[0] + 'pyodide.mjs');
+      return { async loadPyodide(opts) { assert.equal(opts.indexURL, bases[0]); return py; } };
+    }
+  };
+  vm.runInNewContext(source.replace("import(base + 'pyodide.mjs')", "importModule(base + 'pyodide.mjs')"), workerCtx);
+  await workerCtx.self.onmessage({ data: { type: 'init' } });
+  assert.equal(imports.length, 1);
+  assert.equal(messages[0].type, 'ready');
+  worker.onmessage({ data: messages[0] });
+  assert.equal(await pending, true);
+  assert.equal(engine.worker, worker);
+  assert.equal(cleared, true);
+  assert.equal(worker.terminated, undefined);
+});
+
 test('mergeProgress：双向合并取更优、成绩去重', () => {
   const local = { mcq: { a: { choice: 0, correct: false, ts: 100 } }, mockRuns: [{ ts: 500, score: 90 }], lessonRead: {} };
   const imp = {
