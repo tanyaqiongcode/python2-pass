@@ -995,6 +995,29 @@ const App = {
     box.append(h('div', { style: 'margin:6px 0 20px' },
       h('button', { class: 'btn btn-green', onclick: () => { State.markLessonRead(level); App.render(); } }, State.lessonReadStat(level) ? '✓ 已标记已读（再点一次重新渲染）' : '我已读完本关速览，标记已读')
     ));
+    // 教学视频
+    const VIDEO_MAP = {
+      1: [{ file: 'precedence.mp4', title: '-3**2 为什么是 -9（运算符优先级）' },
+          { file: 'and_or.mp4', title: 'and/or 短路求值图解' }],
+      2: [{ file: 'for_loop.mp4', title: 'for 循环执行过程（逐轮演示）' }],
+      3: [{ file: 'slice.mp4', title: '切片左闭右开图解' }],
+      5: [{ file: 'file_io.mp4', title: '文件读写三步走' },
+          { file: 'fix_demo.mp4', title: '改错题实操演示（从报错到修复）' }]
+    };
+    const vids = VIDEO_MAP[level];
+    if (vids && vids.length) {
+      const vSection = h('div', { class: 'card', style: 'margin-top:16px' },
+        h('h2', null, '📺 教学视频'));
+      vids.forEach(v => {
+        vSection.append(h('div', { style: 'margin:12px 0' },
+          h('div', { class: 'io-label', style: 'margin-bottom:6px' }, v.title),
+          h('video', {
+            src: 'videos/' + v.file, controls: '', preload: 'metadata',
+            style: 'width:100%;max-width:720px;border-radius:10px;background:#11111B;display:block'
+          })));
+      });
+      box.append(vSection);
+    }
   },
 
   /* ---------- 单选题渲染 ---------- */
