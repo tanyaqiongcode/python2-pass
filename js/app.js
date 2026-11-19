@@ -347,8 +347,9 @@ const App = {
    * ============================================================ */
   viewSprint(app) {
     app.innerHTML = '';
-    const today = new Date();
-    const ymd = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    // 每日一题按日期取题：seed 公式与本机模拟卷（viewLocal）同源，同一天出同一道题
+    const today = PY2CORE.ymd(Date.now());
+    const seed = Number(today.replace(/-/g, '')) % 9973;
     // 考场做题策略（150 分钟时间分配）
     app.append(h('div', { class: 'card' },
       h('h2', null, '🎯 考场做题策略（150 分钟）'),
